@@ -15,6 +15,7 @@
 \usepackage{lastpage}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
+\usepackage{needspace}
 
 \setlength{\parindent}{0pt}
 \pagestyle{fancy}
@@ -22,6 +23,8 @@
 \renewcommand{\headrulewidth}{0pt}
 \fancyfoot[L]{\footnotesize\itshape As of July 2026}
 \fancyfoot[R]{\footnotesize\thepage\ of \pageref{LastPage}}
+\widowpenalty=10000
+\clubpenalty=10000
 
 %---- Section headings: bold italic + full-width rule -----------
 \titleformat{\section}
@@ -65,6 +68,7 @@
 \begin{center}
   {\LARGE\bfseries Kabir Singh}\\[4pt]
   {\small New Jersey $\cdot$
+   \href 917.636.8664 $\cdot$
    \href{mailto:kabirsinghji@gmail.com}{kabirsinghji@gmail.com} $\cdot$
    \href{https://www.linkedin.com/in/kabir-singh-ji}{linkedin.com/in/kabir-singh-ji}}
 \end{center}
@@ -157,7 +161,7 @@ Imperial College London}{Jun '26 -- Jul '26}
         degenerative eye diseases
   \item Project funding awarded to support customer-discovery activities
 \end{cvitems}
-
+\needspace{5\baselineskip}
 \entry{Grace Hopper AI Research Institute, Computational Protein Design}{May '25 -- Aug '25}
 \begin{cvitems}
   \item NJIT grant to develop a course on computational protein design
