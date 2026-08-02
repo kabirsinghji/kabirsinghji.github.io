@@ -1,0 +1,417 @@
+%==============================================================
+%  Kabir Singh — Curriculum Vitae
+%  Compile: latexmk -pdf cv.tex
+%==============================================================
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage[margin=0.7in,top=0.6in,bottom=0.75in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{\footnotesize\itshape As of July 2026}
+\fancyfoot[R]{\footnotesize\thepage\ of \pageref{LastPage}}
+
+%---- Section headings: bold italic + full-width rule -----------
+\titleformat{\section}
+  {\large\bfseries\itshape}{}{0em}{}[\vspace{-6pt}\rule{\textwidth}{0.8pt}]
+\titlespacing*{\section}{0pt}{12pt}{4pt}
+
+%---- \entry{left block}{dates} --------------------------------
+% Left block wraps freely; dates stay pinned top-right.
+% Tune \entrygap to control visual density (try 2pt–6pt).
+% Note: at this content volume it does not change the page count.
+\newlength{\entrygap}\setlength{\entrygap}{5pt}
+\newcommand{\entry}[2]{%
+  \par\vspace{\entrygap}%
+  \noindent
+  \begin{minipage}[t]{0.795\textwidth}\raggedright #1\end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.19\textwidth}\raggedleft\small #2\end{minipage}%
+  \par\nobreak
+}
+
+%---- Bullet list used under an \entry -------------------------
+\newlist{cvitems}{itemize}{1}
+\setlist[cvitems]{label=\textendash,leftmargin=1.3em,topsep=1pt,
+                  itemsep=0pt,parsep=0pt,before=\small}
+
+%---- Presentations: citation, then venue / format / year rows --
+\newcommand{\pres}[1]{\par\vspace{6pt}\noindent\raggedright #1\par\vspace{1pt}}
+\newcommand{\venues}[1]{%
+  \noindent\hspace*{1.3em}\small
+  \begin{tabularx}{\dimexpr\textwidth-1.3em\relax}{@{}Xlr@{}}#1\end{tabularx}\par}
+
+%---- Flat lists (certifications) ------------------------------
+\newlist{flatlist}{itemize}{1}
+\setlist[flatlist]{label=\textbullet,leftmargin=1.3em,topsep=2pt,
+                   itemsep=0pt,parsep=0pt}
+
+%==============================================================
+\begin{document}
+
+%---- Header ---------------------------------------------------
+\begin{center}
+  {\LARGE\bfseries Kabir Singh}\\[4pt]
+  {\small New Jersey $\cdot$
+   \href{mailto:kabirsinghji@gmail.com}{kabirsinghji@gmail.com} $\cdot$
+   \href{https://www.linkedin.com/in/kabir-singh-ji}{linkedin.com/in/kabir-singh-ji}}
+\end{center}
+\vspace{2pt}
+
+%==============================================================
+\section{Academic Education}
+
+\entry{\textbf{Albert Dorman Honors College (ADHC)} and Jordan Hu College of Sciences
+and Liberal Arts (JHCSLA), New Jersey Institute of Technology, Newark, New Jersey, USA}
+{Sep '23 -- May '27\\(Expected)}
+\begin{cvitems}
+  \item Bachelor of Science; Major -- \textbf{Mathematical Biology}
+  \item Minors -- \textbf{Biomedical Engineering in Technology, Philosophy, History}
+  \item ADHC Honors Tracks -- \textbf{Medical Humanities, Global Studies}
+  \item \textit{Academic Excellence, Honors Merit, Honors Residential Scholarship
+        Recipient (Tuition + Board)}
+\end{cvitems}
+
+\entry{Faculty of Engineering, Lunds Tekniska Högskola, \textbf{Lunds Universitet},
+Lund, Sweden}{Jan '25 -- Jun '25}
+\begin{cvitems}
+  \item Fellow, Institute of International Education's Global Engineering
+        Education Exchange (Global E3)
+\end{cvitems}
+
+%==============================================================
+\section{Research}
+
+\entry{Undergraduate Researcher, Mathematical Neuroscience. PI: Dr.~Horacio Rotstein, NJIT}
+{Sep '26 -- Present}
+\begin{cvitems}
+  \item Deriving reduced mathematical descriptions of biophysical neuronal models
+        to characterize their dynamic properties
+\end{cvitems}
+
+\entry{Undergraduate Researcher, \textbf{History of Medicine and Bioethics}.
+PI: Dr.~Stephen Pemberton, NJIT}{Aug '26 -- Present}
+\begin{cvitems}
+  \item Synthesizing legal, clinical, and cultural developments in American
+        end-of-life care from the late twentieth century to the present
+  \item Developing original scholarship for submission to a peer-reviewed
+        humanities journal
+\end{cvitems}
+
+\entry{Undergraduate Researcher, Computational Bionanotechnology.
+PI: Dr.~Stefano Angioletti-Uberti, Imperial College London}{Jun '26 -- Present}
+\begin{cvitems}
+  \item \textbf{BAGEL: Biomolecular Algorithm for Guidance in Energy Landscape}
+  \item Computational modelling of soft-matter and biomaterial systems
+  \item Applying statistical mechanics, molecular dynamics, and machine-learning
+        methods to problems in enzyme design and broader protein design
+\end{cvitems}
+
+\entry{Undergraduate Researcher, \textbf{Computational Biology Team Lead} at KumarLab.
+PI: Dr.~Vivek Kumar, University of Houston (Prev.\ NJIT)}{Oct '23 -- Present}
+\begin{cvitems}
+  \item Lead undergraduate and graduate students on designing and developing
+        peptide-based therapeutics
+  \item Started at NJIT and continued computational work with lab relocation to Houston
+  \item Taught 15+ associates in lab
+  \item Received \textgreater\,\$15,000 in direct funding for projects
+\end{cvitems}
+
+\entry{Undergraduate Researcher, \textbf{Mathematical Modeling}.
+PI: Dr.~James Maclaurin, NJIT}{Oct '25 -- May '26}
+\begin{cvitems}
+  \item Applying Hawkes self-exciting point process to model secondary nucleation
+        dynamics in amyloid formation
+\end{cvitems}
+
+%==============================================================
+\section{Funding}
+
+\entry{Undergraduate Research Opportunities Programme (UROP),
+Imperial College London}{Jun '26 -- Jul '26}
+\begin{cvitems}
+  \item Competitive research bursary awarded through the Department of Materials,
+        Faculty of Engineering
+  \item Project: Using protein language models to mimic natural ligands.
+        Supervisor: Prof.~Stefano Angioletti-Uberti
+  \item Personal compensation included
+\end{cvitems}
+
+\entry{NSF I-Corps Regional Program, Northeast Hub}{May '26 -- Jun '26}
+\begin{cvitems}
+  \item Co-Founder \& Technical Lead, Axioma Therapeutics
+  \item Selected into competitive NSF cohort; led customer discovery and
+        lean-startup validation for cyclic peptide therapeutics targeting
+        degenerative eye diseases
+  \item Project funding awarded to support customer-discovery activities
+\end{cvitems}
+
+\entry{Grace Hopper AI Research Institute, Computational Protein Design}{May '25 -- Aug '25}
+\begin{cvitems}
+  \item NJIT grant to develop a course on computational protein design
+  \item Teaching Assistant
+\end{cvitems}
+
+\entry{The Honors College Moonshot Grants for Engaged Scholarship}{Jun '25 -- Jul '25}
+\begin{cvitems}
+  \item Endowed award to develop interdisciplinary projects that address
+        important social and cultural questions
+  \item Designing Male Contraceptive
+  \item Award providing labs with funds to support undergraduate-led projects
+  \item Personal compensation included. One recipient per annum
+\end{cvitems}
+
+\entry{Male Contraceptive Initiative (MCI)}{Jan '25 -- Jun '25}
+\begin{cvitems}
+  \item Award by the Youth Advisory Board providing funding to support
+        grantee-led project
+  \item Designing Male Contraceptive
+  \item Personal compensation included
+\end{cvitems}
+
+\entry{NJIT Undergraduate Research and Innovation (URI)}{Oct '24 -- May '25}
+\begin{cvitems}
+  \item Student Seed Grant award for a Phase-2 longitudinal project on
+        application-based research funding lab to support undergraduate-led project
+  \item Developing cyclic peptide therapeutic for Multiple Sclerosis
+\end{cvitems}
+
+\entry{Travel Award -- National Contraception Meeting}{May '25}
+\begin{cvitems}
+  \item Awarded by the Male Contraceptive Initiative for travel to Durham, NC,
+        supporting a conference presentation
+\end{cvitems}
+
+\entry{NJIT Honors Summer Research Institute (HSRI)}{Jun '24 -- Jul '24}
+\begin{cvitems}
+  \item Grant award by ADHC and URI providing funds to support
+        undergraduate-led projects
+  \item A combination of Multiple Sclerosis project and Male Contraceptive project
+  \item Personal compensation included
+\end{cvitems}
+
+%==============================================================
+\section{Publications}
+
+\vspace{4pt}
+\textbf{Peer-Reviewed}
+\begin{cvitems}
+  \item C.~Heffernan, O.~West, \textbf{K.~Singh}, J.~Dodd-o, M.~James, A.~Baradi,
+        K.~Rybak, A.~Lateef, S.~Elkabes, V.~Kumar. A novel cyclic peptide that
+        blocks human autoimmune antibodies for the treatment of multiple sclerosis.
+        \textit{European Journal of Medicinal Chemistry}, 119173 (2026).
+        \href{https://doi.org/10.1016/j.ejmech.2026.119173}{doi:10.1016/j.ejmech.2026.119173}
+\end{cvitems}
+
+\vspace{6pt}
+\textbf{Manuscripts in Preparation}
+\begin{cvitems}
+  \item \textbf{K.~Singh}, C.~Heffernan, O.~West, J.~Dodd-o, V.~Kumar. Machine
+        learning for rational design of a ***** targeting cyclic peptide-based
+        male contraceptive. Publication [in preparation],
+        \textbf{Patent application} [in preparation], 2026
+  \item J.~Lau, D.~Yun, \textbf{K.~Singh}, A.~Patananan, N.~Jadavji. Academic
+        Publishing as a Launchpad: How Publishing Research in an Undergraduate
+        Journal Shapes Future Careers. Publication [in preparation], 2026
+\end{cvitems}
+
+%==============================================================
+\section{Presentations}
+
+\pres{M.~Kotta, G.~Victorio, G.~Karmacharya, \textbf{K.~Singh}, N.~Giovannetti,
+B.~Shadpoor, J.~Dodd-O, V.~Kumar. Putative computational design of novel inhibitors
+to modulate de-novo targets for CB1 receptor.}
+\venues{
+  UH (Undergraduate Research Day) & Poster + Podium & 2026 \\
+}
+
+\pres{\textbf{K.~Singh}, C.~Heffernan, J.~Dodd-O, V.~Kumar. Development of a novel
+male contraceptive using cyclic peptides to inhibit fertilization.}
+\venues{
+  AAP/ASCI/APSA Joint Meeting & Poster & 2026 \\
+  NJIT AI Exploration Day & Poster & 2026 \\
+  NJIT ADHC (Honors Interdisciplinary Research Forum) \textbf{First Place} & Poster & Fall 2025 \\
+  NCM (National Contraception Meeting) & Poster & 2025 \\
+  NJIT ADHC (Honors Interdisciplinary Research Forum) & Poster & Spring 2025 \\
+  NJIT (Dana Knox Research Showcase) & Poster & 2025 \\
+  NJIT (Undergraduate Research and Innovation) & Abstract + Podium & 2025 \\
+  BMES (Biomedical Engineering Society) \textit{[Co-Presenter]} & Abstract + Poster & 2024 \\
+  NJIT (Undergraduate Research and Innovation) & Abstract + Podium & 2024 \\
+}
+
+\pres{\textbf{K.~Singh}, J.~Lau, H.~Gerber, A.~Alibilli, L.~Goralsky. Mitigating
+Knowledge Drain: A Case Study in Optimizing Workflow and Training in a
+High-Turnover, International Peer-Reviewed Undergraduate Science Academic Journal.}
+\venues{
+  NCUR & Poster & 2026 \\
+}
+
+%==============================================================
+\section{Academic Service}
+
+\entry{\textbf{22\textsuperscript{nd} Editor-in-Chief}, Associate Editor (Former),
+Journal of Young Investigators}{Dec '24 -- Present}
+\begin{cvitems}
+  \item Manage timely publication of high-quality scientific content
+  \item Develop initiatives to further the journal's mission
+  \item Former specialization in Biology, Physical Sciences, and Social Science
+        Departments
+\end{cvitems}
+
+\entry{\textbf{Research Chair}, American Association of Physicians of Indian Origin
+(AAPI) PreMed Board}{Jun '25 -- Present}
+\begin{cvitems}
+  \item Lead committee and organize events to achieve research-related objectives
+        on a national level to support students, researchers, physicians, and more
+        of an Indian origin
+\end{cvitems}
+
+\entry{\textbf{Board Member}, MCI Youth Advisory Board (YAB)}{Aug '25 -- Present}
+
+\entry{Member, Pre-Medical Ad Hoc Committee, APSA}{Mar '26 -- Present}
+
+\entry{Member, Goldwater Ambassadors Program}{Aug '25 -- Present}
+\begin{cvitems}
+  \item Selected into competitive process as a mentee, mentored by Goldwater Scholars
+  \item Program specially designed for students from underrepresented or
+        underserved backgrounds
+\end{cvitems}
+
+\entry{Member, ARTISAN Program}{Apr '25 -- Present}
+\begin{cvitems}
+  \item Inducted in the NSF ART Integrated Student Ambassador Network (ARTISAN)
+        program, based off commitment to translational research in my work
+\end{cvitems}
+
+\entry{Member, Inclusive Excellence Student Advisory Board}{Feb '25 -- Present}
+
+\entry{Member, Multifaith Council}{Jan '25 -- Present}
+
+\entry{Member, Student Conduct Board}{Dec '24 -- Present}
+\begin{cvitems}
+  \item Serve as adjudicator on academic and behavioral cases in student conduct
+        hearings, along with other members of the board, including faculty and
+        NJIT administration
+\end{cvitems}
+
+\entry{Chair, Chair-in-Training (Former), Highlander Integrity Council}{Sep '24 -- Present}
+
+\entry{Organizer, `It's Different for Girls' Documentary Screening and Panel,
+NJIT ADHC and CSLA Co-Sponsored Colloquium}{Mar '26}
+
+\entry{NJIT Representative, BioNJ 33\textsuperscript{rd} Annual Dinner Meeting
+\& Innovation Celebration}{Feb '26}
+
+\entry{Grant Reviewer, MCI YAB Undergraduate Project Grant}{Dec '25 -- Jan '26}
+
+\entry{Teaching Assistant, Honors First Year Seminar}{Sep '24 -- Dec '24,\\Sep '25 -- Dec '25}
+
+\entry{Invited Speaker, NJIT First Aid Squad}{Sep '25, Oct '25}
+\begin{cvitems}
+  \item Presented to NJIT Board of Trustees as well as the President's Town Hall
+        with squad leadership at the request of NJIT President Teik Lim
+\end{cvitems}
+
+\entry{Steering Committee Lead, ADHC First Year Retreat}{Mar '25 -- Aug '25}
+
+\entry{Teaching Assistant, Grace Hopper AI Research Institute}{May '25 -- Aug '25}
+\begin{cvitems}
+  \item Computational Protein Design
+\end{cvitems}
+
+\entry{Featured Speaker, ADHC Advising Day}{Jun '24 \& '25}
+
+\entry{Advisor, President (Former), Secretary (Former), Honors Hall Council}{Feb '24 -- May '25}
+
+\entry{ADHC Representative, National Collegiate Honors Council Annual Conference}{Nov '24}
+
+%==============================================================
+\section{Lectures \& Features}
+
+\begin{cvitems}
+  \item Lecture Series. Ethics in Science and Research, Science Mentorship Institute
+  \item Session Moderator. Student Oral Presentation (Communications). NCUR, 2026
+  \item Featured Presenter. `Navigating peer review and the student journal
+        landscape'. ``Shaping Asia's Future: Development, Innovation, and Society
+        in Transition'' organized by Nazarbayev University, Asian Universities
+        Alliance 2026
+  \item Featured Panelist. `It's Different for Girls' Documentary Screening and
+        Panel. NJIT ADHC and CSLA Co-Sponsored Colloquium, NJIT 2026
+  \item NJIT Makes: Undergraduate Research and Innovation, NJIT Promotional
+        Material. NJIT, 2026
+  \item Albert Dorman Honors College, Honors in Action 2025 (Research, Award, and
+        Study Abroad Experience). ADHC Publication. NJIT, 2025
+  \item Nayib Morán. `150+ Honors Scholars Showcase Findings at Interdisciplinary
+        Research Forum'. Article Feature. NJIT News, 2025
+  \item Albert Dorman Honors College, Honors in Action 2024 (Research and Study
+        Abroad Experience). ADHC Publication. NJIT, 2024
+  \item Gurnoor Kaur. `Undergraduate Student Researchers on Campus'. Article
+        Feature. NJIT (Student Newspaper -- The Vector), 2024
+  \item K.~Singh. `Introduction to PyMOL and Linear Peptide Design'. Lecture.
+        NJIT (Genetically Engineered Machines), 2024
+\end{cvitems}
+
+%==============================================================
+\section{Certifications \& Licenses}
+
+\begin{flatlist}
+  \item New Jersey EMT License
+  \item ACS ``Stop the Bleed'' Certification \& Instructor License
+  \item OSHA General Industry Safety and Health Certification
+  \item CITI Biomedical Research Certification
+  \item CITI RCR Basic Certification
+  \item American Heart Association BLS \& CPR for Adult/Child/Infant Certification
+\end{flatlist}
+
+%==============================================================
+\section{Leadership}
+
+\entry{Ethics Coordinator, Mentor (Neuro + Bio), Ethics Curriculum Dev (Former),
+Admission Officer, Symposium Committee Organizer, Grant Writer,
+Science Mentorship Institute (Sci-Mi)}{May '24 -- Present}
+
+\entry{Public Relations Chair, EMT, NJIT First Aid Squad}
+{Oct '25 -- Present,\\Jan '24 -- Present}
+
+\entry{Stop the Bleed Instructor (Hybrid English--Punjabi), NJ Gurdwaras,
+NJ Office of Homeland Security and Preparedness (NJOHSP) \& Sikh Youth Alliance}
+{Jan '26 -- Present}
+
+\entry{Khalsa School Virsa (Sikh History) Teacher, Sikh Sabha of New Jersey}
+{Sep '20 -- Present}
+
+\entry{Youth Camp Organizer and Coordinator, Sikh Sabha of New Jersey}{Aug '21 -- Present}
+
+\entry{Content Manager, The Mardana Project}{May '26 -- Present}
+
+\entry{Youth Camp Counselor, Guru Nanak Sikh Heritage}{Aug '21 -- Aug '25}
+
+\entry{President, Events Coordinator (Former), NJIT Sikhs}{Dec '23 -- May '26}
+
+\entry{President, Treasurer (Former), Co-Founder, NJIT MedicZero}{Nov '23 -- May '26}
+
+\entry{Co-Founder, Delta Epsilon Mu (Pre-medical Professional Fraternity)}{Feb '24 -- May '25}
+
+\entry{Fellow, Honors Summer Research Institute Fellowship}
+{Jun '24 -- Jul '24,\\Jun '25 -- Jul '25}
+
+\entry{EMT Senior Squad Member, Cadet Crew Chief (Former), Marlboro First Aid Squad}
+{Apr '22 -- Jan '25}
+
+\entry{Fellow, No Patient Left Behind Fellowship}{Jun '24 -- Aug '24}
+
+\entry{Young Scholar, American College of Cardiology}{May '23 -- Apr '24}
+
+\end{document}

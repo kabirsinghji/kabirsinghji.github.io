@@ -1,0 +1,210 @@
+/* ============================================================
+   Kabir Singh — site styles
+   Palette, type scale, and layout all derive from the tokens
+   in :root. Change a value there and it propagates everywhere.
+   ============================================================ */
+
+:root {
+  --paper:      #F4F6F8;
+  --card:       #FFFFFF;
+  --ink:        #1A1D24;
+  --ink-soft:   #5D6472;
+  --rule:       #DCE1E8;
+  --signal:     #1B4D3E;
+  --signal-dim: #E4EDE8;
+
+  --serif: "Newsreader", Georgia, serif;
+  --sans:  "IBM Plex Sans", system-ui, sans-serif;
+  --mono:  "IBM Plex Mono", ui-monospace, monospace;
+
+  --measure: 68rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--signal); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { background: var(--signal-dim); }
+
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+.wrap {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 1.5rem 5rem;
+}
+
+/* ---------- Masthead ---------- */
+.masthead { padding: 4.5rem 0 2rem; }
+
+.masthead h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  letter-spacing: -0.02em;
+  margin: 0 0 .4rem;
+}
+
+.tagline {
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  max-width: 46ch;
+  margin: 0 0 1.4rem;
+}
+
+.contact {
+  font-family: var(--mono);
+  font-size: .82rem;
+  letter-spacing: .01em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.cv-link {
+  display: inline-block;
+  margin-top: 1.6rem;
+  font-family: var(--mono);
+  font-size: .82rem;
+  padding: .55rem 1rem;
+  border: 1px solid var(--signal);
+  border-radius: 2px;
+  text-decoration: none;
+}
+.cv-link:hover { background: var(--signal); color: var(--paper); }
+
+/* ---------- Section headings ---------- */
+section { padding-top: 2.6rem; }
+
+section > h2 {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .13em;
+  color: var(--signal);
+  margin: 0 0 .5rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ---------- Entries ---------- */
+.entry {
+  display: grid;
+  grid-template-columns: 1fr 11rem;
+  gap: 1.5rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.entry:last-child { border-bottom: 0; }
+
+.entry h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.06rem;
+  margin: 0 0 .15rem;
+  line-height: 1.35;
+}
+
+.meta {
+  font-family: var(--sans);
+  font-size: .88rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.date {
+  font-family: var(--mono);
+  font-size: .78rem;
+  color: var(--ink-soft);
+  text-align: right;
+  margin: .2rem 0 0;
+  white-space: nowrap;
+}
+
+.entry ul {
+  font-family: var(--sans);
+  font-size: .9rem;
+  color: var(--ink-soft);
+  margin: .5rem 0 0;
+  padding-left: 1.1rem;
+}
+.entry ul li { margin-bottom: .18rem; }
+.entry ul li::marker { color: var(--rule); }
+
+/* ---------- Publications ---------- */
+.pub-group { margin-top: 1.2rem; }
+
+.pub-group h3 {
+  font-family: var(--mono);
+  font-size: .74rem;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--ink-soft);
+  font-weight: 500;
+  margin: 0 0 .6rem;
+}
+
+.pub {
+  padding: .85rem 0 .85rem 1rem;
+  border-left: 2px solid var(--rule);
+  margin-bottom: .5rem;
+}
+.pub.is-published { border-left-color: var(--signal); }
+
+.pub .authors,
+.pub .venue { font-family: var(--sans); font-size: .87rem; color: var(--ink-soft); margin: 0; }
+.pub .title { font-weight: 600; margin: .15rem 0; line-height: 1.4; }
+.pub .venue { font-style: italic; }
+.pub .doi { font-family: var(--mono); font-size: .76rem; }
+
+/* ---------- Presentations ---------- */
+.talk { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
+.talk:last-child { border-bottom: 0; }
+.talk > p { margin: 0 0 .5rem; font-size: .97rem; }
+
+.venues { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: .86rem; }
+.venues td { padding: .22rem 0; color: var(--ink-soft); vertical-align: top; }
+.venues td:nth-child(2) { width: 9rem; }
+.venues td:nth-child(3) { width: 5.5rem; text-align: right; font-family: var(--mono); font-size: .78rem; }
+
+/* ---------- Plain lists ---------- */
+.plain { font-family: var(--sans); font-size: .93rem; padding-left: 1.1rem; margin: .8rem 0 0; }
+.plain li { margin-bottom: .35rem; color: var(--ink-soft); }
+.plain li::marker { color: var(--rule); }
+
+/* ---------- Footer ---------- */
+footer {
+  margin-top: 4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: .76rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .entry { grid-template-columns: 1fr; gap: .3rem; }
+  .date { text-align: left; order: -1; margin: 0 0 .2rem; }
+  .venues td:nth-child(2) { width: 6.5rem; }
+  .venues td:nth-child(3) { width: 4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
