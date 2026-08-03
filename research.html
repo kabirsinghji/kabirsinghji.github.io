@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research — Kabir Singh</title>
+<meta name="description" content="Computational protein and peptide design, mathematical neuroscience, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
+<meta property="og:title" content="Research — Kabir Singh">
+<meta property="og:image" content="og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="sitenav">
+    <a href="index.html">CV</a>
+    <a href="research.html" aria-current="page">Research</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <header class="masthead masthead--sub">
+    <h1>Research</h1>
+    <p class="tagline">
+      Most of my work is computational design of peptides that have to do one
+      specific thing to one specific target. The rest is mathematics applied to
+      systems that are too messy to measure directly &mdash; and, lately, the
+      history of how medicine decides what a good death looks like.
+    </p>
+  </header>
+
+  <figure class="lab-photo">
+    <img src="research-lab.jpg" alt="Kabir Singh at a workstation running PyMOL alongside an RMSD-versus-energy docking plot"
+         width="1600" height="1066" loading="lazy">
+    <figcaption>
+      Docking analysis at KumarLab &mdash; an RMSD-versus-energy funnel on the
+      left, the corresponding peptide&ndash;target complex in PyMOL on the right.
+    </figcaption>
+  </figure>
+
+  <!-- ================= INTERACTIVE STRUCTURE VIEWER =================
+       PLACEHOLDER: this currently loads 1CRN (crambin), a small test protein.
+       To show your own work, change data-pdb-id below to a PDB entry, e.g.
+           data-pdb-id="5F4E"
+       or drop a file at structures/mypeptide.pdb and use
+           data-pdb-file="structures/mypeptide.pdb"
+       Also update the caption underneath so it describes what's on screen.
+  =================================================================== -->
+  <section class="project">
+    <h2>Structure viewer</h2>
+    <div id="viewer"
+         class="viewer"
+         data-pdb-id="1CRN"
+         role="img"
+         aria-label="Interactive three-dimensional protein structure">
+      <p class="viewer-msg">Loading structure&hellip;</p>
+    </div>
+    <p class="caption">
+      Drag to rotate, scroll to zoom. <strong>Placeholder structure</strong> &mdash;
+      replace with a designed peptide bound to its target.
+    </p>
+  </section>
+
+  <!-- ================= PROJECTS =================
+       Each block below is a template. The facts are from your CV; the
+       "Question / Approach / Where it stands" lines are for you to fill in
+       properly. Delete any block you don't want.
+  ============================================== -->
+
+  <section class="project">
+    <h2>Cyclic peptides that block fertilization</h2>
+    <p class="project-meta">KumarLab &middot; PI: Dr. Vivek Kumar &middot; 2023&ndash;present</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>Can a cyclic peptide be designed to interrupt sperm&ndash;egg
+          recognition selectively enough to work as a non-hormonal male
+          contraceptive?</dd>
+      <dt>Approach</dt>
+      <dd>Machine-learning-guided design of cyclic peptides against
+          sperm-specific protein targets, followed by docking and refinement.</dd>
+      <dt>Where it stands</dt>
+      <dd>Manuscript and patent application both in preparation. Presented at the
+          AAP/ASCI/APSA Joint Meeting and the National Contraception Meeting;
+          took first place at the NJIT Honors Interdisciplinary Research Forum.</dd>
+    </dl>
+  </section>
+
+  <section class="project">
+    <h2>A cyclic peptide for multiple sclerosis</h2>
+    <p class="project-meta">KumarLab &middot; PI: Dr. Vivek Kumar &middot; published 2026</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>Can autoimmune antibodies driving multiple sclerosis be blocked
+          directly by a designed cyclic peptide?</dd>
+      <dt>Where it stands</dt>
+      <dd>Published in <em>European Journal of Medicinal Chemistry</em>.
+          <a href="https://doi.org/10.1016/j.ejmech.2026.119173">Read the paper &rarr;</a></dd>
+    </dl>
+  </section>
+
+  <section class="project">
+    <h2>BAGEL — searching biomolecular energy landscapes</h2>
+    <p class="project-meta">Imperial College London &middot; PI: Prof. Stefano Angioletti-Uberti &middot; 2026&ndash;present</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>How do you guide a search through an energy landscape toward sequences
+          that fold and bind the way you intended?</dd>
+      <dt>Approach</dt>
+      <dd>Statistical mechanics, molecular dynamics, and protein language models
+          applied to enzyme and binder design.</dd>
+      <dt>Where it stands</dt>
+      <dd><em>Add a sentence here about what you found or built.</em></dd>
+    </dl>
+  </section>
+
+  <section class="project">
+    <h2>Amyloid aggregation as a self-exciting process</h2>
+    <p class="project-meta">NJIT &middot; PI: Dr. James Maclaurin &middot; 2025&ndash;2026</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>Secondary nucleation makes amyloid growth accelerate itself. Can that
+          feedback be captured by a point process instead of a rate equation?</dd>
+      <dt>Approach</dt>
+      <dd>Hawkes self-exciting point processes applied to nucleation dynamics in
+          amyloid formation.</dd>
+      <dt>Where it stands</dt>
+      <dd><em>Add a sentence here.</em></dd>
+    </dl>
+  </section>
+
+  <section class="project">
+    <h2>Reducing biophysical neuron models</h2>
+    <p class="project-meta">NJIT &middot; PI: Dr. Horacio Rotstein &middot; 2026&ndash;present</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>Detailed neuronal models have too many parameters to reason about.
+          Which reduced descriptions preserve the dynamics that matter?</dd>
+      <dt>Where it stands</dt>
+      <dd><em>Just beginning &mdash; add detail as it develops.</em></dd>
+    </dl>
+  </section>
+
+  <section class="project">
+    <h2>How American medicine learned to talk about dying</h2>
+    <p class="project-meta">NJIT &middot; PI: Dr. Stephen Pemberton &middot; 2026&ndash;present</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>How did legal, clinical, and cultural developments from the late
+          twentieth century onward reshape American end-of-life care?</dd>
+      <dt>Where it stands</dt>
+      <dd>Developing original scholarship for submission to a peer-reviewed
+          humanities journal.</dd>
+    </dl>
+  </section>
+
+  <footer>
+    <p><a href="index.html">&larr; Back to CV</a></p>
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/3dmol@2.4.0/build/3Dmol-min.js"></script>
+<script>
+/* Initialise the structure viewer. Fails visibly rather than silently if the
+   3Dmol library or the structure can't be loaded. */
+(function () {
+  var el = document.getElementById('viewer');
+  if (!el) return;
+
+  function fail(msg) { el.innerHTML = '<p class="viewer-msg">' + msg + '</p>'; }
+
+  if (typeof $3Dmol === 'undefined') {
+    fail('Structure viewer could not load. Check your connection.');
+    return;
+  }
+
+  var viewer = $3Dmol.createViewer(el, { backgroundColor: '#FFFFFF' });
+
+  function render(data, format) {
+    el.querySelectorAll('.viewer-msg').forEach(function (n) { n.remove(); });
+    viewer.addModel(data, format);
+    viewer.setStyle({}, { cartoon: { color: '#1B4D3E' } });
+    viewer.addStyle({ hetflag: true }, { stick: { colorscheme: 'greenCarbon' } });
+    viewer.zoomTo();
+    viewer.render();
+  }
+
+  var file = el.dataset.pdbFile;
+  var id   = el.dataset.pdbId;
+
+  if (file) {
+    fetch(file)
+      .then(function (r) { if (!r.ok) throw 0; return r.text(); })
+      .then(function (t) { render(t, 'pdb'); })
+      .catch(function () { fail('Could not load ' + file + '.'); });
+  } else if (id) {
+    $3Dmol.download('pdb:' + id, viewer, {}, function () {
+      el.querySelectorAll('.viewer-msg').forEach(function (n) { n.remove(); });
+      viewer.setStyle({}, { cartoon: { color: '#1B4D3E' } });
+      viewer.zoomTo();
+      viewer.render();
+    });
+  } else {
+    fail('No structure specified.');
+  }
+})();
+</script>
+</body>
+</html>

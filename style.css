@@ -208,3 +208,126 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* ============================================================
+   Added: site navigation, prose pages, projects, structure viewer
+   ============================================================ */
+
+.sitenav {
+  display: flex;
+  gap: 1.4rem;
+  padding: 1.6rem 0 0;
+  font-family: var(--mono);
+  font-size: .8rem;
+  letter-spacing: .02em;
+}
+.sitenav a { text-decoration: none; color: var(--ink-soft); padding-bottom: 2px; }
+.sitenav a:hover { background: none; color: var(--signal); }
+.sitenav a[aria-current="page"] {
+  color: var(--signal);
+  border-bottom: 1px solid var(--signal);
+}
+
+.masthead--sub { padding: 2.6rem 0 1rem; }
+.masthead--sub h1 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); }
+
+/* ---------- Prose blocks ---------- */
+.prose { max-width: 60ch; }
+.prose h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-transform: none;
+  border-bottom: 0;
+  margin: 0 0 .6rem;
+  padding-bottom: 0;
+}
+.prose p { margin: 0 0 1rem; }
+.prose-more { font-family: var(--mono); font-size: .82rem; }
+.prose-more a { text-decoration: none; }
+
+/* ---------- Portrait ---------- */
+.portrait { margin: 0 0 2rem; max-width: 20rem; }
+.portrait img {
+  width: 100%; height: auto; display: block;
+  border-radius: 2px; border: 1px solid var(--rule);
+}
+
+/* ---------- Projects ---------- */
+.project { padding-top: 2.4rem; max-width: 62ch; }
+.project h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  border-bottom: 0;
+  margin: 0 0 .2rem;
+  padding-bottom: 0;
+}
+.project-meta {
+  font-family: var(--mono);
+  font-size: .76rem;
+  color: var(--ink-soft);
+  margin: 0 0 .9rem;
+}
+
+.qa { margin: 0; }
+.qa dt {
+  font-family: var(--sans);
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--signal);
+  margin-top: .8rem;
+}
+.qa dd { margin: .2rem 0 0; font-size: .98rem; }
+.qa dd em { color: var(--ink-soft); }
+
+/* ---------- Structure viewer ---------- */
+.viewer {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.viewer canvas { display: block; }
+.viewer-msg {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0; padding: 1rem; text-align: center;
+  font-family: var(--mono); font-size: .8rem; color: var(--ink-soft);
+}
+.caption {
+  font-family: var(--sans);
+  font-size: .84rem;
+  color: var(--ink-soft);
+  margin: .6rem 0 0;
+}
+
+@media (max-width: 640px) {
+  .viewer { height: 300px; }
+  .sitenav { gap: 1.1rem; }
+}
+
+/* ---------- Photography ---------- */
+.lab-photo { margin: 1.4rem 0 0; }
+.lab-photo img {
+  width: 100%; height: auto; display: block;
+  border: 1px solid var(--rule); border-radius: 2px;
+}
+.lab-photo figcaption,
+.portrait figcaption {
+  font-family: var(--sans);
+  font-size: .84rem;
+  color: var(--ink-soft);
+  margin-top: .6rem;
+  max-width: 60ch;
+}
