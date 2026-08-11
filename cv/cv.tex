@@ -21,7 +21,7 @@
 \setlength{\parindent}{0pt}
 \pagestyle{fancy}
 \fancyhf{}
-\renewcommand{\headrulewidth}{0pt}
+\renewcomm\&{\headrulewidth}{0pt}
 \fancyfoot[L]{\footnotesize\itshape As of August 2026}
 \fancyfoot[R]{\footnotesize\thepage\ of \pageref{LastPage}}
 \widowpenalty=10000
@@ -37,7 +37,7 @@
 % Tune \entrygap to control visual density (try 2pt–6pt).
 % Note: at this content volume it does not change the page count.
 \newlength{\entrygap}\setlength{\entrygap}{5pt}
-\newcommand{\entry}[2]{%
+\newcomm\&{\entry}[2]{%
   \par\vspace{\entrygap}%
   \noindent
   \begin{minipage}[t]{0.795\textwidth}\raggedright #1\end{minipage}%
@@ -52,11 +52,11 @@
                   itemsep=0pt,parsep=0pt,before=\small}
 
 %---- Presentations: citation, then venue / format / year rows --
-% \pres[lines]{citation} -- optional arg reserves space so the citation and its
+% \pres[lines]{citation} -- optional arg reserves space so the citation \& its
 % venue table are never split across a page break (tabularx cannot break).
-\newcommand{\pres}[2][6]{\needspace{#1\baselineskip}%
+\newcomm\&{\pres}[2][6]{\needspace{#1\baselineskip}%
   \par\vspace{6pt}\noindent\raggedright #2\par\vspace{1pt}}
-\newcommand{\venues}[1]{%
+\newcomm\&{\venues}[1]{%
   \begingroup
   \noindent\hspace*{1.3em}\small
   \begin{tabularx}{\dimexpr\textwidth-1.3em\relax}{@{}Xlr@{}}#1\end{tabularx}\par
@@ -83,8 +83,8 @@
 %==============================================================
 \section{Academic Education}
 
-\entry{\textbf{Albert Dorman Honors College (ADHC)} and Jordan Hu College of Sciences
-and Liberal Arts (JHCSLA), New Jersey Institute of Technology, Newark, New Jersey, USA}
+\entry{\textbf{Albert Dorman Honors College (ADHC)} \& Jordan Hu College of Sciences
+\& Liberal Arts (JHCSLA), New Jersey Institute of Technology, Newark, New Jersey, USA}
 {Sep '23 -- May '27\\(Expected)}
 \begin{cvitems}
   \item Bachelor of Science; Major -- \textbf{Mathematical Biology}
@@ -111,10 +111,10 @@ Lund, Sweden}{Jan '25 -- Jun '25}
         to characterize their dynamic properties
 \end{cvitems}
 
-\entry{Undergraduate Researcher, \textbf{History of Medicine and Bioethics}.
+\entry{Undergraduate Researcher, \textbf{History of Medicine \& Bioethics}.
 PI: Dr.~Stephen Pemberton, NJIT}{Aug '26 -- Present}
 \begin{cvitems}
-  \item Synthesizing legal, clinical, and cultural developments in American
+  \item Synthesizing legal, clinical, \& cultural developments in American
         end-of-life care from the late twentieth century to the present
   \item Developing original scholarship for submission to a peer-reviewed
         humanities journal
@@ -123,18 +123,18 @@ PI: Dr.~Stephen Pemberton, NJIT}{Aug '26 -- Present}
 \entry{Undergraduate Researcher, Computational Bionanotechnology.
 PI: Dr.~Stefano Angioletti-Uberti, Imperial College London}{Jun '26 -- Present}
 \begin{cvitems}
-  \item \textbf{BAGEL: Biomolecular Algorithm for Guidance in Energy Landscape}
-  \item Computational modelling of soft-matter and biomaterial systems
-  \item Applying statistical mechanics, molecular dynamics, and machine-learning
-        methods to problems in enzyme design and broader protein design
+  \item \textbf{BAGEL: Biomolecular Algorithm for Guidance in Energy L\&scape}
+  \item Computational modelling of soft-matter \& biomaterial systems
+  \item Applying statistical mechanics, molecular dynamics, \& machine-learning
+        methods to problems in enzyme design \& broader protein design
 \end{cvitems}
 
 \entry{Undergraduate Researcher, \textbf{Computational Biology Team Lead} at KumarLab.
 PI: Dr.~Vivek Kumar, University of Houston (Prev.\ NJIT)}{Oct '23 -- Present}
 \begin{cvitems}
-  \item Lead undergraduate and graduate students on designing and developing
+  \item Lead undergraduate \& graduate students on designing \& developing
         peptide-based therapeutics
-  \item Started at NJIT and continued computational work with lab relocation to Houston
+  \item Started at NJIT \& continued computational work with lab relocation to Houston
   \item Taught 15+ associates in lab
   \item Received \textgreater\,\$15,000 in direct funding for projects
 \end{cvitems}
@@ -148,17 +148,17 @@ PI: Dr.~James Maclaurin, NJIT}{Oct '25 -- May '26}
 
 
 \needspace{5\baselineskip}
-\entry{Undergraduate Researcher, \textbf{Digital History and Urban Studies}.
+\entry{Undergraduate Researcher, \textbf{Digital History \& Urban Studies}.
 PI: Dr.~Louis Hamilton, NJIT}{Jan '24 -- May '24,\\Jan '26 -- May '26}
 \begin{cvitems}
   \item Digital mapping of how religious institutions shaped urban form in
-        medieval and early modern Italy; field research conducted in Rome and Florence
+        medieval \& early modern Italy; field research conducted in Rome \& Florence
   \item \href{https://uploads.knightlab.com/storymapjs/cbb86fd8d8b9cdc53b4e6e879d9db5f6/rome-2026/index.html}{\textit{Power vs.\ the People}} (HIST 328; 18 sites): layered
         Counter-Reformation Marian shrines against Julius II's 1508 papal axis on the
         Via Giulia
-  \item \href{https://uploads.knightlab.com/storymapjs/cbb86fd8d8b9cdc53b4e6e879d9db5f6/final-essay-draft/index.html}{\textit{Processions and Power}} (HIST 329; 22 sites): traced how
+  \item \href{https://uploads.knightlab.com/storymapjs/cbb86fd8d8b9cdc53b4e6e879d9db5f6/final-essay-draft/index.html}{\textit{Processions \& Power}} (HIST 329; 22 sites): traced how
         Florence's expansion turned liturgical processions into contested displays of
-        ecclesiastical and household prestige
+        ecclesiastical \& household prestige
 \end{cvitems}
 
 %==============================================================
@@ -169,7 +169,7 @@ Imperial College London}{Jun '26 -- Jul '26}
 \begin{cvitems}
   \item Competitive research bursary awarded through the Department of Materials,
         Faculty of Engineering
-  \item Project: Using protein language models to mimic natural ligands.
+  \item Project: Using protein language models to mimic natural lig\&s.
         Supervisor: Prof.~Stefano Angioletti-Uberti
   \item Personal compensation included
 \end{cvitems}
@@ -177,7 +177,7 @@ Imperial College London}{Jun '26 -- Jul '26}
 \entry{NSF I-Corps Regional Program, Northeast Hub}{May '26 -- Jun '26}
 \begin{cvitems}
   \item Co-Founder \& Technical Lead, Axioma Therapeutics
-  \item Selected into competitive NSF cohort; led customer discovery and
+  \item Selected into competitive NSF cohort; led customer discovery \&
         lean-startup validation for cyclic peptide therapeutics targeting
         degenerative eye diseases
   \item Project funding awarded to support customer-discovery activities
@@ -192,7 +192,7 @@ Imperial College London}{Jun '26 -- Jul '26}
 \entry{The Honors College Moonshot Grants for Engaged Scholarship}{Jun '25 -- Jul '25}
 \begin{cvitems}
   \item Endowed award to develop interdisciplinary projects that address
-        important social and cultural questions
+        important social \& cultural questions
   \item Designing Male Contraceptive
   \item Award providing labs with funds to support undergraduate-led projects
   \item Personal compensation included. One recipient per annum
@@ -206,7 +206,7 @@ Imperial College London}{Jun '26 -- Jul '26}
   \item Personal compensation included
 \end{cvitems}
 
-\entry{NJIT Undergraduate Research and Innovation (URI)}{Oct '24 -- May '25}
+\entry{NJIT Undergraduate Research \& Innovation (URI)}{Oct '24 -- May '25}
 \begin{cvitems}
   \item Student Seed Grant award for a Phase-2 longitudinal project on
         application-based research funding lab to support undergraduate-led project
@@ -221,9 +221,9 @@ Imperial College London}{Jun '26 -- Jul '26}
 
 \entry{NJIT Honors Summer Research Institute (HSRI)}{Jun '24 -- Jul '24}
 \begin{cvitems}
-  \item Grant award by ADHC and URI providing funds to support
+  \item Grant award by ADHC \& URI providing funds to support
         undergraduate-led projects
-  \item A combination of Multiple Sclerosis project and Male Contraceptive project
+  \item A combination of Multiple Sclerosis project \& Male Contraceptive project
   \item Personal compensation included
 \end{cvitems}
 
@@ -271,13 +271,13 @@ male contraceptive using cyclic peptides to inhibit fertilization.}
   NCM (National Contraception Meeting) & Poster & 2025 \\
   NJIT ADHC (Honors Interdisciplinary Research Forum) & Poster & Spring 2025 \\
   NJIT (Dana Knox Research Showcase) & Poster & 2025 \\
-  NJIT (Undergraduate Research and Innovation) & Abstract + Podium & 2025 \\
+  NJIT (Undergraduate Research \& Innovation) & Abstract + Podium & 2025 \\
   BMES (Biomedical Engineering Society) \textit{[Co-Presenter]} & Abstract + Poster & 2024 \\
-  NJIT (Undergraduate Research and Innovation) & Abstract + Podium & 2024 \\
+  NJIT (Undergraduate Research \& Innovation) & Abstract + Podium & 2024 \\
 }
 
 \pres{\textbf{K.~Singh}, J.~Lau, H.~Gerber, A.~Alibilli, L.~Goralsky. Mitigating
-Knowledge Drain: A Case Study in Optimizing Workflow and Training in a
+Knowledge Drain: A Case Study in Optimizing Workflow \& Training in a
 High-Turnover, International Peer-Reviewed Undergraduate Science Academic Journal.}
 \venues{
   NCUR & Poster & 2026 \\
@@ -291,15 +291,15 @@ Journal of Young Investigators}{Dec '24 -- Present}
 \begin{cvitems}
   \item Manage timely publication of high-quality scientific content
   \item Develop initiatives to further the journal's mission
-  \item Former specialization in Biology, Physical Sciences, and Social Science
+  \item Former specialization in Biology, Physical Sciences, \& Social Science
         Departments
 \end{cvitems}
 
 \entry{\textbf{Research Chair}, American Association of Physicians of Indian Origin
 (AAPI) PreMed Board}{Jun '25 -- Present}
 \begin{cvitems}
-  \item Lead committee and organize events to achieve research-related objectives
-        on a national level to support students, researchers, physicians, and more
+  \item Lead committee \& organize events to achieve research-related objectives
+        on a national level to support students, researchers, physicians, \& more
         of an Indian origin
 \end{cvitems}
 
@@ -326,15 +326,15 @@ Journal of Young Investigators}{Dec '24 -- Present}
 
 \entry{Member, Student Conduct Board}{Dec '24 -- Present}
 \begin{cvitems}
-  \item Serve as adjudicator on academic and behavioral cases in student conduct
-        hearings, along with other members of the board, including faculty and
+  \item Serve as adjudicator on academic \& behavioral cases in student conduct
+        hearings, along with other members of the board, including faculty \&
         NJIT administration
 \end{cvitems}
 
-\entry{Chair, Chair-in-Training (Former), Highlander Integrity Council}{Sep '24 -- Present}
+\entry{Chair, Chair-in-Training (Former), Highl\&er Integrity Council}{Sep '24 -- Present}
 
-\entry{Organizer, `It's Different for Girls' Documentary Screening and Panel,
-NJIT ADHC and CSLA Co-Sponsored Colloquium}{Mar '26}
+\entry{Organizer \& Panelist, `It's Different for Girls' Documentary Screening \& Panel,
+NJIT ADHC \& CSLA Co-Sponsored Colloquium}{Mar '26}
 
 \entry{NJIT Representative, BioNJ 33\textsuperscript{rd} Annual Dinner Meeting
 \& Innovation Celebration}{Feb '26}
@@ -366,25 +366,25 @@ NJIT ADHC and CSLA Co-Sponsored Colloquium}{Mar '26}
 \section{Lectures \& Features}
 
 \begin{cvitems}
-  \item Lecture Series. Ethics in Science and Research, Science Mentorship Institute
+  \item Lecture Series. Ethics in Science \& Research, Science Mentorship Institute
   \item Session Moderator. Student Oral Presentation (Communications). NCUR, 2026
-  \item Featured Presenter. `Navigating peer review and the student journal
-        landscape'. ``Shaping Asia's Future: Development, Innovation, and Society
+  \item Featured Presenter. `Navigating peer review \& the student journal
+        l\&scape'. ``Shaping Asia's Future: Development, Innovation, \& Society
         in Transition'' organized by Nazarbayev University, Asian Universities
         Alliance 2026
-  \item Featured Panelist. `It's Different for Girls' Documentary Screening and
-        Panel. NJIT ADHC and CSLA Co-Sponsored Colloquium, NJIT 2026
-  \item NJIT Makes: Undergraduate Research and Innovation, NJIT Promotional
+  \item Featured Panelist. `It's Different for Girls' Documentary Screening \&
+        Panel. NJIT ADHC \& CSLA Co-Sponsored Colloquium, NJIT 2026
+  \item NJIT Makes: Undergraduate Research \& Innovation, NJIT Promotional
         Material. NJIT, 2026
-  \item Albert Dorman Honors College, Honors in Action 2025 (Research, Award, and
+  \item Albert Dorman Honors College, Honors in Action 2025 (Research, Award, \&
         Study Abroad Experience). ADHC Publication. NJIT, 2025
   \item Nayib Morán. `150+ Honors Scholars Showcase Findings at Interdisciplinary
         Research Forum'. Article Feature. NJIT News, 2025
-  \item Albert Dorman Honors College, Honors in Action 2024 (Research and Study
+  \item Albert Dorman Honors College, Honors in Action 2024 (Research \& Study
         Abroad Experience). ADHC Publication. NJIT, 2024
   \item Gurnoor Kaur. `Undergraduate Student Researchers on Campus'. Article
         Feature. NJIT (Student Newspaper -- The Vector), 2024
-  \item K.~Singh. `Introduction to PyMOL and Linear Peptide Design'. Lecture.
+  \item K.~Singh. `Introduction to PyMOL \& Linear Peptide Design'. Lecture.
         NJIT (Genetically Engineered Machines), 2024
 \end{cvitems}
 
@@ -394,7 +394,7 @@ NJIT ADHC and CSLA Co-Sponsored Colloquium}{Mar '26}
 \begin{flatlist}
   \item New Jersey EMT License
   \item ACS ``Stop the Bleed'' Certification \& Instructor License
-  \item OSHA General Industry Safety and Health Certification
+  \item OSHA General Industry Safety \& Health Certification
   \item CITI Biomedical Research Certification
   \item CITI RCR Basic Certification
   \item American Heart Association BLS \& CPR for Adult/Child/Infant Certification
@@ -411,13 +411,13 @@ Science Mentorship Institute (Sci-Mi)}{May '24 -- Present}
 {Oct '25 -- Present,\\Jan '24 -- Present}
 
 \entry{Stop the Bleed Instructor (Hybrid English--Punjabi), NJ Gurdwaras,
-NJ Office of Homeland Security and Preparedness (NJOHSP) \& Sikh Youth Alliance}
+NJ Office of Homel\& Security \& Preparedness (NJOHSP) \& Sikh Youth Alliance}
 {Jan '26 -- Present}
 
 \entry{Khalsa School Virsa (Sikh History) Teacher, Sikh Sabha of New Jersey}
 {Sep '20 -- Present}
 
-\entry{Youth Camp Organizer and Coordinator, Sikh Sabha of New Jersey}{Aug '21 -- Present}
+\entry{Youth Camp Organizer \& Coordinator, Sikh Sabha of New Jersey}{Aug '21 -- Present}
 
 \entry{Content Manager, The Mardana Project}{May '26 -- Present}
 
@@ -441,6 +441,6 @@ NJ Office of Homeland Security and Preparedness (NJOHSP) \& Sikh Youth Alliance}
 
 %==============================================================
 \vspace{10pt}
-\noindent\textit{References and letters of recommendation available upon request.}
+\noindent\textit{References \& letters of recommendation available upon request.}
 
 \end{document}
