@@ -34,15 +34,14 @@
 %---- \entry{left block}{dates} --------------------------------
 % Left block wraps freely; dates stay pinned top-right.
 % Tune \entrygap to control visual density (try 2pt–6pt).
-% Note: at this content volume it does not change the page count.
-\newlength{\entrygap}\setlength{\entrygap}{5pt}
+\newlength{\entrygap}\setlength{\entrygap}{3pt}
 \newcommand{\entry}[2]{%
   \par\vspace{\entrygap}%
   \noindent
   \begin{minipage}[t]{0.795\textwidth}\raggedright #1\end{minipage}%
   \hfill
   \begin{minipage}[t]{0.19\textwidth}\raggedleft\small #2\end{minipage}%
-  \par\nobreak
+  \par\penalty500
 }
 
 %---- Bullet list used under an \entry -------------------------
@@ -117,6 +116,20 @@ PI: Dr.~Stephen Pemberton, NJIT}{Aug '26 -- Present}
         end-of-life care from the late twentieth century to the present
   \item Developing original scholarship for submission to a peer-reviewed
         humanities journal
+\end{cvitems}
+
+\needspace{6\baselineskip}
+\entry{\textbf{Emerging Scholars Research Fellow}, Early Modern Sikh History.
+Mentor: Satnam Singh, Harvard Sikh Center}{Sep '26 -- Dec '26}
+\begin{cvitems}
+  \item \textit{Dissemination and the making of Khalsa authority in a contested panth}:
+        examining how the Khalsa asserted dominance over the wider Sikh world within
+        decades of its founding, against rival claimants including the Bandai Khalsa,
+        Minas, and Ram Raiyas
+  \item Arguing that the consolidation of ``authentic Sikh teachings'' through katha
+        was instrumental to that dominance; working from Gurmukhi and Persian primary
+        sources, including works attributed to Bhai Mani Singh, hukamname, and
+        rahit-nama literature
 \end{cvitems}
 
 \entry{Undergraduate Researcher, Computational Bionanotechnology.
@@ -252,6 +265,7 @@ Imperial College London}{Jun '26 -- Jul '26}
 \end{cvitems}
 
 %==============================================================
+\needspace{10\baselineskip}
 \section{Presentations}
 
 \pres{M.~Kotta, G.~Victorio, G.~Karmacharya, \textbf{K.~Singh}, N.~Giovannetti,
@@ -439,7 +453,7 @@ NJ Office of Homeland Security \& Preparedness (NJOHSP) \& Sikh Youth Alliance}
 \entry{Young Scholar, American College of Cardiology}{May '23 -- Apr '24}
 
 %==============================================================
-\vspace{10pt}
+\vspace{4pt}
 \noindent\textit{References and letters of recommendation available upon request.}
 
 \end{document}
