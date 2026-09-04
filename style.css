@@ -626,6 +626,18 @@ section { scroll-margin-top: 1.2rem; }
   .toc a[aria-current="true"] { background: var(--signal-dim); color: var(--signal); }
 }
 
+/* ---------- Escapades photo grid ---------- */
+.photos { max-width: 100%; }
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: .8rem;
+  margin-top: .6rem;
+}
+.photo-grid a { display: block; background: var(--card); border: 1px solid var(--rule); border-radius: 2px; }
+.photo-grid a:hover { background: var(--card); border-color: var(--signal); }
+.photo-grid img { display: block; width: 100%; height: auto; }
+
 /* ---------- Print ---------- */
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }

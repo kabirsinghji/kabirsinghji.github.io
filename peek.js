@@ -13,19 +13,14 @@
   var edges = ['bottom', 'left', 'right'];
   var HOLD = 1500;
 
-  /* Unlocks. Add a line here as each page is built. */
+  /* Unlocks. The count is per page — it starts again on every page load — and
+     nothing on screen says a reward exists until one appears. */
   var UNLOCKS = [
     { at: 5,  url: 'ms-docking.html', name: 'dock it yourself' },
-    { at: 10, url: null,              name: 'something else' },
-    { at: 15, url: null,              name: 'one more thing' }
+    { at: 10, url: 'escapades.html',  name: 'latest escapades' }
   ];
-  var KEY = 'ks-catches';
   var caught = 0, current = null, counter = null;
-  try { caught = parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) { caught = 0; }
 
-  function unlocked() {
-    return UNLOCKS.filter(function (u) { return caught >= u.at && u.url; });
-  }
   function render() {
     if (!counter) {
       counter = document.createElement('div');
@@ -33,22 +28,13 @@
       counter.setAttribute('aria-live', 'polite');
       document.body.appendChild(counter);
     }
-    var got = unlocked(), next = null;
-    for (var i = 0; i < UNLOCKS.length; i++) { if (caught < UNLOCKS[i].at) { next = UNLOCKS[i]; break; } }
     var html = '<span class="catch-n">' + caught + (caught === 1 ? ' catch' : ' catches') + '</span>';
-    if (got.length) {
-      var last = got[got.length - 1];
-      html += ' <a href="' + last.url + '">' + last.name + ' &rarr;</a>';
-    }
-    if (next) html += '<span class="catch-next">' + (next.at - caught) + ' to go</span>';
+    UNLOCKS.forEach(function (u) {
+      if (caught >= u.at) html += ' <a href="' + u.url + '">' + u.name + ' &rarr;</a>';
+    });
     counter.innerHTML = html;
   }
-  function score() {
-    caught += 1;
-    try { localStorage.setItem(KEY, caught); } catch (e) {}
-    render();
-  }
-  if (caught > 0) render();
+  function score() { caught += 1; render(); }
 
   function appear() {
     var who  = cast[Math.random() < 0.5 ? 0 : 1];

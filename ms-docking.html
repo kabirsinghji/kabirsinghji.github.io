@@ -12,8 +12,8 @@
 <link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=6">
-<script src="peek.js?v=6" defer></script>
+<link rel="stylesheet" href="style.css?v=7">
+<script src="peek.js?v=7" defer></script>
 </head>
 <body data-no-popups>
 <div class="wrap">
@@ -65,9 +65,12 @@
         across the antigen-binding site rather than inside one loop, touching six
         residues: Tyr31 (CDRL1) and Trp99 — the tryptophan of this antibody's
         CDRL3 — on the light chain, and Trp144 (CDRH1), Glu168 and Tyr170
-        (CDRH2) and Pro211 (CDRH3) on the heavy chain. The design work found the
-        aspartates at positions 7 and 8 doing most of the hydrogen bonding here,
-        four polar contacts in all.
+        (CDRH2) and Pro211 (CDRH3) on the heavy chain. Phe5 and Trp6 sit deepest,
+        two thirds of the PFW motif the design converged on independently against
+        all three template autoantibodies. The paper reports four polar bonds for
+        this pairing, made by the aspartates at positions 7 and 8; in this
+        particular coordinate set those side chains have swung clear of the
+        antibody, so it is likely a later frame rather than the docked pose itself.
       </p>
       <p>
         Measured, it bound the anti-GlialCAM autoantibody with a K<sub>d</sub> of
@@ -90,10 +93,12 @@
       Real docking searches six degrees of freedom plus the peptide's own
       flexibility, scored by a force field. Here the depth is locked to the plane
       of the published complex, so you are solving three — two of position, one of
-      rotation. Contacts and clashes are counted honestly, over every heavy atom
-      within 20&nbsp;Å of the site: a contact is a peptide atom within 4&nbsp;Å of
-      the antibody, a clash is any pair closer than 2.6&nbsp;Å. The coordinates are
-      the published ones.
+      rotation. The antibody is drawn as a solvent-excluded surface, pre-rendered
+      once because it never moves; the peptide is its backbone, so the ring you are
+      moving is the macrocycle without its side chains. Contacts and clashes are
+      counted over every heavy atom within 20&nbsp;Å of the site: a contact is a
+      peptide atom within 4&nbsp;Å of the antibody, a clash is any pair closer than
+      2.6&nbsp;Å. The coordinates are the published ones.
       <a href="structures/glialcam-cap8.pdb" download>Download them &rarr;</a>
     </p>
   </section>
@@ -108,7 +113,7 @@
 
 </div>
 
-<script src="docking-data.js?v=6" defer></script>
-<script src="docking.js?v=6" defer></script>
+<script src="dock-ms.js?v=7" defer></script>
+<script src="docking.js?v=7" defer></script>
 </body>
 </html>

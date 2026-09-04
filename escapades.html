@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latest escapades — Kabir Singh</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Photos.">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=7">
+<script src="peek.js?v=7" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="sitenav" aria-label="Site">
+    <a href="/">CV</a>
+    <a href="science.html">Scientific Research</a>
+    <a href="history.html">History Research</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <header class="masthead masthead--sub">
+    <h1>Latest escapades</h1>
+    <p class="tagline">Ten catches. You've earned the photos.</p>
+  </header>
+
+  <section class="project photos" id="photos" aria-live="polite">
+    <p class="caption" id="photos-status">Fetching photos&hellip;</p>
+  </section>
+
+  <footer>
+    <div class="sign-off">
+      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
+      <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
+    </div>
+    <p><a href="/">&larr; Back to CV</a></p>
+  </footer>
+
+</div>
+
+<script>
+/* Lists whatever image files are in the escapades/ folder of the repo, newest
+   filename first, so adding a photo is just uploading it there. Uses the public
+   GitHub API to read the folder; the images themselves load from this site. */
+(function () {
+  var REPO = 'kabirsinghji/kabirsinghji.github.io', DIR = 'escapades';
+  var box = document.getElementById('photos'), status = document.getElementById('photos-status');
+  var IMAGE = /\.(jpe?g|png|webp|gif|avif)$/i;
+  function fromApi() {
+    return fetch('https://api.github.com/repos/' + REPO + '/contents/' + DIR)
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (items) {
+        return items.filter(function (f) { return f.type === 'file' && IMAGE.test(f.name); })
+                    .map(function (f) { return f.name; });
+      });
+  }
+  function fromList() {                 /* optional escapades/photos.json: ["a.jpg", ...] */
+    return fetch(DIR + '/photos.json').then(function (r) { if (!r.ok) throw 0; return r.json(); });
+  }
+  fromApi().catch(fromList)
+    .then(function (names) {
+      var photos = names.filter(function (n) { return IMAGE.test(n); })
+                        .sort(function (a, b) { return a < b ? 1 : -1; })
+                        .map(function (n) { return { name: n }; });
+      if (!photos.length) { status.textContent = 'No photos yet.'; return; }
+      status.remove();
+      var grid = document.createElement('div'); grid.className = 'photo-grid';
+      photos.forEach(function (f) {
+        var a = document.createElement('a'); a.href = DIR + '/' + f.name;
+        var img = document.createElement('img');
+        img.src = DIR + '/' + f.name; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
+        a.appendChild(img); grid.appendChild(a);
+      });
+      box.appendChild(grid);
+    })
+    .catch(function () {
+      status.textContent = 'Could not fetch the photo list just now. Try again in a minute.';
+    });
+})();
+</script>
+</body>
+</html>
