@@ -4,40 +4,76 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kabir Singh</title>
+<link rel="canonical" href="https://kabirsinghji.github.io/">
 <meta name="description" content="Kabir Singh — Mathematical Biology, NJIT. Computational protein and peptide design, mathematical neuroscience, history of medicine.">
 <meta property="og:title" content="Kabir Singh">
 <meta property="og:description" content="Mathematical Biology at NJIT. Computational protein and peptide design, mathematical neuroscience, and the history of medicine.">
-<meta property="og:image" content="og-image.png">
+<meta property="og:url" content="https://kabirsinghji.github.io/">
+<meta property="og:image" content="https://kabirsinghji.github.io/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:type" content="profile">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script src="structure.js" defer></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Kabir Singh",
+  "url": "https://kabirsinghji.github.io/",
+  "image": "https://kabirsinghji.github.io/photo.webp",
+  "description": "Mathematical Biology at NJIT. Computational protein and peptide design, mathematical neuroscience, and the history of medicine.",
+  "affiliation": {
+    "@type": "CollegeOrUniversity",
+    "name": "New Jersey Institute of Technology",
+    "url": "https://www.njit.edu/"
+  },
+  "sameAs": [
+    "https://www.linkedin.com/in/kabir-singh-ji"
+  ]
+}
+</script>
 </head>
 <body>
 <div class="wrap">
 
-  <nav class="sitenav">
-    <a href="index.html" aria-current="page">CV</a>
+  <nav class="sitenav" aria-label="Site">
+    <a href="/" aria-current="page">CV</a>
     <a href="science.html">Scientific Research</a>
     <a href="history.html">History Research</a>
     <a href="about.html">About</a>
   </nav>
 
-  <header class="masthead">
-    <h1>Kabir Singh</h1>
-    <p class="tagline">
-      Mathematical Biology at NJIT. I work on computational protein and peptide
-      design, mathematical neuroscience, and the history of medicine &mdash; and,
-      separately, on the intellectual history of the early modern Sikh panth.
-    </p>
-    <ul class="contact">
-      <li>New Jersey</li>
-      <li><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a></li>
-      <li><a href="https://www.linkedin.com/in/kabir-singh-ji">LinkedIn</a></li>
-    </ul>
-    <a class="cv-link" href="cv/cv.pdf">Full CV (PDF) &rarr;</a>
+  <header class="masthead masthead--hero">
+    <div>
+      <h1>Kabir Singh</h1>
+      <p class="tagline">
+        Mathematical Biology at NJIT. I work on computational protein and peptide
+        design, mathematical neuroscience, and the history of medicine &mdash; and,
+        separately, on the intellectual history of the early modern Sikh panth.
+      </p>
+      <ul class="contact">
+        <li>New Jersey</li>
+        <li><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a></li>
+        <li><a href="https://www.linkedin.com/in/kabir-singh-ji">LinkedIn</a></li>
+      </ul>
+      <a class="cv-link" href="cv/cv.pdf">Full CV (PDF) &rarr;</a>
+    </div>
+    <figure class="hero-structure">
+      <canvas id="hero-structure" width="360" height="360" tabindex="0" role="img"
+              aria-label="Rotatable model of the cyclic peptide CAP8 bound to an anti-GlialCAM antibody fragment"></canvas>
+      <figcaption>
+        CAP8, a designed cyclic peptide, bound to an anti-GlialCAM autoantibody.
+        Drag to rotate.
+      </figcaption>
+    </figure>
   </header>
 
   <section id="intro" class="prose">
@@ -183,10 +219,33 @@
     </article>
   </section>
 
-  <!-- ============ PUBLICATIONS (rendered from publications.json) ============ -->
+  <!-- ============ PUBLICATIONS ============ -->
   <section id="publications">
     <h2>Publications</h2>
-    <div id="pubs"><p class="meta">Loading publications&hellip;</p></div>
+
+    <div class="pub-group">
+      <h3>Peer-reviewed</h3>
+      <div class="pub is-published">
+        <p class="authors">C. Heffernan, O. West, <strong>K. Singh</strong>, J. Dodd-o, M. James, A. Baradi, K. Rybak, A. Lateef, S. Elkabes, V. Kumar</p>
+        <p class="title">A novel cyclic peptide that blocks human autoimmune antibodies for the treatment of multiple sclerosis</p>
+        <p class="venue">European Journal of Medicinal Chemistry, 119173 (2026)</p>
+        <p class="doi"><a href="https://doi.org/10.1016/j.ejmech.2026.119173">doi:10.1016/j.ejmech.2026.119173</a></p>
+      </div>
+    </div>
+
+    <div class="pub-group">
+      <h3>Manuscripts in preparation</h3>
+      <div class="pub">
+        <p class="authors"><strong>K. Singh</strong>, C. Heffernan, O. West, J. Dodd-o, V. Kumar</p>
+        <p class="title">Machine learning for rational design of a ***** targeting cyclic peptide-based male contraceptive</p>
+        <p class="venue">Publication in preparation; patent application in preparation (2026)</p>
+      </div>
+      <div class="pub">
+        <p class="authors">J. Lau, D. Yun, <strong>K. Singh</strong>, A. Patananan, N. Jadavji</p>
+        <p class="title">Academic Publishing as a Launchpad: How Publishing Research in an Undergraduate Journal Shapes Future Careers</p>
+        <p class="venue">Publication in preparation (2026)</p>
+      </div>
+    </div>
   </section>
 
   <!-- ============ PRESENTATIONS ============ -->
@@ -198,7 +257,10 @@
          B. Shadpoor, J. Dodd-O, V. Kumar. Putative computational design of novel
          inhibitors to modulate de-novo targets for CB1 receptor.</p>
       <table class="venues">
+        <thead class="sr-only"><tr><th scope="col">Venue</th><th scope="col">Format</th><th scope="col">Year</th></tr></thead>
+        <tbody>
         <tr><td>UH Undergraduate Research Day</td><td>Poster + Podium</td><td>2026</td></tr>
+        </tbody>
       </table>
     </div>
 
@@ -206,6 +268,8 @@
       <p><strong>K. Singh</strong>, C. Heffernan, J. Dodd-O, V. Kumar. Development of a
          novel male contraceptive using cyclic peptides to inhibit fertilization.</p>
       <table class="venues">
+        <thead class="sr-only"><tr><th scope="col">Venue</th><th scope="col">Format</th><th scope="col">Year</th></tr></thead>
+        <tbody>
         <tr><td>AAP/ASCI/APSA Joint Meeting</td><td>Poster</td><td>2026</td></tr>
         <tr><td>NJIT AI Exploration Day</td><td>Poster</td><td>2026</td></tr>
         <tr><td>NJIT ADHC Honors Interdisciplinary Research Forum &mdash; <strong>First Place</strong></td><td>Poster</td><td>Fall 2025</td></tr>
@@ -215,6 +279,7 @@
         <tr><td>NJIT Undergraduate Research and Innovation</td><td>Abstract + Podium</td><td>2025</td></tr>
         <tr><td>BMES &mdash; Biomedical Engineering Society <em>(co-presenter)</em></td><td>Abstract + Poster</td><td>2024</td></tr>
         <tr><td>NJIT Undergraduate Research and Innovation</td><td>Abstract + Podium</td><td>2024</td></tr>
+        </tbody>
       </table>
     </div>
 
@@ -223,7 +288,10 @@
          Knowledge Drain: A Case Study in Optimizing Workflow and Training in a
          High-Turnover, International Peer-Reviewed Undergraduate Science Academic Journal.</p>
       <table class="venues">
+        <thead class="sr-only"><tr><th scope="col">Venue</th><th scope="col">Format</th><th scope="col">Year</th></tr></thead>
+        <tbody>
         <tr><td>NCUR</td><td>Poster</td><td>2026</td></tr>
+        </tbody>
       </table>
     </div>
   </section>
@@ -576,50 +644,10 @@
   </section>
 
   <footer>
-    <p>Last updated July 2026. Built with plain HTML; CV typeset in LaTeX.</p>
+    <p>Last updated September 2026. Built with plain HTML; CV typeset in LaTeX.</p>
   </footer>
 
 </div>
 
-<script>
-/* Render the Publications section from publications.json.
-   This is the seam: swap the fetch source for a generated file later
-   and nothing else on the page has to change. */
-fetch('publications.json')
-  .then(function (r) {
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  })
-  .then(function (pubs) {
-    var groups = [
-      { key: 'peer-reviewed',  label: 'Peer-reviewed' },
-      { key: 'in-preparation', label: 'Manuscripts in preparation' }
-    ];
-    var html = '';
-
-    groups.forEach(function (g) {
-      var items = pubs.filter(function (p) { return p.status === g.key; });
-      if (!items.length) return;
-
-      html += '<div class="pub-group"><h3>' + g.label + '</h3>';
-      items.forEach(function (p) {
-        var authors = p.authors.replace('K. Singh', '<strong>K. Singh</strong>');
-        html += '<div class="pub ' + (g.key === 'peer-reviewed' ? 'is-published' : '') + '">'
-              + '<p class="authors">' + authors + '</p>'
-              + '<p class="title">' + p.title + '</p>'
-              + '<p class="venue">' + p.venue + ' (' + p.year + ')</p>'
-              + (p.doi ? '<p class="doi"><a href="https://doi.org/' + p.doi + '">doi:' + p.doi + '</a></p>' : '')
-              + '</div>';
-      });
-      html += '</div>';
-    });
-
-    document.getElementById('pubs').innerHTML = html;
-  })
-  .catch(function () {
-    document.getElementById('pubs').innerHTML =
-      '<p class="meta">Publication list unavailable. See the <a href="cv/cv.pdf">full CV</a>.</p>';
-  });
-</script>
 </body>
 </html>

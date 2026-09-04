@@ -4,21 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sikh Studies — Kabir Singh</title>
+<link rel="canonical" href="https://kabirsinghji.github.io/sikh-studies.html">
 <meta name="description" content="Early modern Sikh history: katha, the making of Khalsa authority, and teaching Sikh history in New Jersey.">
 <meta property="og:title" content="Sikh Studies — Kabir Singh">
 <meta property="og:description" content="Early modern Sikh history: katha, the making of Khalsa authority, and teaching Sikh history in New Jersey.">
-<meta property="og:image" content="og-image.png">
+<meta property="og:url" content="https://kabirsinghji.github.io/sikh-studies.html">
+<meta property="og:image" content="https://kabirsinghji.github.io/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="wrap">
 
-  <nav class="sitenav">
-    <a href="index.html">CV</a>
+  <nav class="sitenav" aria-label="Site">
+    <a href="/">CV</a>
     <a href="science.html">Scientific Research</a>
     <a href="history.html" aria-current="page">History Research</a>
     <a href="about.html">About</a>
@@ -77,10 +84,13 @@
     <aside class="split-figure">
       <h3 class="embed-title">Video introduction</h3>
       <div class="embed embed--video">
-      <iframe src="https://drive.google.com/file/d/1so-yweVDRd0ZGXAcAepH4Mj_eh3E-zO-/preview"
-              title="Kabir Singh — video introduction to the Khalsa authority project"
-              allow="autoplay" loading="lazy" allowfullscreen></iframe>
-    </div>
+        <button type="button" class="embed-play"
+                data-src="https://drive.google.com/file/d/1so-yweVDRd0ZGXAcAepH4Mj_eh3E-zO-/preview"
+                data-title="Kabir Singh — video introduction to the Khalsa authority project">
+          <span class="embed-play-icon" aria-hidden="true"></span>
+          Play video
+        </button>
+      </div>
       <p class="caption">
         A short introduction to this project, recorded for my fellowship
         application.
@@ -134,9 +144,23 @@
   </section>
 
   <footer>
-    <p><a href="index.html">&larr; Back to CV</a></p>
+    <p><a href="/">&larr; Back to CV</a></p>
   </footer>
 
 </div>
+<script>
+/* The Google Drive player is only loaded when the video is asked for. */
+document.querySelectorAll('.embed-play').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var f = document.createElement('iframe');
+    f.src = btn.dataset.src;
+    f.title = btn.dataset.title;
+    f.setAttribute('allow', 'autoplay');
+    f.setAttribute('allowfullscreen', '');
+    btn.replaceWith(f);
+    f.focus();
+  });
+});
+</script>
 </body>
 </html>
