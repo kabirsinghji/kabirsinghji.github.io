@@ -20,7 +20,7 @@
 <link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 <script src="peek.js?v=4" defer></script>
 <script src="structure.js?v=3" defer></script>
 <script type="application/ld+json">
@@ -45,7 +45,8 @@
 </script>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap wrap--cv">
+<div class="cv-main">
 
   <nav class="sitenav" aria-label="Site">
     <a href="/" aria-current="page">CV</a>
@@ -655,8 +656,41 @@
     </div>
     <p>Last updated September 2026. Built with plain HTML; CV typeset in LaTeX.</p>
   </footer>
+</div>
+
+  <nav class="toc" aria-label="CV sections">
+    <a href="#education">Education</a>
+    <a href="#research">Research</a>
+    <a href="#publications">Publications</a>
+    <a href="#presentations">Presentations</a>
+    <a href="#funding">Funding &amp; Awards</a>
+    <a href="#service">Academic Service</a>
+    <a href="#features">Lectures &amp; Features</a>
+    <a href="#certifications">Certifications &amp; Licenses</a>
+    <a href="#leadership">Leadership</a>
+  </nav>
 
 </div>
 
+<script>
+/* Highlight the section list entry for wherever you are on the page. */
+(function () {
+  var links = [].slice.call(document.querySelectorAll('.toc a[href^="#"]'));
+  if (!links.length) return;
+  var targets = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  var queued = false;
+  function update() {
+    queued = false;
+    var line = window.innerHeight * 0.3, idx = -1;
+    targets.forEach(function (t, i) { if (t && t.getBoundingClientRect().top <= line) idx = i; });
+    links.forEach(function (a, i) {
+      if (i === idx) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+  }
+  window.addEventListener('scroll', function () { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
 </body>
 </html>

@@ -592,11 +592,46 @@ footer > p { margin: 0; order: 1; }
   .masthead--art .pinned { max-width: 14rem; }
 }
 
+/* ---------- CV section list (index) ---------- */
+.toc { display: none; }
+section { scroll-margin-top: 1.2rem; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media (min-width: 64rem) {
+  .wrap--cv {
+    max-width: 80rem;
+    display: grid;
+    grid-template-columns: 12rem minmax(0, 1fr);
+    column-gap: 3rem;
+  }
+  .cv-main { grid-column: 2; grid-row: 1; min-width: 0; }
+  .toc {
+    grid-column: 1; grid-row: 1;
+    display: block;
+    position: sticky;
+    top: 2rem;
+    align-self: start;
+    margin-top: 6.6rem;
+    font-family: var(--sans);
+    font-size: .82rem;
+    line-height: 1.35;
+  }
+  .toc a {
+    display: block;
+    padding: .34rem .6rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-radius: 2px;
+  }
+  .toc a:hover { background: none; color: var(--signal); }
+  .toc a[aria-current="true"] { background: var(--signal-dim); color: var(--signal); }
+}
+
 /* ---------- Print ---------- */
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }
   .wrap { max-width: none; padding: 0; }
-  .sitenav, .subnav, .cv-link, .prose-more, .viewer, .embed, .embed-title, .hero-structure, .popup, .catch-count, footer { display: none; }
+  .sitenav, .subnav, .cv-link, .prose-more, .viewer, .embed, .embed-title, .hero-structure, .popup, .catch-count, .toc, footer { display: none; }
+  .wrap--cv { display: block; max-width: none; }
   .masthead { padding-top: 0; }
   section { padding-top: 1.4rem; }
   .entry, .talk, .pub, .project, .topic { break-inside: avoid; }
