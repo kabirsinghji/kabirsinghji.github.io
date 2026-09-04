@@ -12,18 +12,43 @@
   ];
   var edges = ['bottom', 'left', 'right'];
   var HOLD = 1500;
-  var caught = 0, current = null, counter = null;
 
-  function score() {
-    caught += 1;
+  /* Unlocks. Add a line here as each page is built. */
+  var UNLOCKS = [
+    { at: 5,  url: 'ms-docking.html', name: 'dock it yourself' },
+    { at: 10, url: null,              name: 'something else' },
+    { at: 15, url: null,              name: 'one more thing' }
+  ];
+  var KEY = 'ks-catches';
+  var caught = 0, current = null, counter = null;
+  try { caught = parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) { caught = 0; }
+
+  function unlocked() {
+    return UNLOCKS.filter(function (u) { return caught >= u.at && u.url; });
+  }
+  function render() {
     if (!counter) {
       counter = document.createElement('div');
       counter.className = 'catch-count';
       counter.setAttribute('aria-live', 'polite');
       document.body.appendChild(counter);
     }
-    counter.textContent = caught + (caught === 1 ? ' catch' : ' catches');
+    var got = unlocked(), next = null;
+    for (var i = 0; i < UNLOCKS.length; i++) { if (caught < UNLOCKS[i].at) { next = UNLOCKS[i]; break; } }
+    var html = '<span class="catch-n">' + caught + (caught === 1 ? ' catch' : ' catches') + '</span>';
+    if (got.length) {
+      var last = got[got.length - 1];
+      html += ' <a href="' + last.url + '">' + last.name + ' &rarr;</a>';
+    }
+    if (next) html += '<span class="catch-next">' + (next.at - caught) + ' to go</span>';
+    counter.innerHTML = html;
   }
+  function score() {
+    caught += 1;
+    try { localStorage.setItem(KEY, caught); } catch (e) {}
+    render();
+  }
+  if (caught > 0) render();
 
   function appear() {
     var who  = cast[Math.random() < 0.5 ? 0 : 1];
@@ -54,7 +79,10 @@
     timer = setTimeout(function () { leave(false); }, HOLD);
   }
 
+  var quiet = document.body.hasAttribute('data-no-popups');   /* score still shows */
+
   function later(min, max) {
+    if (quiet) return;
     setTimeout(function () {
       if (document.hidden) { later(1500, 3000); return; }
       if (!current) appear();

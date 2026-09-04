@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ms_docking — Kabir Singh</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Put CAP8 back where it belongs.">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=6">
+<script src="peek.js?v=6" defer></script>
+</head>
+<body data-no-popups>
+<div class="wrap">
+
+  <nav class="sitenav" aria-label="Site">
+    <a href="/">CV</a>
+    <a href="science.html">Scientific Research</a>
+    <a href="history.html">History Research</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <header class="masthead masthead--sub">
+    <h1>ms_docking</h1>
+    <p class="tagline">
+      You found this by catching things, so here is something to do. CAP8 is an
+      8-mer cyclic peptide designed to stop multiple sclerosis autoantibodies
+      binding myelin. Put it back where it binds.
+    </p>
+  </header>
+
+  <section class="project dock-game">
+    <canvas id="dock" tabindex="0" role="application"
+            aria-label="Docking puzzle: move the cyclic peptide CAP8 into its binding site on an antibody Fv"></canvas>
+
+    <div class="dock-panel">
+      <dl class="dock-readout">
+        <div><dt>Distance from the answer</dt><dd id="out-rmsd">—</dd></div>
+        <div><dt>Contacts</dt><dd id="out-contacts">—</dd></div>
+        <div><dt>Clashes</dt><dd id="out-clashes">—</dd></div>
+      </dl>
+      <p class="dock-controls">
+        <button type="button" id="spin-left">&#8630; Spin</button>
+        <button type="button" id="spin-right">Spin &#8631;</button>
+        <button type="button" id="dock-hint">Show me the site</button>
+        <button type="button" id="dock-reset">New start</button>
+      </p>
+      <p class="caption">
+        Drag the peptide to move it, scroll or use the spin buttons to turn it.
+        Arrow keys and Q/E work too. Aim for many contacts and no clashes.
+      </p>
+    </div>
+
+    <div class="dock-done" id="dock-done" hidden>
+      <h2>That's the pose.</h2>
+      <p>
+        In the published model CAP8 sits against six residues of the antibody's
+        combining site — Tyr31 and Trp99 on the light chain, Trp144, Glu168,
+        Tyr170 and Pro211 on the heavy chain. The peptide was designed against
+        the CDRL3 loops of 23 human MS autoantibodies, on the reasoning that
+        CDRL3 is structurally homogeneous where CDRH3 is not, so one scaffold
+        can plausibly fit many targets.
+      </p>
+      <p>
+        Measured, it bound the anti-GlialCAM autoantibody with a K<sub>d</sub> of
+        0.294&nbsp;mM — about an order of magnitude tighter than linear or
+        scrambled cyclic controls — and cut autoantibody detection of its epitope
+        by 69% on Western blot. Binding to a non-pathological influenza antibody
+        was indistinguishable from controls. Inhibition is partial, not complete,
+        and the controls showed modest effects of their own, so selectivity needs
+        firmer evidence before <em>in vivo</em> work.
+        <a href="https://doi.org/10.1016/j.ejmech.2026.119173">Read the paper &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="project">
+    <h2>What this is and isn't</h2>
+    <p class="caption">
+      Real docking searches six degrees of freedom plus the peptide's own
+      flexibility, scored by a force field. Here the depth is locked to the plane
+      of the published complex, so you are solving three — two of position, one of
+      rotation. Contacts and clashes are counted honestly, over every heavy atom
+      within 20&nbsp;Å of the site: a contact is a peptide atom within 4&nbsp;Å of
+      the antibody, a clash is any pair closer than 2.6&nbsp;Å. The coordinates are
+      the published ones.
+      <a href="structures/glialcam-cap8.pdb" download>Download them &rarr;</a>
+    </p>
+  </section>
+
+  <footer>
+    <div class="sign-off">
+      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
+      <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
+    </div>
+    <p><a href="/">&larr; Back to CV</a></p>
+  </footer>
+
+</div>
+
+<script src="docking-data.js?v=6" defer></script>
+<script src="docking.js?v=6" defer></script>
+</body>
+</html>
