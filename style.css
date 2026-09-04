@@ -407,3 +407,18 @@ footer {
 .topic-go { font-family: var(--mono); font-size: .78rem; color: var(--signal); }
 
 @media (min-width: 800px) { .topics { grid-template-columns: repeat(3, 1fr); } }
+
+/* ---------- Structure figure: still image with viewer layered over ---------- */
+.structure-fig { position: relative; margin: 0; }
+.structure-fig img {
+  display: block; width: 100%; height: auto;
+  border: 1px solid var(--rule); border-radius: 2px; background: var(--card);
+}
+.structure-fig .viewer {
+  position: absolute; inset: 0;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.structure-fig .viewer.is-live { opacity: 1; pointer-events: auto; }
