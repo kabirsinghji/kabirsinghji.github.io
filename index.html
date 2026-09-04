@@ -36,7 +36,9 @@
     "url": "https://www.njit.edu/"
   },
   "sameAs": [
-    "https://www.linkedin.com/in/kabir-singh-ji"
+    "https://www.linkedin.com/in/kabir-singh-ji",
+    "https://orcid.org/0009-0002-5159-5879",
+    "https://scholar.google.com/citations?user=-RpJmPsAAAAJ"
   ]
 }
 </script>
@@ -63,6 +65,8 @@
         <li>New Jersey</li>
         <li><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a></li>
         <li><a href="https://www.linkedin.com/in/kabir-singh-ji">LinkedIn</a></li>
+        <li><a href="https://orcid.org/0009-0002-5159-5879">ORCID</a></li>
+        <li><a href="https://scholar.google.com/citations?user=-RpJmPsAAAAJ">Google Scholar</a></li>
       </ul>
       <a class="cv-link" href="cv/cv.pdf">Full CV (PDF) &rarr;</a>
     </div>
@@ -643,11 +647,25 @@
     </article>
   </section>
 
+  <div class="peek" aria-hidden="true">
+    <img src="waldo-singh.webp" alt="" width="277" height="360">
+  </div>
   <footer>
+    <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     <p>Last updated September 2026. Built with plain HTML; CV typeset in LaTeX.</p>
   </footer>
 
 </div>
 
+<script>
+/* Someone is peeking over the footer once you've scrolled all the way down. */
+(function () {
+  var el = document.querySelector('.peek');
+  if (!el || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (en, obs) {
+    if (en[0].isIntersecting) { el.classList.add('is-up'); obs.disconnect(); }
+  }, { threshold: 1 }).observe(el);
+})();
+</script>
 </body>
 </html>

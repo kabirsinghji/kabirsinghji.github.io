@@ -39,6 +39,7 @@
     <img src="photo.webp" alt="Kabir Singh" width="640" height="800" fetchpriority="high">
   </figure>
 
+  <div class="cat-stage">
   <section class="prose">
     <p>
       I'm a senior at the New Jersey Institute of Technology, in the Albert
@@ -69,20 +70,35 @@
       great deal, mostly history, epistemology, and comparative theology.
     </p>
   </section>
+  <img class="cat-peek" src="cat-singh.webp" alt="" aria-hidden="true" width="369" height="520" loading="lazy">
+  </div>
 
   <section class="prose">
     <h2>Elsewhere</h2>
     <ul class="plain">
       <li><a href="https://njitvector.com/19044/features/undergraduate-student-researchers-on-campus/">Undergraduate Student Researchers on Campus</a> &mdash; The Vector, NJIT, 2024</li>
       <li><a href="https://www.linkedin.com/in/kabir-singh-ji">LinkedIn</a></li>
+      <li><a href="https://orcid.org/0009-0002-5159-5879">ORCID 0009-0002-5159-5879</a></li>
+      <li><a href="https://scholar.google.com/citations?user=-RpJmPsAAAAJ">Google Scholar</a></li>
       <li><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a></li>
     </ul>
   </section>
 
   <footer>
+    <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     <p><a href="/">&larr; Back to CV</a></p>
   </footer>
 
 </div>
+<script>
+/* The Cat leans in once the reader reaches the free-time paragraph. */
+(function () {
+  var stage = document.querySelector('.cat-stage');
+  if (!stage || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (en, obs) {
+    if (en[0].isIntersecting) { stage.classList.add('is-in'); obs.disconnect(); }
+  }, { threshold: 0.7 }).observe(stage);
+})();
+</script>
 </body>
 </html>

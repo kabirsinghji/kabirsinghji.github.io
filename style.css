@@ -13,6 +13,14 @@
   src: url("fonts/newsreader-latin-var.woff2") format("woff2");
 }
 @font-face {
+  font-family: "Noto Serif Gurmukhi";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/noto-serif-gurmukhi-gurmukhi-400-normal.woff2") format("woff2");
+  unicode-range: U+0951-0952, U+0964-0965, U+0A01-0A76, U+200C-200D, U+20B9, U+25CC, U+262C, U+A830-A839;
+}
+@font-face {
   font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 400;
@@ -50,7 +58,7 @@
   --signal:     #1B4D3E;
   --signal-dim: #E4EDE8;
 
-  --serif: "Newsreader", Georgia, serif;
+  --serif: "Newsreader", "Noto Serif Gurmukhi", Georgia, serif;
   --sans:  "IBM Plex Sans", system-ui, sans-serif;
   --mono:  "IBM Plex Mono", ui-monospace, monospace;
 
@@ -356,11 +364,15 @@ footer {
 
 /* ---------- Photography ---------- */
 .lab-photo { margin: 1.4rem 0 0; }
-.lab-photo img {
+.illustration { margin: 1.4rem 0 0; max-width: 32rem; }
+.illustration--wide { max-width: 40rem; margin: 0 0 1.6rem; }
+.lab-photo img,
+.illustration img {
   width: 100%; height: auto; display: block;
   border: 1px solid var(--rule); border-radius: 2px;
 }
 .lab-photo figcaption,
+.illustration figcaption,
 .portrait figcaption {
   font-family: var(--sans);
   font-size: .84rem;
@@ -560,10 +572,65 @@ footer {
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }
   .wrap { max-width: none; padding: 0; }
-  .sitenav, .subnav, .cv-link, .prose-more, .viewer, .embed, .embed-title, .hero-structure, footer { display: none; }
+  .sitenav, .subnav, .cv-link, .prose-more, .viewer, .embed, .embed-title, .hero-structure, .peek, .cat-peek, footer { display: none; }
   .masthead { padding-top: 0; }
   section { padding-top: 1.4rem; }
   .entry, .talk, .pub, .project, .topic { break-inside: avoid; }
   a { color: inherit; text-decoration: none; }
   .entry, .talk, .pub, section > h2 { border-color: #bbb; }
 }
+
+/* ---------- Gurmukhi ---------- */
+.byline {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  margin: -.1rem 0 .7rem;
+}
+footer .pa {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin: 0 0 .5rem;
+}
+
+/* ---------- Pinned illustration ---------- */
+.pinned {
+  display: block;
+  width: 100%; height: auto;
+  border: 6px solid var(--card);
+  box-shadow: 0 2px 12px rgba(26, 29, 36, .16);
+  transform: rotate(-2.5deg);
+  transition: transform .3s ease;
+}
+.pinned:hover { transform: rotate(0); }
+
+/* ---------- Someone peeking over the footer (index) ---------- */
+.peek {
+  position: relative;
+  height: 2.4rem;
+  margin-top: 4rem;
+  overflow: hidden;
+}
+.peek img {
+  position: absolute;
+  right: 2.5rem; top: 1.2rem;
+  height: 4.4rem; width: auto;
+  transition: top .5s ease;
+}
+.peek.is-up img,
+.peek:hover img { top: -.2rem; }
+.peek + footer { margin-top: 0; }
+
+/* ---------- The Cat leaning in (about) ---------- */
+.cat-stage { position: relative; overflow: clip; }
+.cat-peek {
+  position: absolute;
+  right: 1rem; bottom: 0;
+  width: 12rem; height: auto;
+  transform: translateX(130%) rotate(10deg);
+  transform-origin: bottom center;
+  transition: transform .8s cubic-bezier(.2, .8, .2, 1);
+}
+.cat-stage.is-in .cat-peek { transform: translateX(0) rotate(-7deg); }
+@media (max-width: 960px) { .cat-peek { display: none; } }
