@@ -440,3 +440,12 @@ footer {
   .project--split { grid-template-columns: 1fr; gap: 1.4rem; }
   .split-figure { max-width: 26rem; }
 }
+
+/* Video wants width, unlike the tall structure figure: give it a wider column.
+   If the video is portrait (phone-shot), change .embed--video's aspect-ratio
+   above from 16/9 to 9/16 and drop 34rem here to about 20rem. */
+.split--media { grid-template-columns: minmax(0, 40ch) minmax(0, 34rem); }
+@media (max-width: 1050px) {
+  .split--media { grid-template-columns: 1fr; }
+  .split--media .split-figure { max-width: 34rem; }
+}
