@@ -21,6 +21,15 @@
   unicode-range: U+0951-0952, U+0964-0965, U+0A01-0A76, U+200C-200D, U+20B9, U+25CC, U+262C, U+A830-A839;
 }
 @font-face {
+  /* Nastaliq, subset to the glyphs of the coin legend in the footer */
+  font-family: "Noto Nastaliq Urdu";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/noto-nastaliq-urdu-coin-subset.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+200C-200D, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
   font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 400;
@@ -365,7 +374,7 @@ footer {
 /* ---------- Photography ---------- */
 .lab-photo { margin: 1.4rem 0 0; }
 .illustration { margin: 1.4rem 0 0; max-width: 32rem; }
-.illustration--wide { max-width: 40rem; margin: 0 0 1.6rem; }
+.illustration--wide { max-width: 40rem; margin: 1.8rem 0 .2rem; }
 .lab-photo img,
 .illustration img {
   width: 100%; height: auto; display: block;
@@ -563,16 +572,24 @@ footer {
   color: var(--ink-soft);
   margin-top: .5rem;
 }
+.masthead--art {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(12rem, 16rem);
+  gap: 1.6rem 3rem;
+  align-items: center;
+}
+.masthead--art .pinned { margin: .4rem .6rem 0 0; }
 @media (max-width: 760px) {
-  .masthead--hero { grid-template-columns: 1fr; gap: 1.6rem; }
+  .masthead--hero, .masthead--art { grid-template-columns: 1fr; gap: 1.6rem; }
   .hero-structure { max-width: 17rem; }
+  .masthead--art .pinned { max-width: 14rem; }
 }
 
 /* ---------- Print ---------- */
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }
   .wrap { max-width: none; padding: 0; }
-  .sitenav, .subnav, .cv-link, .prose-more, .viewer, .embed, .embed-title, .hero-structure, .peek, .cat-peek, footer { display: none; }
+  .sitenav, .subnav, .cv-link, .prose-more, .viewer, .embed, .embed-title, .hero-structure, .popup, footer { display: none; }
   .masthead { padding-top: 0; }
   section { padding-top: 1.4rem; }
   .entry, .talk, .pub, .project, .topic { break-inside: avoid; }
@@ -586,6 +603,14 @@ footer {
   font-size: 1.15rem;
   color: var(--ink-soft);
   margin: -.1rem 0 .7rem;
+}
+footer .coin {
+  display: inline-block;          /* hugs the left edge; lines align right within */
+  font-family: "Noto Nastaliq Urdu", "Noto Naskh Arabic", "Geeza Pro", serif;
+  font-size: 1.15rem;
+  line-height: 2.2;
+  color: var(--ink);
+  margin: 0 0 .6rem;
 }
 footer .pa {
   font-family: var(--serif);
@@ -605,32 +630,18 @@ footer .pa {
 }
 .pinned:hover { transform: rotate(0); }
 
-/* ---------- Someone peeking over the footer (index) ---------- */
-.peek {
-  position: relative;
-  height: 2.4rem;
-  margin-top: 4rem;
-  overflow: hidden;
+/* ---------- Random pop-ups (peek.js) ---------- */
+.popup {
+  position: fixed;
+  z-index: 10;
+  height: 6.5rem; width: auto;
+  cursor: pointer;
+  transition: transform .7s cubic-bezier(.2, .8, .2, 1);
 }
-.peek img {
-  position: absolute;
-  right: 2.5rem; top: 1.2rem;
-  height: 4.4rem; width: auto;
-  transition: top .5s ease;
-}
-.peek.is-up img,
-.peek:hover img { top: -.2rem; }
-.peek + footer { margin-top: 0; }
-
-/* ---------- The Cat leaning in (about) ---------- */
-.cat-stage { position: relative; overflow: clip; }
-.cat-peek {
-  position: absolute;
-  right: 1rem; bottom: 0;
-  width: 12rem; height: auto;
-  transform: translateX(130%) rotate(10deg);
-  transform-origin: bottom center;
-  transition: transform .8s cubic-bezier(.2, .8, .2, 1);
-}
-.cat-stage.is-in .cat-peek { transform: translateX(0) rotate(-7deg); }
-@media (max-width: 960px) { .cat-peek { display: none; } }
+.popup--bottom { bottom: 0; transform: translateY(110%); }
+.popup--bottom.is-in { transform: translateY(38%); }
+.popup--left { left: 0; transform: translateX(-110%) rotate(6deg); transform-origin: bottom left; }
+.popup--left.is-in { transform: translateX(-42%) rotate(6deg); }
+.popup--right { right: 0; transform: translateX(110%) rotate(-6deg); transform-origin: bottom right; }
+.popup--right.is-in { transform: translateX(42%) rotate(-6deg); }
+@media (max-width: 640px) { .popup { height: 5rem; } }

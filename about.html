@@ -20,6 +20,7 @@
 <link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script src="peek.js" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -39,7 +40,6 @@
     <img src="photo.webp" alt="Kabir Singh" width="640" height="800" fetchpriority="high">
   </figure>
 
-  <div class="cat-stage">
   <section class="prose">
     <p>
       I'm a senior at the New Jersey Institute of Technology, in the Albert
@@ -70,8 +70,6 @@
       great deal, mostly history, epistemology, and comparative theology.
     </p>
   </section>
-  <img class="cat-peek" src="cat-singh.webp" alt="" aria-hidden="true" width="369" height="520" loading="lazy">
-  </div>
 
   <section class="prose">
     <h2>Elsewhere</h2>
@@ -85,20 +83,11 @@
   </section>
 
   <footer>
+    <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
     <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     <p><a href="/">&larr; Back to CV</a></p>
   </footer>
 
 </div>
-<script>
-/* The Cat leans in once the reader reaches the free-time paragraph. */
-(function () {
-  var stage = document.querySelector('.cat-stage');
-  if (!stage || !('IntersectionObserver' in window)) return;
-  new IntersectionObserver(function (en, obs) {
-    if (en[0].isIntersecting) { stage.classList.add('is-in'); obs.disconnect(); }
-  }, { threshold: 0.7 }).observe(stage);
-})();
-</script>
 </body>
 </html>

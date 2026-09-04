@@ -21,6 +21,7 @@
 <link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script src="peek.js" defer></script>
 <script src="structure.js" defer></script>
 <script type="application/ld+json">
 {
@@ -647,25 +648,13 @@
     </article>
   </section>
 
-  <div class="peek" aria-hidden="true">
-    <img src="waldo-singh.webp" alt="" width="277" height="360">
-  </div>
   <footer>
+    <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
     <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     <p>Last updated September 2026. Built with plain HTML; CV typeset in LaTeX.</p>
   </footer>
 
 </div>
 
-<script>
-/* Someone is peeking over the footer once you've scrolled all the way down. */
-(function () {
-  var el = document.querySelector('.peek');
-  if (!el || !('IntersectionObserver' in window)) return;
-  new IntersectionObserver(function (en, obs) {
-    if (en[0].isIntersecting) { el.classList.add('is-up'); obs.disconnect(); }
-  }, { threshold: 1 }).observe(el);
-})();
-</script>
 </body>
 </html>

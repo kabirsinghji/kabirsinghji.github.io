@@ -20,9 +20,16 @@
 <link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script src="peek.js" defer></script>
 </head>
 <body>
 <div class="wrap">
+
+  <figure class="illustration illustration--wide">
+    <img src="sangat-woodcut.webp"
+         alt="Early printed illustration of a Sikh sangat: men seated in rows before a granthi reading from a large book, with the Mool Mantar in Gurmukhi across the foreground"
+         width="624" height="264">
+  </figure>
 
   <nav class="sitenav" aria-label="Site">
     <a href="/">CV</a>
@@ -31,21 +38,23 @@
     <a href="about.html">About</a>
   </nav>
 
-  <header class="masthead masthead--sub">
-    <h1>Sikh Studies</h1>
-    <p class="byline" lang="pa">ਕਬੀਰ ਸਿੰਘ</p>
-    <p class="tagline">
-      How teaching was transmitted in the early modern Sikh panth, who got to decide
-      what counted as authentic, and how that shaped which community endured. I also
-      teach it, most weekends, to children in New Jersey.
-    </p>
-  </header>
 
-  <figure class="illustration illustration--wide">
-    <img src="sangat-woodcut.webp"
-         alt="Early printed illustration of a Sikh sangat: men seated in rows before a granthi reading from a large book, with the Mool Mantar in Gurmukhi across the foreground"
-         width="624" height="264">
-  </figure>
+  <header class="masthead masthead--sub masthead--art">
+    <div>
+      <h1>Sikh Studies</h1>
+      <p class="byline" lang="pa">ਕਬੀਰ ਸਿੰਘ</p>
+      <p class="tagline">
+        How teaching was transmitted in the early modern Sikh panth, who got to decide
+        what counted as authentic, and how that shaped which community endured. I also
+        teach it, most weekends, to children in New Jersey.
+      </p>
+    </div>
+    <img class="pinned" src="harmandir-sahib-512.webp"
+         srcset="harmandir-sahib-512.webp 512w, harmandir-sahib.webp 1024w"
+         sizes="(max-width: 760px) 14rem, 16rem"
+         alt="Watercolour illustration of five turbaned Sikh men in conversation, one gesturing as he speaks, in front of the Harmandir Sahib in Amritsar"
+         width="1024" height="1024">
+  </header>
 
   <nav class="subnav" aria-label="History research topics">
     <a href="history.html">Overview</a>
@@ -113,8 +122,7 @@
     <p class="project-meta">Teaching and community work in Sikh history</p>
   </section>
 
-  <section class="project project--split">
-    <div class="split-text">
+  <section class="project">
     <h2>Teaching</h2>
     <dl class="qa">
       <dt>Khalsa School Virsa &mdash; Sikh Sabha of New Jersey</dt>
@@ -130,14 +138,6 @@
       <dt>The Mardana Project</dt>
       <dd>Content Manager, 2026&ndash;present.</dd>
     </dl>
-    </div>
-    <aside class="split-figure">
-      <img class="pinned" src="harmandir-sahib-512.webp"
-           srcset="harmandir-sahib-512.webp 512w, harmandir-sahib.webp 1024w"
-           sizes="(max-width: 900px) 26rem, 24rem"
-           alt="Watercolour illustration of five turbaned Sikh men in conversation, one gesturing as he speaks, in front of the Harmandir Sahib in Amritsar"
-           width="1024" height="1024" loading="lazy">
-    </aside>
   </section>
 
   <section class="project">
@@ -160,6 +160,7 @@
   </section>
 
   <footer>
+    <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
     <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     <p><a href="/">&larr; Back to CV</a></p>
   </footer>
