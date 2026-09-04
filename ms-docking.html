@@ -93,10 +93,9 @@
       Real docking searches six degrees of freedom plus the peptide's own
       flexibility, scored by a force field. Here the depth is locked to the plane
       of the published complex, so you are solving three — two of position, one of
-      rotation. The antibody is drawn as a solvent-excluded surface, pre-rendered
-      once because it never moves; the peptide is its backbone, so the ring you are
-      moving is the macrocycle without its side chains. Contacts and clashes are
-      counted over every heavy atom within 20&nbsp;Å of the site: a contact is a
+      rotation. The antibody is drawn as its backbone trace, the peptide with every
+      heavy atom. Contacts and clashes are counted over every heavy atom within
+      20&nbsp;Å of the site: a contact is a
       peptide atom within 4&nbsp;Å of the antibody, a clash is any pair closer than
       2.6&nbsp;Å. The coordinates are the published ones.
       <a href="structures/glialcam-cap8.pdb" download>Download them &rarr;</a>
@@ -113,7 +112,7 @@
 
 </div>
 
-<script src="dock-ms.js?v=7" defer></script>
-<script src="docking.js?v=7" defer></script>
+<script src="docking-data.js?v=8" defer></script>
+<script src="docking.js?v=8" defer></script>
 </body>
 </html>
