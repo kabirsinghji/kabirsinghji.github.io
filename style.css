@@ -434,6 +434,7 @@ footer {
 .split-text { min-width: 0; }
 .split-figure { min-width: 0; margin: 0; }
 .split-figure .caption { margin-top: .7rem; }
+.split-figure .embed-title { margin-top: 0; margin-bottom: .6rem; }
 
 @media (max-width: 900px) {
   .project--split { grid-template-columns: 1fr; gap: 1.4rem; }
