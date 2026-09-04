@@ -254,8 +254,8 @@ footer {
   align-items: flex-end;
   gap: 1rem 2rem;
 }
-footer > p { margin: 0; text-align: right; }
-.sign-off { margin: 0; }
+footer > p { margin: 0; order: 1; }
+.sign-off { margin: 0; order: 2; text-align: right; margin-left: auto; }
 
 /* ---------- Mobile ---------- */
 @media (max-width: 640px) {
@@ -381,7 +381,7 @@ footer > p { margin: 0; text-align: right; }
 /* ---------- Photography ---------- */
 .lab-photo { margin: 1.4rem 0 0; }
 .illustration { margin: 1.4rem 0 0; max-width: 32rem; }
-.illustration--wide { max-width: 40rem; margin: 1.8rem 0 .2rem; }
+.illustration--wide { max-width: none; margin: 1.8rem 0 .2rem; }
 .lab-photo img,
 .illustration img {
   width: 100%; height: auto; display: block;
