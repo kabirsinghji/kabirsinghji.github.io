@@ -1,4 +1,4 @@
-/* Waris and the Cat pop up from random edges. Each stays 1.5 s. Catch one
+/* Waris, the Cat and friends pop up from random edges. Each stays 1.5 s. Catch one
    (click or tap) and the next appears at once; miss it and the next comes a
    little later. A counter keeps score for as long as you stay on the page.
    Skipped for visitors who prefer reduced motion; paused while the tab is
@@ -7,8 +7,11 @@
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   var cast = [
-    { src: '/waldo-singh.webp', w: 277, h: 360 },
-    { src: '/cat-singh.webp',   w: 369, h: 520 }
+    { src: '/waldo-singh.webp',     w: 277, h: 360 },
+    { src: '/cat-singh.webp',       w: 369, h: 520 },
+    { src: '/chill-sikh.webp',      w: 409, h: 520 },
+    { src: '/sikh-bear.webp',       w: 306, h: 520 },
+    { src: '/polo-bear-daari.webp', w: 296, h: 482 }
   ];
   var edges = ['bottom', 'left', 'right'];
   var HOLD = 1500;
@@ -37,7 +40,7 @@
   function score() { caught += 1; render(); }
 
   function appear() {
-    var who  = cast[Math.random() < 0.5 ? 0 : 1];
+    var who  = cast[Math.floor(Math.random() * cast.length)];
     var edge = edges[Math.floor(Math.random() * edges.length)];
     var img  = document.createElement('img');
     img.src = who.src; img.width = who.w; img.height = who.h;
