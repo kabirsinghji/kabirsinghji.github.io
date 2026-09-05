@@ -638,6 +638,22 @@ section { scroll-margin-top: 1.2rem; }
 .photo-grid a:hover { background: var(--card); border-color: var(--signal); }
 .photo-grid img { display: block; width: 100%; height: auto; }
 
+/* ---------- Institution marks ---------- */
+.mark {
+  display: inline-block;
+  height: 1.8rem; width: auto;
+  vertical-align: middle;
+  margin: 0 .55rem .2rem 0;
+}
+.mascot {
+  float: right;
+  width: 9rem; height: auto;
+  margin: .2rem 0 1rem 1.6rem;
+}
+@media (max-width: 640px) {
+  .mascot { width: 6rem; margin-left: 1rem; }
+}
+
 /* ---------- Print ---------- */
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }
