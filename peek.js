@@ -1,4 +1,4 @@
-/* Waris, the Cat and friends pop up from random edges. Each stays 1.5 s. Catch one
+/* Waris, the Cat, the Maharaja and friends pop up from random edges. Each stays 1.5 s. Catch one
    (click or tap) and the next appears at once; miss it and the next comes a
    little later. A counter keeps score for as long as you stay on the page.
    Skipped for visitors who prefer reduced motion; paused while the tab is
@@ -11,7 +11,8 @@
     { src: '/cat-singh.webp',       w: 369, h: 520 },
     { src: '/chill-sikh.webp',      w: 409, h: 520 },
     { src: '/sikh-bear.webp',       w: 306, h: 520 },
-    { src: '/polo-bear-daari.webp', w: 296, h: 482 }
+    { src: '/polo-bear-daari.webp', w: 296, h: 482 },
+    { src: '/ranjit-singh.webp',    w: 213, h: 560 }
   ];
   var edges = ['bottom', 'left', 'right'];
   var HOLD = 1500;
