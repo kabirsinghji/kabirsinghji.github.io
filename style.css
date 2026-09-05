@@ -645,10 +645,42 @@ section { scroll-margin-top: 1.2rem; }
   vertical-align: middle;
   margin: 0 .55rem .2rem 0;
 }
-.mascot {
+.mascot {                                 /* bobblehead: body + separately hinged head */
   float: right;
-  width: 9rem; height: auto;
+  position: relative;
+  display: block;
+  width: 9rem;
   margin: .2rem 0 1rem 1.6rem;
+  cursor: pointer;
+}
+.mascot-body { display: block; width: 100%; height: auto; }
+.mascot-head {
+  position: absolute;
+  top: 0; left: 35.97%;
+  width: 40.62%; height: auto;
+  transform-origin: 50% 87.0%;           /* the neck */
+  animation: bobble 7s ease-in-out infinite;
+}
+.mascot:hover .mascot-head,
+.mascot:active .mascot-head { animation: bobble-big 1.8s ease-out; }
+@keyframes bobble {
+  0%, 100% { transform: rotate(0); }
+  4%  { transform: rotate(-5deg); }
+  9%  { transform: rotate(4deg); }
+  14% { transform: rotate(-3deg); }
+  19% { transform: rotate(2deg); }
+  24% { transform: rotate(-1deg); }
+  30% { transform: rotate(0); }
+}
+@keyframes bobble-big {
+  0%   { transform: rotate(0); }
+  10%  { transform: rotate(-11deg); }
+  25%  { transform: rotate(9deg); }
+  40%  { transform: rotate(-6deg); }
+  55%  { transform: rotate(4deg); }
+  70%  { transform: rotate(-2deg); }
+  85%  { transform: rotate(1deg); }
+  100% { transform: rotate(0); }
 }
 @media (max-width: 640px) {
   .mascot { width: 6rem; margin-left: 1rem; }
