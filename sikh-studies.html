@@ -102,20 +102,18 @@
     <aside class="split-figure">
       <h3 class="embed-title">Video introduction</h3>
       <div class="embed embed--video">
-        <button type="button" class="embed-play"
-                data-src="https://drive.google.com/file/d/1so-yweVDRd0ZGXAcAepH4Mj_eh3E-zO-/preview"
-                data-title="Kabir Singh — video introduction to the Khalsa authority project">
-          <span class="embed-play-icon" aria-hidden="true"></span>
-          Play video
-        </button>
+        <video controls preload="metadata" playsinline
+               poster="hsc-pitch-poster.webp"
+               width="1280" height="720"
+               title="Kabir Singh — video introduction to the Khalsa authority project">
+          <source src="hsc-pitch.mp4" type="video/mp4">
+          <a href="hsc-pitch.mp4">Download the video (MP4, 11 MB)</a>
+        </video>
       </div>
       <p class="caption">
         A short introduction to this project, recorded for my fellowship
-        application.
+        application. About seven minutes.
       </p>
-      <p class="caption">
-      <a href="https://drive.google.com/file/d/1so-yweVDRd0ZGXAcAepH4Mj_eh3E-zO-/view">Open in Google Drive &rarr;</a>
-    </p>
     </aside>
   </section>
 
@@ -186,19 +184,5 @@
   </footer>
 
 </div>
-<script>
-/* The Google Drive player is only loaded when the video is asked for. */
-document.querySelectorAll('.embed-play').forEach(function (btn) {
-  btn.addEventListener('click', function () {
-    var f = document.createElement('iframe');
-    f.src = btn.dataset.src;
-    f.title = btn.dataset.title;
-    f.setAttribute('allow', 'autoplay');
-    f.setAttribute('allowfullscreen', '');
-    btn.replaceWith(f);
-    f.focus();
-  });
-});
-</script>
 </body>
 </html>
