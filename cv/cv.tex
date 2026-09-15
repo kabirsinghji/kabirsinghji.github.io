@@ -28,8 +28,8 @@
 
 %---- Section headings: bold small caps + full-width rule -------
 \titleformat{\section}
-  {\large\bfseries\scshape}{}{0em}{}[\vspace{-6pt}\rule{\textwidth}{0.8pt}]
-\titlespacing*{\section}{0pt}{12pt}{4pt}
+  {\fontsize{13}{15}\selectfont\bfseries\scshape}{}{0em}{}[\vspace{-6pt}\rule{\textwidth}{0.8pt}]
+\titlespacing*{\section}{0pt}{9pt}{3pt}
 
 %---- \entry{left block}{dates} --------------------------------
 % Left block wraps freely; dates stay pinned top-right.
@@ -43,6 +43,10 @@
   \begin{minipage}[t]{0.19\textwidth}\raggedleft\small #2\end{minipage}%
   \par\penalty500
 }
+
+%---- Subheading inside a section ------------------------------
+\newcommand{\subhead}[1]{%
+  \par\vspace{10pt}\noindent$\diamond$\ {\fontsize{11}{13}\selectfont\itshape #1}\ $\diamond$\par\vspace{3pt}}
 
 %---- Bullet list used under an \entry -------------------------
 \newlist{cvitems}{itemize}{1}
@@ -74,8 +78,7 @@
   {\small New Jersey $\cdot$
    917.636.8664 $\cdot$
    \href{mailto:kabirsinghji@gmail.com}{kabirsinghji@gmail.com} $\cdot$
-   \href{https://www.linkedin.com/in/kabir-singh-ji}{linkedin.com/in/kabir-singh-ji} $\cdot$
-   \href{https://kabirsinghji.github.io}{kabirsinghji.github.io}}
+   \href{https://www.linkedin.com/in/kabir-singh-ji}{linkedin.com/in/kabir-singh-ji}}
 \end{center}
 \vspace{2pt}
 
@@ -103,6 +106,26 @@ Lund, Sweden}{Jan '25 -- Jun '25}
 %==============================================================
 \section{Research}
 
+\subhead{Computational and Mathematical Biology}
+\entry{Undergraduate Researcher, \textbf{Computational Biology Team Lead} at KumarLab.
+PI: Dr.~Vivek Kumar, University of Houston (Prev.\ NJIT)}{Oct '23 -- Present}
+\begin{cvitems}
+  \item Lead undergraduate and graduate students on designing and developing
+        peptide-based therapeutics
+  \item Started at NJIT and continued computational work with lab relocation to Houston
+  \item Taught 15+ associates in lab
+  \item Received \textgreater\,\$15,000 in direct funding for projects
+\end{cvitems}
+
+\entry{Undergraduate Researcher, Computational Bionanotechnology.
+PI: Dr.~Stefano Angioletti-Uberti, Imperial College London}{Jun '26 -- Present}
+\begin{cvitems}
+  \item \textbf{BAGEL: Biomolecular Algorithm for Guidance in Energy Landscape}
+  \item Computational modelling of soft-matter and biomaterial systems
+  \item Applying statistical mechanics, molecular dynamics, and machine-learning
+        methods to problems in enzyme design and broader protein design
+\end{cvitems}
+
 \entry{Undergraduate Researcher, Mathematical Neuroscience. PI: Dr.~Horacio Rotstein, NJIT}
 {Sep '26 -- Present}
 \begin{cvitems}
@@ -110,15 +133,14 @@ Lund, Sweden}{Jan '25 -- Jun '25}
         to characterize their dynamic properties
 \end{cvitems}
 
-\entry{Undergraduate Researcher, \textbf{History of Medicine \& Bioethics}.
-PI: Dr.~Stephen Pemberton, NJIT}{Sep '26 -- Present}
+\entry{Undergraduate Researcher, \textbf{Mathematical Modeling}.
+PI: Dr.~James Maclaurin, NJIT}{Oct '25 -- May '26}
 \begin{cvitems}
-  \item Synthesizing legal, clinical, and cultural developments in American
-        end-of-life care from the late twentieth century to the present
-  \item Developing original scholarship for submission to a peer-reviewed
-        humanities journal
+  \item Applying Hawkes self-exciting point process to model secondary nucleation
+        dynamics in amyloid formation
 \end{cvitems}
 
+\subhead{Intellectual and Cultural History}
 \needspace{6\baselineskip}
 \entry{\textbf{Emerging Scholars Research Fellow}, Early Modern Sikh History.
 Mentor: Satnam Singh, Harvard Sikh Center}{Sep '26 -- Present}
@@ -133,30 +155,13 @@ Mentor: Satnam Singh, Harvard Sikh Center}{Sep '26 -- Present}
         rahit-nama literature
 \end{cvitems}
 
-\entry{Undergraduate Researcher, Computational Bionanotechnology.
-PI: Dr.~Stefano Angioletti-Uberti, Imperial College London}{Jun '26 -- Present}
+\entry{Undergraduate Researcher, \textbf{History of Medicine \& Bioethics}.
+PI: Dr.~Stephen Pemberton, NJIT}{Sep '26 -- Present}
 \begin{cvitems}
-  \item \textbf{BAGEL: Biomolecular Algorithm for Guidance in Energy Landscape}
-  \item Computational modelling of soft-matter and biomaterial systems
-  \item Applying statistical mechanics, molecular dynamics, and machine-learning
-        methods to problems in enzyme design and broader protein design
-\end{cvitems}
-
-\entry{Undergraduate Researcher, \textbf{Computational Biology Team Lead} at KumarLab.
-PI: Dr.~Vivek Kumar, University of Houston (Prev.\ NJIT)}{Oct '23 -- Present}
-\begin{cvitems}
-  \item Lead undergraduate and graduate students on designing and developing
-        peptide-based therapeutics
-  \item Started at NJIT and continued computational work with lab relocation to Houston
-  \item Taught 15+ associates in lab
-  \item Received \textgreater\,\$15,000 in direct funding for projects
-\end{cvitems}
-
-\entry{Undergraduate Researcher, \textbf{Mathematical Modeling}.
-PI: Dr.~James Maclaurin, NJIT}{Oct '25 -- May '26}
-\begin{cvitems}
-  \item Applying Hawkes self-exciting point process to model secondary nucleation
-        dynamics in amyloid formation
+  \item Synthesizing legal, clinical, and cultural developments in American
+        end-of-life care from the late twentieth century to the present
+  \item Developing original scholarship for submission to a peer-reviewed
+        humanities journal
 \end{cvitems}
 
 \needspace{5\baselineskip}
@@ -300,6 +305,7 @@ High-Turnover, International Peer-Reviewed Undergraduate Science Academic Journa
 %==============================================================
 \section{Academic Service}
 
+\subhead{Editorial and Peer Review}
 \entry{\textbf{22\textsuperscript{nd} Editor-in-Chief}, Associate Editor (Former),
 Journal of Young Investigators}{Dec '24 -- Present}
 \begin{cvitems}
@@ -309,6 +315,9 @@ Journal of Young Investigators}{Dec '24 -- Present}
         Departments
 \end{cvitems}
 
+\entry{Grant Reviewer, MCI YAB Undergraduate Project Grant}{Dec '25 -- Jan '26}
+
+\subhead{Teaching and Mentorship}
 \entry{\textbf{Research Lead}, Governor's STEM Scholars,
 Research \& Development Council of New Jersey}{Sep '26 -- May '27 (Expected)}
 \begin{cvitems}
@@ -323,6 +332,14 @@ Research \& Development Council of New Jersey}{Sep '26 -- May '27 (Expected)}
         \$1,000 completion stipend
 \end{cvitems}
 
+\entry{Teaching Assistant, Honors First Year Seminar}{Sep '24 -- Dec '24,\\Sep '25 -- Dec '25}
+
+\entry{Teaching Assistant, Grace Hopper AI Research Institute}{May '25 -- Aug '25}
+\begin{cvitems}
+  \item Computational Protein Design
+\end{cvitems}
+
+\subhead{National and Professional Service}
 \entry{\textbf{Research Chair}, American Association of Physicians of Indian Origin
 (AAPI) PreMed Board}{Jun '25 -- Present}
 \begin{cvitems}
@@ -348,10 +365,7 @@ Research \& Development Council of New Jersey}{Sep '26 -- May '27 (Expected)}
         program, based off commitment to translational research in my work
 \end{cvitems}
 
-\entry{Member, Inclusive Excellence Student Advisory Board}{Feb '25 -- Present}
-
-\entry{Member, Multifaith Council}{Jan '25 -- Present}
-
+\subhead{University Service}
 \entry{Member, Student Conduct Board}{Dec '24 -- Present}
 \begin{cvitems}
   \item Serve as adjudicator on academic and behavioral cases in student conduct
@@ -361,30 +375,17 @@ Research \& Development Council of New Jersey}{Sep '26 -- May '27 (Expected)}
 
 \entry{Chair, Chair-in-Training (Former), Highlander Integrity Council}{Sep '24 -- Present}
 
-\entry{Organizer \& Panelist, `It's Different for Girls' Documentary Screening \& Panel,
+\entry{Member, Inclusive Excellence Student Advisory Board}{Feb '25 -- Present}
+
+\entry{Member, Multifaith Council}{Jan '25 -- Present}
+
+\entry{Organizer, `It's Different for Girls' Documentary Screening \& Panel,
 NJIT ADHC \& CSLA Co-Sponsored Colloquium}{Mar '26}
 
 \entry{NJIT Representative, BioNJ 33\textsuperscript{rd} Annual Dinner Meeting
 \& Innovation Celebration}{Feb '26}
 
-\entry{Grant Reviewer, MCI YAB Undergraduate Project Grant}{Dec '25 -- Jan '26}
-
-\entry{Teaching Assistant, Honors First Year Seminar}{Sep '24 -- Dec '24,\\Sep '25 -- Dec '25}
-
-\entry{Invited Speaker, NJIT First Aid Squad}{Sep '25, Oct '25}
-\begin{cvitems}
-  \item Presented to NJIT Board of Trustees as well as the President's Town Hall
-        with squad leadership at the request of NJIT President Teik Lim
-\end{cvitems}
-
 \entry{Steering Committee Lead, ADHC First Year Retreat}{Mar '25 -- Aug '25}
-
-\entry{Teaching Assistant, Grace Hopper AI Research Institute}{May '25 -- Aug '25}
-\begin{cvitems}
-  \item Computational Protein Design
-\end{cvitems}
-
-\entry{Featured Speaker, ADHC Advising Day}{Jun '24 \& '25}
 
 \entry{Advisor, President (Former), Secretary (Former), Honors Hall Council}{Feb '24 -- May '25}
 
@@ -404,10 +405,14 @@ NJIT ADHC \& CSLA Co-Sponsored Colloquium}{Mar '26}
         Panel. NJIT ADHC \& CSLA Co-Sponsored Colloquium, NJIT 2026
   \item NJIT Makes: Undergraduate Research \& Innovation, NJIT Promotional
         Material. NJIT, 2026
+  \item Invited Speaker. Presentations to the NJIT Board of Trustees and the
+        President's Town Hall with squad leadership, at the request of NJIT
+        President Teik Lim. NJIT First Aid Squad, 2025
   \item Albert Dorman Honors College, Honors in Action 2025 (Research, Award, and
         Study Abroad Experience). ADHC Publication. NJIT, 2025
   \item Nayib Morán. `150+ Honors Scholars Showcase Findings at Interdisciplinary
         Research Forum'. Article Feature. NJIT News, 2025
+  \item Featured Speaker. ADHC Advising Day. NJIT, 2024 \& 2025
   \item Albert Dorman Honors College, Honors in Action 2024 (Research and Study
         Abroad Experience). ADHC Publication. NJIT, 2024
   \item Gurnoor Kaur. `Undergraduate Student Researchers on Campus'. Article
@@ -451,7 +456,8 @@ NJ Office of Homeland Security \& Preparedness (NJOHSP) \& Sikh Youth Alliance}
 
 \entry{Youth Camp Counselor, Guru Nanak Sikh Heritage}{Aug '21 -- Aug '25}
 
-\entry{President, Events Coordinator (Former), NJIT Sikhs}{Dec '23 -- May '26}
+\entry{Vice President, President (Former), Events Coordinator (Former),
+Sikh Association of NJIT (SANJIT)}{Dec '23 -- Present}
 
 \entry{President, Treasurer (Former), Co-Founder, NJIT MedicZero}{Nov '23 -- May '26}
 
