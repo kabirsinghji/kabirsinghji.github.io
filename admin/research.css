@@ -37,9 +37,8 @@
 .rs-add3 { grid-template-columns: minmax(0, 1fr) 11rem 10rem auto !important; margin-top: .6rem; }
 
 /* outline: a section's own text, counted as you type */
-.rs-draft-btn { justify-self: start; font: inherit; font-size: .8rem; font-weight: 600; color: var(--sky); background: none; border: 0; padding: .1rem 0; cursor: pointer; }
-.rs-draft-btn:hover { text-decoration: underline; }
-.rs .rs-sec-main .rs-draft { font-family: var(--display); font-size: 1rem; line-height: 1.65; color: var(--ink); min-height: 12rem; resize: vertical; }
+.rs .rs-sec-main .rs-draft { font-family: var(--display); font-size: 1rem; line-height: 1.65; color: var(--ink); background: var(--surface); resize: vertical; }
+.rs-count { justify-self: end; margin-top: -.15rem; font-size: .76rem; font-weight: 600; color: var(--soft); font-variant-numeric: tabular-nums; }
 .rs input.rs-auto { border-style: dashed; background: transparent; color: var(--ink); font-weight: 600; }
 
 /* sources */

@@ -25,7 +25,7 @@
   function label(list, v) { var x = list.filter(function (o) { return o[0] === v; })[0]; return x ? x[1] : v; }
 
   var S = { doc: null, sha: null, repoOk: false, pending: false, saving: false, rev: 0, err: '', savedAt: null, timer: null,
-            f: { q: '', scope: '', type: '', status: '' }, lf: { tag: '', scope: '' }, openSrc: null, openText: {} };
+            f: { q: '', scope: '', type: '', status: '' }, lf: { tag: '', scope: '' }, openSrc: null };
   var root, R = {};
 
   /* ------------------------------------------------------------ utils -- */
@@ -386,10 +386,10 @@
       var w = textIn(s.words, 'Words written', function (v) { s.words = v; touch(s); paint(); renderSummary(); total(); }, { type: 'number', ph: '0' });
       var tx = sectionText(s, w, function () { paint(); renderSummary(); total(); });
       var tg = textIn(s.target, 'Target words', function (v) { s.target = v; touch(s); paint(); }, { type: 'number', ph: 'target' });
-      var notes = textIn(s.notes, 'Notes for ' + s.title, function (v) { s.notes = v; touch(s); }, { area: true, rows: 1, ph: 'Notes, sources to use, points to make' });
+      var notes = textIn(s.notes, 'Notes for ' + s.title, function (v) { s.notes = v; touch(s); }, { area: true, rows: 1, ph: 'Notes for yourself: sources to use, points to make (not counted)' });
       return h('div', { class: 'rs-sec-row' },
         h('span', { class: 'rs-num', text: String(i + 1) }),
-        h('div', { class: 'rs-sec-main' }, title, notes, tx.button, tx.box),
+        h('div', { class: 'rs-sec-main' }, title, tx.box, tx.count, notes),
         h('div', { class: 'rs-sec-side' }, st, h('div', { class: 'rs-words' }, w, h('span', { text: '/' }), tg), bar),
         h('div', { class: 'rs-sec-ctl' },
           h('button', { class: 'icon', type: 'button', 'aria-label': 'Move up', text: '↑', disabled: i === 0 ? true : null, onclick: function () { move(i, -1); } }),
@@ -407,25 +407,23 @@
     fill(R.outline, rows, h('div', { class: 'ms-add rs-add2' }, nt, h('button', { class: 'btn', type: 'button', text: 'Add section', onclick: addSec })));
   }
 
-  /* A section's own text: write or paste it here and its word count keeps itself up to date.
+  /* A section's own text, in the box under its title: its word count keeps itself up to date.
      With no text, the count box stays free for a number typed in by hand (for drafts kept elsewhere). */
   function sectionText(s, w, after) {
     var box = textIn(s.text, 'Text of ' + (s.title || 'this section'), function (v) {
-      s.text = v; s.words = countWords(v) || null; touch(s); sync(); after();
-    }, { area: true, rows: 10, ph: 'Write or paste this section here; its words are counted as you type.' });
-    box.className = 'rs-draft'; box.hidden = !S.openText[s.id];
-    var button = h('button', { class: 'rs-draft-btn', type: 'button', onclick: function () {
-      box.hidden = !box.hidden; S.openText[s.id] = !box.hidden; sync(); if (!box.hidden) box.focus();
-    } });
+      s.text = v; s.words = countWords(v) || null; touch(s); sync(); grow(); after();
+    }, { area: true, rows: 3, ph: 'Write or paste this section here. Its words are counted as you type.' });
+    box.className = 'rs-draft';
+    var count = h('span', { class: 'rs-count' });
+    function grow() { box.style.height = 'auto'; box.style.height = Math.min(box.scrollHeight + 2, 520) + 'px'; }   /* fits the text, up to a limit */
     function sync() {
-      var auto = !!(s.text && s.text.trim());
+      var auto = !!(s.text && s.text.trim()), n = countWords(s.text);
       w.readOnly = auto; w.classList.toggle('rs-auto', auto); w.title = auto ? 'Counted from the section’s text' : '';
       if (auto || s.words == null) w.value = s.words == null ? '' : s.words;
-      button.textContent = !box.hidden ? 'Hide text' : auto ? 'Show text' : 'Write or paste the text';
-      button.setAttribute('aria-expanded', String(!box.hidden));
+      count.textContent = n.toLocaleString() + (n === 1 ? ' word' : ' words');
     }
-    sync();
-    return { box: box, button: button };
+    sync(); requestAnimationFrame(grow);
+    return { box: box, count: count };
   }
 
   /* ----------------------------------------------------------- sources -- */
