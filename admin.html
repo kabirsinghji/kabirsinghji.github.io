@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="style.css?v=9">
 <link rel="stylesheet" href="admin/masters.css?v=1">
 <script src="admin/masters.js?v=1" defer></script>
+<link rel="stylesheet" href="admin/research.css?v=1">
+<script src="admin/research.js?v=1" defer></script>
 <style>
 /* Admin-only styles; tokens and fonts come from style.css */
 body { font-size: 15px; }
@@ -158,6 +160,12 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     </div>
   </section>
 
+  <!-- ===================== Present: a parent tab with sub-tabs ===================== -->
+  <section class="panel" role="tabpanel" id="panel-present" aria-labelledby="tab-present" hidden>
+    <nav class="subtabs" role="tablist" aria-label="Present" id="subtabs-present"></nav>
+    <section class="subpanel" role="tabpanel" id="panel-sikh" aria-labelledby="subtab-sikh" hidden></section>
+  </section>
+
   <!-- ===================== Future: a parent tab with sub-tabs ===================== -->
   <section class="panel" role="tabpanel" id="panel-future" aria-labelledby="tab-future" hidden>
     <nav class="subtabs" role="tablist" aria-label="Future" id="subtabs-future"></nav>
@@ -167,7 +175,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   <!-- ===================== Settings tab ===================== -->
   <section class="panel settings" role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" hidden>
     <h2>Connect to GitHub</h2>
-    <p>Saving commits <code>data/cv.json</code> to your site&rsquo;s repository. A GitHub Action then rebuilds the homepage and the CV PDF from it, usually within two minutes. The UK master&rsquo;s tab keeps your progress and notes in a separate <b>private</b> repository, so they are never published with the site. To save, this page needs a GitHub access token. It is kept only in this browser and sent only to GitHub.</p>
+    <p>Saving commits <code>data/cv.json</code> to your site&rsquo;s repository. A GitHub Action then rebuilds the homepage and the CV PDF from it, usually within two minutes. The Present and Future tabs keep your progress and notes in a separate <b>private</b> repository, so they are never published with the site. To save, this page needs a GitHub access token. It is kept only in this browser and sent only to GitHub.</p>
     <ol>
       <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub &rarr; Settings &rarr; Fine-grained tokens &rarr; Generate new token</a>.</li>
       <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> and pick <code>kabirsinghji.github.io</code> and your private <code>admin-data</code> repository. (Already have a token? Edit it and add <code>admin-data</code>.)</li>
@@ -179,7 +187,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       <label class="f"><span>Site repository</span><input type="text" id="repo" spellcheck="false"></label>
       <label class="f"><span>Branch</span><input type="text" id="branch" spellcheck="false"></label>
     </div>
-    <label class="f"><span>Private data repository</span><input type="text" id="datarepo" spellcheck="false"><small>Where the UK master&rsquo;s tab saves your progress. Must be private.</small></label>
+    <label class="f"><span>Private data repository</span><input type="text" id="datarepo" spellcheck="false"><small>Where the Present and Future tabs save your progress. Must be private.</small></label>
     <label class="check"><input type="checkbox" id="remember" checked> Remember on this device</label>
     <div class="add">
       <button class="btn btn--primary" type="button" id="connect">Connect</button>
@@ -204,6 +212,9 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
      protects must also need the GitHub token (as saving does). */
   var TABS = [
     { id: 'cv', label: 'CV', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' },
+    { id: 'present', label: 'Present', lock: '4d4c7eee2e28d03cb2dbf3df639c3290ade66e18755e83caade2d8f37bd8c044', sub: [
+      { id: 'sikh', label: 'Sikh research' }
+    ] },
     { id: 'future', label: 'Future', lock: 'ebb3de8a3d9a40366132eb5deb5af44e4c96c11696f8fc34ea2c1d8bd8399171', sub: [
       { id: 'masters', label: 'UK master\u2019s' }
     ] },
