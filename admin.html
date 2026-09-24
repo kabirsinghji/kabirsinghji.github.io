@@ -7,6 +7,8 @@
 <title>Admin — Kabir Singh</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="admin/masters.css?v=1">
+<script src="admin/masters.js?v=1" defer></script>
 <style>
 /* Admin-only styles; tokens and fonts come from style.css */
 body { font-size: 15px; }
@@ -152,21 +154,25 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     </div>
   </section>
 
+  <!-- ===================== UK master's tab (admin/masters.js) ===================== -->
+  <section class="panel" role="tabpanel" id="panel-masters" aria-labelledby="tab-masters" hidden></section>
+
   <!-- ===================== Settings tab ===================== -->
   <section class="panel settings" role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" hidden>
     <h2>Connect to GitHub</h2>
-    <p>Saving commits <code>data/cv.json</code> to your site&rsquo;s repository. A GitHub Action then rebuilds the homepage and the CV PDF from it, usually within two minutes. To save, this page needs a GitHub access token. It is kept only in this browser and sent only to GitHub.</p>
+    <p>Saving commits <code>data/cv.json</code> to your site&rsquo;s repository. A GitHub Action then rebuilds the homepage and the CV PDF from it, usually within two minutes. The UK master&rsquo;s tab keeps your progress and notes in a separate <b>private</b> repository, so they are never published with the site. To save, this page needs a GitHub access token. It is kept only in this browser and sent only to GitHub.</p>
     <ol>
       <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub &rarr; Settings &rarr; Fine-grained tokens &rarr; Generate new token</a>.</li>
-      <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> and pick <code>kabirsinghji.github.io</code>.</li>
+      <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> and pick <code>kabirsinghji.github.io</code> and your private <code>admin-data</code> repository. (Already have a token? Edit it and add <code>admin-data</code>.)</li>
       <li>Under <b>Permissions &rarr; Repository permissions</b>, set <b>Contents</b> to <b>Read and write</b> and <b>Actions</b> to <b>Read-only</b>.</li>
       <li>Generate it, copy it, and paste it below.</li>
     </ol>
     <label class="f"><span>Access token</span><input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
     <div class="row">
-      <label class="f"><span>Repository</span><input type="text" id="repo" spellcheck="false"></label>
+      <label class="f"><span>Site repository</span><input type="text" id="repo" spellcheck="false"></label>
       <label class="f"><span>Branch</span><input type="text" id="branch" spellcheck="false"></label>
     </div>
+    <label class="f"><span>Private data repository</span><input type="text" id="datarepo" spellcheck="false"><small>Where the UK master&rsquo;s tab saves your progress. Must be private.</small></label>
     <label class="check"><input type="checkbox" id="remember" checked> Remember on this device</label>
     <div class="add">
       <button class="btn btn--primary" type="button" id="connect">Connect</button>
@@ -188,12 +194,14 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
      protects must also need the GitHub token (as saving does). */
   var TABS = [
     { id: 'cv', label: 'CV', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' },
+    { id: 'masters', label: 'UK master\u2019s', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' },
     { id: 'settings', label: 'Settings', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' }
   ];
 
   var FILE = 'data/cv.json';
   var DEFAULT_REPO = 'kabirsinghji/kabirsinghji.github.io';
   var DEFAULT_BRANCH = 'main';
+  var DEFAULT_DATA_REPO = 'kabirsinghji/admin-data';
   var SHOW = [['both', 'CV and site'], ['cv', 'CV only'], ['site', 'Site only']];
   var CATS = [['', 'Default for section'], ['research', 'Research'], ['award', 'Award'], ['service', 'Service'], ['teaching', 'Teaching'],
               ['community', 'Community'], ['leadership', 'Leadership'], ['education', 'Education']];
@@ -233,7 +241,8 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     return {
       token: sstore('adm.token') || store('adm.token') || '',
       repo: store('adm.repo') || DEFAULT_REPO,
-      branch: store('adm.branch') || DEFAULT_BRANCH
+      branch: store('adm.branch') || DEFAULT_BRANCH,
+      dataRepo: store('adm.datarepo') || DEFAULT_DATA_REPO
     };
   }
   function json(d) { return JSON.stringify(d, null, 2) + '\n'; }
@@ -650,25 +659,36 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   /* -------------------------------------------------------- settings -- */
   function fillSettings() {
     var c = cfg();
-    $('token').value = c.token; $('repo').value = c.repo; $('branch').value = c.branch;
+    $('token').value = c.token; $('repo').value = c.repo; $('branch').value = c.branch; $('datarepo').value = c.dataRepo;
     $('remember').checked = !!store('adm.token') || !c.token;
   }
   $('connect').onclick = function () {
     var t = $('token').value.trim(), repo = $('repo').value.trim() || DEFAULT_REPO, branch = $('branch').value.trim() || DEFAULT_BRANCH;
-    store('adm.repo', repo); store('adm.branch', branch);
+    var dataRepo = $('datarepo').value.trim() || DEFAULT_DATA_REPO;
+    store('adm.repo', repo); store('adm.branch', branch); store('adm.datarepo', dataRepo);
     if ($('remember').checked) { store('adm.token', t); sstore('adm.token', null); } else { sstore('adm.token', t); store('adm.token', null); }
     var out = $('settings-note'); out.innerHTML = '<div class="note">Checking&hellip;</div>';
     gh('/repos/' + repo).then(function (r) {
       if (!r.permissions || !r.permissions.push) throw new Error('The token can read ' + repo + ' but cannot write to it. Give it Contents: Read and write.');
       out.innerHTML = '<div class="note note--ok">Connected to <b>' + esc(r.full_name) + '</b>. You can save from the CV tab.</div>';
       syncBar();
+      /* the private data repo is optional here; the master's tab explains any problem with it */
+      gh('/repos/' + dataRepo).then(function (d) {
+        var msg = !d.private ? '<div class="note note--err"><b>' + esc(d.full_name) + '</b> is public. Make it private (Settings &rarr; General &rarr; Danger zone) before the master&rsquo;s tab will save to it.</div>'
+          : !(d.permissions && d.permissions.push) ? '<div class="note note--warn">The token can read <b>' + esc(d.full_name) + '</b> but not write to it. Give it Contents: Read and write.</div>'
+          : '<div class="note note--ok">Private data repository <b>' + esc(d.full_name) + '</b> is ready for the master&rsquo;s tab.</div>';
+        out.insertAdjacentHTML('beforeend', msg);
+      }).catch(function () {
+        out.insertAdjacentHTML('beforeend', '<div class="note note--warn">Could not reach <b>' + esc(dataRepo) + '</b>. The master&rsquo;s tab needs it: create it as a private repository and add it to the token.</div>');
+      });
+      emit('connect');
       if (isDirty()) { note('warn', 'You have unsaved edits from the read-only copy. Download them before reloading from GitHub, or keep editing and reload later.'); return; }
       return load();
     }).catch(function (e) {
       out.innerHTML = '<div class="note note--err">Could not connect: ' + esc(e.message) + '</div>';
     });
   };
-  $('forget').onclick = function () { store('adm.token', null); sstore('adm.token', null); $('token').value = ''; syncBar(); $('settings-note').innerHTML = '<div class="note">Token removed from this browser.</div>'; S.source = 'site'; syncBar(); };
+  $('forget').onclick = function () { store('adm.token', null); sstore('adm.token', null); $('token').value = ''; syncBar(); $('settings-note').innerHTML = '<div class="note">Token removed from this browser.</div>'; S.source = 'site'; syncBar(); emit('connect'); };
 
   /* ------------------------------------------------------------ lock -- */
   var open = {};
@@ -727,7 +747,23 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       $('panel-' + t.id).hidden = t.id !== id;
     });
     if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+    initTab(id);
   }
+
+  /* ------------------------------------------ helpers for tab modules --
+     A tab module (e.g. admin/masters.js) calls AdminCore.register(id, init).
+     init(panel) runs once, the first time the tab is opened and unlocked. */
+  var inits = {}, inited = {}, listeners = {};
+  function initTab(id) {
+    if (inits[id] && !inited[id] && isOpen(id) && !$('panel-' + id).hidden) { inited[id] = true; inits[id]($('panel-' + id)); }
+  }
+  function emit(ev) { (listeners[ev] || []).forEach(function (f) { try { f(); } catch (e) { console.error(e); } }); }
+  window.AdminCore = {
+    register: function (id, init) { inits[id] = init; initTab(id); },
+    on: function (ev, f) { (listeners[ev] = listeners[ev] || []).push(f); },
+    gh: gh, cfg: cfg, esc: esc, el: el, store: store, b64encode: b64encode, b64decode: b64decode,
+    goSettings: function () { showTab('settings'); }
+  };
   TABS.forEach(function (t, i) {
     var b = el('button', { type: 'button', role: 'tab', id: 'tab-' + t.id, 'aria-controls': 'panel-' + t.id, text: t.label });
     b.onclick = function () { showTab(t.id); };
