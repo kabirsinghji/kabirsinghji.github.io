@@ -647,47 +647,56 @@
         {
           "text": "Invited Speaker (forthcoming). Presentation on interdisciplinary research in medicine and healthcare to NJIT leadership, including the Interim President and Interim Provost. University Advancement Dinner, NJIT, 2026",
           "kind": "talk",
-          "show": "both"
+          "show": "both",
+          "year": 2026
         },
         {
-          "text": "Lecture Series. Ethics in Science and Research, Science Mentorship Institute",
+          "text": "Lecture Series. Ethics in Science and Research. Science Mentorship Institute, 2026",
           "kind": "talk",
-          "show": "both"
+          "show": "both",
+          "year": 2026
         },
         {
           "text": "Session Moderator. Student Oral Presentation (Communications). NCUR, 2026",
           "kind": "talk",
-          "show": "both"
+          "show": "both",
+          "year": 2026
         },
         {
-          "text": "Featured Presenter. ‘Navigating peer review and the student journal landscape’. “Shaping Asia’s Future: Development, Innovation, and Society in Transition” organized by Nazarbayev University, Asian Universities Alliance 2026",
+          "text": "Featured Presenter. ‘Navigating peer review and the student journal landscape’. “Shaping Asia’s Future: Development, Innovation, and Society in Transition” organized by Nazarbayev University, Asian Universities Alliance, 2026",
           "kind": "talk",
-          "show": "both"
+          "show": "both",
+          "year": 2026
         },
         {
           "text": "Featured Panelist. ‘It’s Different for Girls’ Documentary Screening & Panel. NJIT ADHC & CSLA Co-Sponsored Colloquium, NJIT 2026",
           "kind": "talk",
-          "show": "both"
+          "show": "both",
+          "year": 2026
         },
         {
           "text": "NJIT Makes: Undergraduate Research & Innovation, NJIT Promotional Material. NJIT, 2026",
           "kind": "feature",
-          "show": "both"
+          "show": "both",
+          "year": 2026
         },
         {
           "text": "Invited Speaker. Presentations to the NJIT Board of Trustees and the President’s Town Hall with squad leadership, at the request of NJIT President Teik Lim. NJIT First Aid Squad, 2025",
           "kind": "talk",
-          "show": "both"
+          "show": "both",
+          "year": 2025
         },
         {
           "text": "Albert Dorman Honors College, Honors in Action 2025 (Research, Award, and Study Abroad Experience). ADHC Publication. NJIT, 2025",
           "kind": "feature",
-          "show": "both"
+          "show": "both",
+          "year": 2025
         },
         {
           "text": "Nayib Morán. ‘150+ Honors Scholars Showcase Findings at Interdisciplinary Research Forum’. Article Feature. NJIT News, 2025",
           "kind": "feature",
-          "show": "both"
+          "show": "both",
+          "year": 2025
         },
         {
           "text": "Featured Speaker. ADHC Advising Day. NJIT, 2024 & 2025",
@@ -698,17 +707,20 @@
         {
           "text": "Albert Dorman Honors College, Honors in Action 2024 (Research and Study Abroad Experience). ADHC Publication. NJIT, 2024",
           "kind": "feature",
-          "show": "both"
+          "show": "both",
+          "year": 2024
         },
         {
           "text": "Gurnoor Kaur. ‘Undergraduate Student Researchers on Campus’. Article Feature. NJIT (Student Newspaper – The Vector), 2024",
           "kind": "feature",
-          "show": "both"
+          "show": "both",
+          "year": 2024
         },
         {
           "text": "K. Singh. ‘Introduction to PyMOL and Linear Peptide Design’. Lecture. NJIT (Genetically Engineered Machines), 2024",
           "kind": "talk",
-          "show": "both"
+          "show": "both",
+          "year": 2024
         }
       ]
     },
