@@ -192,7 +192,9 @@ h1, h2, h3 { text-wrap: balance; }
 
 .illustration { margin: 1rem 0 0; }
 .illustration img, .lab-photo img { display: block; width: 100%; height: auto; border-radius: 8px; }
-.illustration--wide img { max-height: 22rem; object-fit: cover; }
+.illustration--ink img { border-radius: 0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .illustration--ink img { filter: invert(1); } }
+:root[data-theme="dark"] .illustration--ink img { filter: invert(1); }
 .lab-photo { margin: 1.2rem 0 0; max-width: 52rem; }
 .lab-photo figcaption, .illustration figcaption, .caption { font-size: .88rem; color: var(--soft); margin: .6rem 0 0; max-width: 62ch; line-height: 1.55; }
 
