@@ -195,6 +195,12 @@ h1, h2, h3 { text-wrap: balance; }
 .illustration--ink img { border-radius: 0; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .illustration--ink img { filter: invert(1); } }
 :root[data-theme="dark"] .illustration--ink img { filter: invert(1); }
+
+/* Sikh Studies: illuminated-pothi border (folio-border*.svg: vine margin, lotus corners, gold rules) */
+.folio { border: 32px solid transparent; border-image: url("folio-border.svg") 40 round; padding: clamp(1.2rem, 3vw, 2.4rem); margin-top: .6rem; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .folio { border-image-source: url("folio-border-dark.svg"); } }
+:root[data-theme="dark"] .folio { border-image-source: url("folio-border-dark.svg"); }
+@media (max-width: 560px) { .folio { border-width: 20px; padding: 1rem .75rem; } }
 .lab-photo { margin: 1.2rem 0 0; max-width: 52rem; }
 .lab-photo figcaption, .illustration figcaption, .caption { font-size: .88rem; color: var(--soft); margin: .6rem 0 0; max-width: 62ch; line-height: 1.55; }
 

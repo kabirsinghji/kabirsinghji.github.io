@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" viewBox="0 0 120 120">
+<!-- Sikh Studies page border: hashiya vine band, lapis corner rosettes, gold jadval rules. Generated; 9-slice for border-image (slice 40). -->
+<defs><g id="e">
+  <rect x="0" y="4" width="40" height="22" fill="#F2E8D0"/>
+  <path d="M10,10.4V15.8" stroke="#B48A2C" stroke-width="1.1" fill="none"/>
+  <polyline points="0,15 1.25,14.1 2.5,13.24 3.75,12.44 5,11.75 6.25,11.18 7.5,10.75 8.75,10.49 10,10.4 11.25,10.49 12.5,10.75 13.75,11.18 15,11.75 16.25,12.44 17.5,13.24 18.75,14.1 20,15 21.25,15.9 22.5,16.76 23.75,17.56 25,18.25 26.25,18.82 27.5,19.25 28.75,19.51 30,19.6 31.25,19.51 32.5,19.25 33.75,18.82 35,18.25 36.25,17.56 37.5,16.76 38.75,15.9 40,15" fill="none" stroke="#B48A2C" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M29.4,18.8c-3.6,-2.2 -3.4,-7 0.8,-9.6c2.4,3.6 2.2,7.4 -0.8,9.6z" fill="#557A3C" stroke="#3A3128" stroke-width=".5"/>
+  <path d="M29.4,18.8q0.4,-4.6 0.8,-9.2" stroke="#F2E8D0" stroke-width=".45" fill="none" opacity=".8"/>
+  <g fill="#B03E2C" stroke="#3A3128" stroke-width=".4"><ellipse cx="10" cy="16.1" rx="1.9" ry="1.25" transform="rotate(-90 10 16.1)"/><ellipse cx="12" cy="17.55" rx="1.9" ry="1.25" transform="rotate(-18 12 17.55)"/><ellipse cx="11.23" cy="19.9" rx="1.9" ry="1.25" transform="rotate(54 11.23 19.9)"/><ellipse cx="8.77" cy="19.9" rx="1.9" ry="1.25" transform="rotate(126 8.77 19.9)"/><ellipse cx="8" cy="17.55" rx="1.9" ry="1.25" transform="rotate(198 8 17.55)"/></g>
+  <circle cx="10" cy="18.2" r="1.15" fill="#B48A2C"/>
+  <circle cx="20" cy="23.4" r=".9" fill="#B48A2C"/>
+  <path d="M0,1.6H40" stroke="#2E4C96" stroke-width="1.2"/>
+  <path d="M0,4H40M0,26H40" stroke="#3A3128" stroke-width=".7"/>
+  <rect x="0" y="28.6" width="40" height="4.4" fill="#B48A2C"/>
+  <path d="M0,28.6H40M0,33H40" stroke="#3A3128" stroke-width=".7"/>
+  <path d="M0,35.6H40" stroke="#B03E2C" stroke-width="1.1"/>
+</g><g id="c">
+  <path d="M40,1.6H1.6V40" stroke="#2E4C96" stroke-width="1.2" fill="none"/>
+  <path d="M4,4H40V26H26V40H4z" fill="#F2E8D0"/>
+  <rect x="4" y="4" width="22" height="22" fill="#2E4C96"/>
+  <path d="M40,4H4V40M40,26H26V40M26,4V26H4" stroke="#3A3128" stroke-width=".7" fill="none"/>
+  <g fill="#B48A2C" stroke="#3A3128" stroke-width=".45"><path d="M15,15c-2.6,-2.4 -2.4,-6.6 0,-8.4c2.4,1.8 2.6,6 0,8.4z" transform="rotate(0 15 15)"/><path d="M15,15c-2.6,-2.4 -2.4,-6.6 0,-8.4c2.4,1.8 2.6,6 0,8.4z" transform="rotate(45 15 15)"/><path d="M15,15c-2.6,-2.4 -2.4,-6.6 0,-8.4c2.4,1.8 2.6,6 0,8.4z" transform="rotate(90 15 15)"/><path d="M15,15c-2.6,-2.4 -2.4,-6.6 0,-8.4c2.4,1.8 2.6,6 0,8.4z" transform="rotate(135 15 15)"/><path d="M15,15c-2.6,-2.4 -2.4,-6.6 0,-8.4c2.4,1.8 2.6,6 0,8.4z" transform="rotate(180 15 15)"/><path d="M15,15c-2.6,-2.4 -2.4,-6.6 0,-8.4c2.4,1.8 2.6,6 0,8.4z" transform="rotate(225 15 15)"/><path d="M15,15c-2.6,-2.4 -2.4,-6.6 0,-8.4c2.4,1.8 2.6,6 0,8.4z" transform="rotate(270 15 15)"/><path d="M15,15c-2.6,-2.4 -2.4,-6.6 0,-8.4c2.4,1.8 2.6,6 0,8.4z" transform="rotate(315 15 15)"/></g>
+  <circle cx="15" cy="15" r="2.2" fill="#B03E2C" stroke="#3A3128" stroke-width=".45"/>
+  <circle cx="15" cy="15" r=".8" fill="#B48A2C"/>
+  <path d="M28.6,28.6H40V33H33V40H28.6z" fill="#B48A2C"/>
+  <path d="M40,28.6H28.6V40M40,33H33V40" stroke="#3A3128" stroke-width=".7" fill="none"/>
+  <path d="M40,35.6H35.6V40" stroke="#B03E2C" stroke-width="1.1" fill="none"/>
+</g></defs>
+<use xlink:href="#e" transform="translate(40 0)"/>
+<use xlink:href="#e" transform="translate(40 120) scale(1 -1)"/>
+<use xlink:href="#e" transform="matrix(0 1 1 0 0 40)"/>
+<use xlink:href="#e" transform="matrix(0 1 -1 0 120 40)"/>
+<use xlink:href="#c"/>
+<use xlink:href="#c" transform="translate(120 0) scale(-1 1)"/>
+<use xlink:href="#c" transform="translate(0 120) scale(1 -1)"/>
+<use xlink:href="#c" transform="translate(120 120) scale(-1 -1)"/>
+</svg>
