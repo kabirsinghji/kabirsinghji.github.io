@@ -182,9 +182,10 @@
   }
   document.addEventListener('visibilitychange', run);
   window.addEventListener('resize', function () { resize(); draw(); });
+  var onScheme = function () { readTheme(); draw(); };
+  document.addEventListener('themechange', onScheme);   /* the header's light/dark switch (theme.js) */
   if (window.matchMedia) {
     var mq = window.matchMedia('(prefers-color-scheme: dark)');
-    var onScheme = function () { readTheme(); draw(); };
     if (mq.addEventListener) mq.addEventListener('change', onScheme); else if (mq.addListener) mq.addListener(onScheme);
   }
 
