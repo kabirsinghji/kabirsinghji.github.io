@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Kabir Singh</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css?v=9">
+<style>
+/* Admin-only styles; tokens and fonts come from style.css */
+body { font-size: 15px; }
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.4rem; padding-block: 1rem; border-bottom: 1px solid var(--rule); }
+.bar .brand small { font-family: var(--sans); font-size: .8rem; color: var(--soft); margin-left: .4rem; }
+.bar .spacer { flex: 1; }
+.conn { font-size: .82rem; color: var(--soft); display: flex; align-items: center; gap: .45rem; }
+.conn::before { content: ""; width: .55rem; height: .55rem; border-radius: 50%; background: var(--faint); }
+.conn.on::before { background: #2f9e5b; }
+.tabs { display: flex; gap: 1.4rem; border-bottom: 1px solid var(--rule); margin-top: .4rem; }
+.tabs button { font: inherit; font-size: .95rem; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: .8rem 0; color: var(--soft); cursor: pointer; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); font-weight: 600; }
+.panel { padding-block: 1.4rem 4rem; }
+.panel[hidden] { display: none; }
+
+.btn { font: inherit; font-size: .88rem; padding: .5rem .95rem; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); cursor: pointer; white-space: nowrap; }
+.btn:hover:not(:disabled) { border-color: var(--ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn--primary { background: var(--ink); color: var(--bg); border-color: var(--ink); font-weight: 600; }
+.btn--small { font-size: .78rem; padding: .25rem .6rem; }
+.btn--danger:hover:not(:disabled) { border-color: #c0392b; color: #c0392b; }
+.icon { font: inherit; font-size: .9rem; line-height: 1; width: 1.9rem; height: 1.9rem; border-radius: 6px; border: 1px solid transparent; background: none; color: var(--soft); cursor: pointer; }
+.icon:hover:not(:disabled) { border-color: var(--rule); color: var(--ink); background: var(--surface); }
+.icon:disabled { opacity: .3; cursor: default; }
+
+.toolbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem;
+  padding: .8rem 1rem; margin-bottom: 1.2rem; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px);
+  border: 1px solid var(--rule); border-radius: 10px; }
+.toolbar .src { font-size: .82rem; color: var(--soft); flex: 1 1 16rem; }
+.toolbar .src b { color: var(--ink); font-weight: 600; }
+.dirty { font-size: .82rem; font-weight: 600; color: var(--gold); }
+.note { padding: .8rem 1rem; border-radius: 8px; border: 1px solid var(--rule); background: var(--surface); font-size: .9rem; margin-bottom: 1rem; }
+.note--warn { border-color: var(--gold); background: var(--gold-t); }
+.note--err { border-color: #c0392b; background: color-mix(in srgb, #c0392b 12%, var(--surface)); }
+.note--ok { border-color: #2f9e5b; background: color-mix(in srgb, #2f9e5b 12%, var(--surface)); }
+.steps { list-style: none; margin: .4rem 0 0; padding: 0; display: grid; gap: .3rem; }
+.steps li { display: flex; gap: .55rem; align-items: baseline; }
+.steps li::before { content: "○"; color: var(--faint); width: 1rem; }
+.steps li.done::before { content: "●"; color: #2f9e5b; }
+.steps li.now::before { content: "◐"; color: var(--gold); }
+.steps li.fail::before { content: "✕"; color: #c0392b; }
+
+.cv-layout { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 1.6rem; align-items: start; }
+.secnav { position: sticky; top: 5.2rem; display: grid; gap: .15rem; }
+.secnav button { font: inherit; font-size: .9rem; text-align: left; padding: .5rem .7rem; border-radius: 8px; border: 0; background: none; color: var(--soft); cursor: pointer; display: flex; justify-content: space-between; gap: .5rem; }
+.secnav button span { font-size: .75rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+.secnav button:hover { color: var(--ink); background: var(--surface); }
+.secnav button[aria-current="true"] { background: var(--ink); color: var(--bg); }
+.secnav button[aria-current="true"] span { color: var(--bg); opacity: .7; }
+
+.ed h2 { font-family: var(--display); font-weight: 300; font-size: 2rem; margin: 0 0 .3rem; }
+.ed .help { font-size: .84rem; color: var(--soft); margin: 0 0 1.2rem; }
+.ed .help code { font-family: var(--mono); font-size: .8rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 0 .3rem; }
+.group { margin-bottom: 1.6rem; }
+.group-head { display: flex; flex-wrap: wrap; align-items: end; gap: .6rem 1rem; margin-bottom: .6rem; padding-bottom: .6rem; border-bottom: 2px solid var(--ink); }
+.group-head .f { flex: 1 1 16rem; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: .9rem 1rem 1rem; margin-bottom: .7rem; }
+.card.is-hidden-cv { border-style: dashed; }
+.card-top { display: flex; align-items: center; gap: .3rem; margin-bottom: .5rem; }
+.card-top .n { font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); flex: 1; }
+.f { display: grid; gap: .25rem; margin-bottom: .6rem; min-width: 0; }
+.f > span { font-size: .74rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); }
+.f small { font-size: .76rem; color: var(--faint); }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 12rem); gap: .8rem; }
+.row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
+input[type="text"], input[type="password"], input[type="number"], textarea, select {
+  font: inherit; font-size: .92rem; width: 100%; padding: .5rem .6rem; border-radius: 6px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); }
+textarea { resize: vertical; min-height: 2.6rem; line-height: 1.45; field-sizing: content; }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outline-offset: 0; border-color: transparent; }
+.preview { font-size: .84rem; color: var(--soft); margin-top: .1rem; }
+.preview:empty { display: none; }
+.bullets { display: grid; gap: .4rem; margin: .2rem 0 .5rem; }
+.bullet { display: grid; grid-template-columns: minmax(0, 1fr) 7.5rem auto; gap: .4rem; align-items: start; }
+.venue { display: grid; grid-template-columns: minmax(0, 1fr) 10rem 7rem auto; gap: .4rem; align-items: start; }
+.adv { margin-top: .4rem; }
+.adv summary { font-size: .8rem; color: var(--soft); cursor: pointer; }
+.adv[open] summary { margin-bottom: .6rem; }
+.add { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .4rem; }
+
+.settings { max-width: 42rem; }
+.settings h2 { font-family: var(--display); font-weight: 300; font-size: 2rem; margin: 0 0 .6rem; }
+.settings ol { padding-left: 1.2rem; }
+.settings li { margin-bottom: .35rem; }
+.check { display: flex; gap: .5rem; align-items: center; font-size: .9rem; margin: .4rem 0 1rem; }
+
+@media (max-width: 860px) {
+  .toolbar { position: static; }
+  .cv-layout { grid-template-columns: 1fr; }
+  .secnav { position: static; display: flex; flex-wrap: wrap; gap: .3rem; }
+  .secnav button { padding: .35rem .7rem; border: 1px solid var(--rule); border-radius: 999px; }
+  .row, .row3 { grid-template-columns: 1fr; }
+  .bullet { grid-template-columns: minmax(0, 1fr) auto; }
+  .bullet select { grid-column: 1; }
+  .venue { grid-template-columns: 1fr 1fr; }
+  .venue > :first-child { grid-column: 1 / -1; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">Kabir Singh<small>Admin</small></a>
+    <span class="spacer"></span>
+    <span class="conn" id="conn">Not connected</span>
+    <a class="btn btn--small" href="./" target="_blank" rel="noopener">View site &nearr;</a>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Admin sections" id="tabs"></nav>
+
+  <!-- ===================== CV tab ===================== -->
+  <section class="panel" role="tabpanel" id="panel-cv" aria-labelledby="tab-cv" hidden>
+    <div class="toolbar">
+      <p class="src" id="src">Loading&hellip;</p>
+      <span class="dirty" id="dirty" hidden></span>
+      <button class="btn" type="button" id="download">Download JSON</button>
+      <button class="btn" type="button" id="discard" disabled>Discard changes</button>
+      <button class="btn btn--primary" type="button" id="save" disabled>Save &amp; publish</button>
+    </div>
+    <div id="notes"></div>
+    <div class="cv-layout">
+      <nav class="secnav" id="secnav" aria-label="CV sections"></nav>
+      <div class="ed" id="editor"></div>
+    </div>
+  </section>
+
+  <!-- ===================== Settings tab ===================== -->
+  <section class="panel settings" role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" hidden>
+    <h2>Connect to GitHub</h2>
+    <p>Saving commits <code>data/cv.json</code> to your site&rsquo;s repository. A GitHub Action then rebuilds the homepage and the CV PDF from it, usually within two minutes. To save, this page needs a GitHub access token. It is kept only in this browser and sent only to GitHub.</p>
+    <ol>
+      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub &rarr; Settings &rarr; Fine-grained tokens &rarr; Generate new token</a>.</li>
+      <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> and pick <code>kabirsinghji.github.io</code>.</li>
+      <li>Under <b>Permissions &rarr; Repository permissions</b>, set <b>Contents</b> to <b>Read and write</b> and <b>Actions</b> to <b>Read-only</b>.</li>
+      <li>Generate it, copy it, and paste it below.</li>
+    </ol>
+    <label class="f"><span>Access token</span><input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
+    <div class="row">
+      <label class="f"><span>Repository</span><input type="text" id="repo" spellcheck="false"></label>
+      <label class="f"><span>Branch</span><input type="text" id="branch" spellcheck="false"></label>
+    </div>
+    <label class="check"><input type="checkbox" id="remember" checked> Remember on this device</label>
+    <div class="add">
+      <button class="btn btn--primary" type="button" id="connect">Connect</button>
+      <button class="btn btn--danger" type="button" id="forget">Forget token</button>
+    </div>
+    <div id="settings-note" style="margin-top:1rem"></div>
+  </section>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ------------------------------------------------------------ tabs --
+     Add a tab by adding an entry here and a matching <section id="panel-…">. */
+  var TABS = [
+    { id: 'cv', label: 'CV' },
+    { id: 'settings', label: 'Settings' }
+  ];
+
+  var FILE = 'data/cv.json';
+  var DEFAULT_REPO = 'kabirsinghji/kabirsinghji.github.io';
+  var DEFAULT_BRANCH = 'main';
+  var SHOW = [['both', 'CV and site'], ['cv', 'CV only'], ['site', 'Site only']];
+  var CATS = [['', 'Default for section'], ['research', 'Research'], ['award', 'Award'], ['service', 'Service'], ['teaching', 'Teaching'],
+              ['community', 'Community'], ['leadership', 'Leadership'], ['education', 'Education']];
+
+  var $ = function (id) { return document.getElementById(id); };
+  function store(k, v) {                    /* per-device settings; failure is harmless */
+    try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {}
+    return null;
+  }
+  function sstore(k, v) {
+    try { if (v === undefined) return sessionStorage.getItem(k); if (v === null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) {}
+    return null;
+  }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  /* Markup preview: **bold**, *italic*, [text](url), ^{sup} */
+  function md(s) {
+    s = esc(s || '').replace(/\*{3,}/g, function (m) { return m.replace(/\*/g, '\u0001'); });
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<u>$1</u>')
+         .replace(/\^\{([^}]*)\}/g, '<sup>$1</sup>')
+         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+         .replace(/(^|[^*\w])\*(?!\s)(.+?)(?<!\s)\*(?![*\w])/g, '$1<em>$2</em>');
+    return s.replace(/\u0001/g, '*');
+  }
+  function preview(s) { return /[*\[\]^]/.test(s || '') ? md(s) : ''; }   /* only when there is markup to show */
+
+  /* ------------------------------------------------------------ state -- */
+  var S = {
+    data: null,          // the CV being edited
+    saved: '',           // JSON text as last loaded or saved
+    sha: null,           // blob sha of data/cv.json on GitHub (null when read from the site)
+    source: '',          // 'github' | 'site'
+    section: null,       // selected section id, or 'meta'
+    busy: false
+  };
+  function cfg() {
+    return {
+      token: sstore('adm.token') || store('adm.token') || '',
+      repo: store('adm.repo') || DEFAULT_REPO,
+      branch: store('adm.branch') || DEFAULT_BRANCH
+    };
+  }
+  function json(d) { return JSON.stringify(d, null, 2) + '\n'; }
+  function isDirty() { return S.data && json(S.data) !== S.saved; }
+
+  /* ----------------------------------------------------------- GitHub -- */
+  function gh(path, opts) {
+    var c = cfg();
+    opts = opts || {};
+    var headers = { 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+    if (c.token) headers.Authorization = 'Bearer ' + c.token;
+    if (opts.body) headers['Content-Type'] = 'application/json';
+    return fetch('https://api.github.com' + path, { method: opts.method || 'GET', headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined, cache: 'no-store' })
+      .then(function (r) {
+        return r.text().then(function (t) {
+          var body = null; try { body = t ? JSON.parse(t) : null; } catch (e) {}
+          if (!r.ok) { var err = new Error((body && body.message) || ('HTTP ' + r.status)); err.status = r.status; throw err; }
+          return body;
+        });
+      });
+  }
+  function b64decode(b) {
+    var bin = atob(b.replace(/\s/g, '')), bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  function b64encode(s) {
+    var bytes = new TextEncoder().encode(s), bin = '';
+    for (var i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  function contentsPath() { var c = cfg(); return '/repos/' + c.repo + '/contents/' + FILE + '?ref=' + encodeURIComponent(c.branch); }
+
+  /* ------------------------------------------------------------- load -- */
+  function load() {
+    var c = cfg();
+    setSrc('Loading&hellip;');
+    var p = c.token
+      ? gh(contentsPath()).then(function (f) { return { text: b64decode(f.content), sha: f.sha, source: 'github' }; })
+      : fetch(FILE, { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('Could not read ' + FILE + ' (HTTP ' + r.status + ')'); return r.text(); })
+          .then(function (t) { return { text: t, sha: null, source: 'site' }; });
+    return p.then(function (res) {
+      S.data = JSON.parse(res.text);
+      S.saved = json(S.data);
+      S.sha = res.sha; S.source = res.source;
+      if (!S.section) S.section = S.data.sections[0].id;
+      renderAll();
+    }).catch(function (e) {
+      setSrc('Could not load the CV.');
+      note('err', 'Loading failed: ' + esc(e.message) + (e.status === 401 ? '. The token was rejected; check it in Settings.' : ''));
+    });
+  }
+
+  /* ------------------------------------------------------------- save -- */
+  function monthYear() { return new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' }); }
+
+  function save() {
+    var c = cfg();
+    if (!c.token) { note('warn', 'Connect a GitHub token in <b>Settings</b> before saving.'); return; }
+    if (S.source !== 'github') { note('warn', 'This copy was read from the live site. Reload after connecting so saves go to GitHub.'); return; }
+    var err = validate(); if (err) { note('err', err); return; }
+    if (S.data.meta && S.autoAsOf !== false) S.data.meta.asOf = monthYear();
+    var text = json(S.data);
+    var msg = 'Update CV via admin (' + new Date().toISOString().slice(0, 10) + ')';
+    S.busy = true; syncBar();
+    var box = progress(['Saving to GitHub', 'Rebuilding the homepage and CV PDF', 'Publishing']);
+    gh('/repos/' + c.repo + '/contents/' + FILE, { method: 'PUT', body: { message: msg, content: b64encode(text), sha: S.sha, branch: c.branch } })
+      .then(function (res) {
+        S.sha = res.content.sha; S.saved = text; S.busy = false;
+        box.step(0, 'done', 'Saved as commit <a href="' + esc(res.commit.html_url) + '" target="_blank" rel="noopener">' + esc(res.commit.sha.slice(0, 7)) + '</a>');
+        box.step(1, 'now');
+        syncBar(); renderEditor();
+        watchBuild(res.commit.sha, box);
+      })
+      .catch(function (e) {
+        S.busy = false; syncBar();
+        if (e.status === 409 || e.status === 422) {
+          box.step(0, 'fail', 'GitHub has a newer copy of the CV than the one you loaded, so nothing was saved. Download your edits, reload, and apply them again.');
+        } else {
+          box.step(0, 'fail', 'Save failed: ' + esc(e.message) + (e.status === 401 || e.status === 403 ? '. Check that the token has Contents: Read and write on this repository.' : ''));
+        }
+      });
+  }
+
+  function watchBuild(sha, box) {
+    var c = cfg(), start = Date.now(), seen = false;
+    (function poll() {
+      gh('/repos/' + c.repo + '/actions/runs?head_sha=' + sha + '&per_page=5').then(function (r) {
+        var run = (r.workflow_runs || []).filter(function (w) { return /cv|build/i.test(w.name || ''); })[0] || (r.workflow_runs || [])[0];
+        if (run) {
+          seen = true;
+          var link = ' <a href="' + esc(run.html_url) + '" target="_blank" rel="noopener">View the run</a>';
+          if (run.status !== 'completed') { box.step(1, 'now', 'Rebuilding the homepage and CV PDF (' + esc(run.status.replace('_', ' ')) + ').' + link); }
+          else if (run.conclusion === 'success') {
+            box.step(1, 'done', 'Homepage and CV PDF rebuilt.' + link);
+            box.step(2, 'done', 'GitHub Pages publishes the new version in about a minute. <a href="./" target="_blank" rel="noopener">Open the site</a> &middot; <a href="cv/cv.pdf" target="_blank" rel="noopener">Open the PDF</a>');
+            return;
+          } else { box.step(1, 'fail', 'The build did not finish (' + esc(run.conclusion) + '). Your data is saved; the site and PDF still show the previous version.' + link); return; }
+        }
+        if (Date.now() - start > 6 * 60 * 1000) {
+          box.step(1, seen ? 'now' : 'fail', seen ? 'Still building after six minutes. Check the Actions tab on GitHub.' : 'No build started. Check the Actions tab on GitHub; the token also needs Actions: Read-only for this page to follow the build.');
+          return;
+        }
+        setTimeout(poll, 5000);
+      }).catch(function (e) {
+        box.step(1, 'fail', 'Could not check the build: ' + esc(e.message) + '. Your data is saved; see the Actions tab on GitHub.');
+      });
+    })();
+  }
+
+  function validate() {
+    var problems = [];
+    S.data.sections.forEach(function (sec) {
+      (sec.groups || []).forEach(function (g) {
+        (g.entries || []).forEach(function (e, i) { if (!String(e.heading || '').trim()) problems.push(sec.title + ': entry ' + (i + 1) + ' has no heading'); });
+        (g.items || []).forEach(function (p, i) { if (!String(p.title || '').trim()) problems.push(sec.title + ': item ' + (i + 1) + ' has no title'); });
+      });
+      if (sec.type === 'presentations') (sec.items || []).forEach(function (p, i) { if (!String(p.title || '').trim()) problems.push(sec.title + ': presentation ' + (i + 1) + ' has no title'); });
+    });
+    return problems.length ? 'Fix these before saving:<br>' + problems.map(esc).join('<br>') : '';
+  }
+
+  /* ------------------------------------------------------------ notes -- */
+  function note(kind, htmlText) {
+    var d = document.createElement('div');
+    d.className = 'note note--' + kind; d.setAttribute('role', kind === 'err' ? 'alert' : 'status');
+    d.innerHTML = htmlText + ' <button class="btn btn--small" type="button" style="margin-left:.5rem">Dismiss</button>';
+    d.querySelector('button').onclick = function () { d.remove(); };
+    $('notes').prepend(d);
+    return d;
+  }
+  function progress(labels) {
+    var d = document.createElement('div');
+    d.className = 'note'; d.setAttribute('role', 'status');
+    d.innerHTML = '<b>Publishing</b><ol class="steps">' + labels.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ol>';
+    d.querySelector('li').className = 'now';
+    $('notes').innerHTML = ''; $('notes').prepend(d);
+    var lis = d.querySelectorAll('li');
+    return {
+      step: function (i, state, text) {
+        lis[i].className = state; if (text) lis[i].innerHTML = text;
+        if (state === 'fail') d.className = 'note note--err';
+        if (i === lis.length - 1 && state === 'done') d.className = 'note note--ok';
+      }
+    };
+  }
+  function setSrc(h) { $('src').innerHTML = h; }
+
+  /* ------------------------------------------------------------ render -- */
+  function renderAll() { renderNav(); renderEditor(); syncBar(); }
+
+  function syncBar() {
+    var c = cfg();
+    $('conn').textContent = c.token ? 'Connected to ' + c.repo : 'Not connected';
+    $('conn').className = 'conn' + (c.token ? ' on' : '');
+    if (S.data) {
+      setSrc(S.source === 'github'
+        ? 'Editing <b>' + esc(FILE) + '</b> on <b>' + esc(c.branch) + '</b> &middot; as of ' + esc((S.data.meta || {}).asOf || '')
+        : 'Read-only copy from the live site. <b>Connect in Settings</b> to save.');
+    }
+    var dirty = isDirty();
+    $('dirty').hidden = !dirty; $('dirty').textContent = 'Unsaved changes';
+    $('save').disabled = !dirty || S.busy || S.source !== 'github';
+    $('discard').disabled = !dirty || S.busy;
+  }
+
+  function countOf(sec) {
+    if (sec.type === 'entries') return (sec.groups || []).reduce(function (n, g) { return n + (g.entries || []).length; }, 0);
+    if (sec.type === 'publications') return (sec.groups || []).reduce(function (n, g) { return n + (g.items || []).length; }, 0);
+    return (sec.items || []).length;
+  }
+  function renderNav() {
+    var nav = $('secnav'); nav.innerHTML = '';
+    var list = S.data.sections.map(function (s) { return { id: s.id, label: s.title, n: countOf(s) }; });
+    list.push({ id: 'meta', label: 'Header & contact', n: '' });
+    list.forEach(function (it) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.innerHTML = esc(it.label) + '<span>' + it.n + '</span>';
+      if (it.id === S.section) b.setAttribute('aria-current', 'true');
+      b.onclick = function () { S.section = it.id; renderNav(); renderEditor(); window.scrollTo({ top: 0 }); };
+      nav.appendChild(b);
+    });
+  }
+
+  /* small DOM helpers */
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (k === 'text') e.textContent = attrs[k];
+      else if (k === 'html') e.innerHTML = attrs[k];
+      else if (k.slice(0, 2) === 'on') e[k] = attrs[k];
+      else e.setAttribute(k, attrs[k]);
+    });
+    (kids || []).forEach(function (c) { if (c) e.appendChild(c); });
+    return e;
+  }
+  var uid = 0;
+  function field(label, obj, key, o) {
+    o = o || {};
+    var id = 'f' + (++uid);
+    var input;
+    if (o.select) {
+      input = el('select', { id: id });
+      o.select.forEach(function (opt) { var op = el('option', { value: opt[0], text: opt[1] }); input.appendChild(op); });
+      input.value = obj[key] == null ? (o.select[0][0]) : String(obj[key]);
+    } else if (o.area) {
+      input = el('textarea', { id: id, rows: o.rows || 2, spellcheck: 'true' });
+      input.value = obj[key] == null ? '' : obj[key];
+    } else {
+      input = el('input', { id: id, type: o.type || 'text', spellcheck: o.type ? 'false' : 'true' });
+      input.value = obj[key] == null ? '' : obj[key];
+    }
+    var pv = o.preview ? el('div', { class: 'preview', html: preview(input.value) }) : null;
+    input.addEventListener(o.select ? 'change' : 'input', function () {
+      var v = input.value;
+      if (o.type === 'number') { if (v === '') delete obj[key]; else obj[key] = Number(v); }
+      else if (o.select && o.dropEmpty && v === '') delete obj[key];
+      else if (o.select && o.dropDefault && v === o.select[0][0]) delete obj[key];
+      else obj[key] = v;
+      if (pv) pv.innerHTML = preview(v);
+      if (o.onchange) o.onchange();
+      syncBar();
+    });
+    return el('label', { class: 'f', for: id }, [el('span', { text: label }), input, o.hint ? el('small', { text: o.hint }) : null, pv]);
+  }
+  function mover(arr, i, rerender) {
+    var box = el('span', {}, []);
+    box.appendChild(el('button', { type: 'button', class: 'icon', title: 'Move up', 'aria-label': 'Move up', text: '↑', onclick: function () { swap(arr, i, i - 1); rerender(); } }));
+    box.lastChild.disabled = i === 0;
+    box.appendChild(el('button', { type: 'button', class: 'icon', title: 'Move down', 'aria-label': 'Move down', text: '↓', onclick: function () { swap(arr, i, i + 1); rerender(); } }));
+    box.lastChild.disabled = i === arr.length - 1;
+    box.appendChild(el('button', { type: 'button', class: 'icon', title: 'Duplicate', 'aria-label': 'Duplicate', text: '⧉', onclick: function () { arr.splice(i + 1, 0, JSON.parse(JSON.stringify(arr[i]))); rerender(); } }));
+    box.appendChild(el('button', { type: 'button', class: 'icon', title: 'Delete', 'aria-label': 'Delete', text: '✕', onclick: function () {
+      if (confirmInline(box, function () { arr.splice(i, 1); rerender(); })) return;
+    } }));
+    return box;
+  }
+  function confirmInline(box, yes) {         /* two-step delete without a dialog */
+    if (box.dataset.arm) return false;
+    box.dataset.arm = '1';
+    var b = el('button', { type: 'button', class: 'btn btn--small btn--danger', text: 'Delete?', onclick: yes });
+    box.appendChild(b);
+    setTimeout(function () { if (b.parentNode) { b.remove(); delete box.dataset.arm; } }, 4000);
+    return true;
+  }
+  function swap(a, i, j) { if (j < 0 || j >= a.length) return; var t = a[i]; a[i] = a[j]; a[j] = t; }
+  function after() { renderNav(); syncBar(); }
+
+  function bulletsEditor(entry, rerender) {
+    entry.bullets = entry.bullets || [];
+    var wrap = el('div', { class: 'f' }, [el('span', { text: 'Bullets' })]);
+    var list = el('div', { class: 'bullets' });
+    entry.bullets.forEach(function (b, i) {
+      if (typeof b === 'string') { b = entry.bullets[i] = { text: b, show: 'both' }; }
+      var t = el('textarea', { rows: 1, 'aria-label': 'Bullet ' + (i + 1) }); t.value = b.text || '';
+      var pv = el('div', { class: 'preview', html: preview(b.text) });
+      t.oninput = function () { b.text = t.value; pv.innerHTML = preview(t.value); syncBar(); };
+      var s = el('select', { 'aria-label': 'Show bullet ' + (i + 1) + ' on' });
+      SHOW.forEach(function (o) { s.appendChild(el('option', { value: o[0], text: o[1] })); });
+      s.value = b.show || 'both'; s.onchange = function () { b.show = s.value; syncBar(); };
+      list.appendChild(el('div', { class: 'bullet' }, [el('div', {}, [t, pv]), s, mover(entry.bullets, i, rerender)]));
+    });
+    wrap.appendChild(list);
+    wrap.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Bullet', onclick: function () { entry.bullets.push({ text: '', show: 'both' }); rerender(); } })]));
+    return wrap;
+  }
+
+  function entryCard(sec, g, arr, i, rerender) {
+    var e = arr[i];
+    var card = el('div', { class: 'card' + ((e.show || 'both') === 'site' ? ' is-hidden-cv' : '') });
+    card.appendChild(el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Entry ' + (i + 1) }), mover(arr, i, rerender)]));
+    card.appendChild(el('div', { class: 'row' }, [
+      field('Heading', e, 'heading', { area: true, preview: true }),
+      field('Dates', e, 'dates', { area: true, hint: 'New line = line break on the PDF' })
+    ]));
+    card.appendChild(bulletsEditor(e, rerender));
+    var adv = el('details', { class: 'adv' }, [el('summary', { text: 'More options' })]);
+    adv.appendChild(el('div', { class: 'row3' }, [
+      field('Show on', e, 'show', { select: SHOW, dropDefault: true }),
+      field('Homepage category', e, 'kind', { select: CATS, dropEmpty: true }),
+      field('Keep together (lines)', e, 'keep', { type: 'number', hint: 'Avoids a page break before this entry on the PDF' })
+    ]));
+    card.appendChild(adv);
+    return card;
+  }
+
+  function renderEditor() {
+    var ed = $('editor'); ed.innerHTML = ''; uid = 0;
+    if (!S.data) return;
+    var rer = function () { var y = window.scrollY; renderEditor(); after(); window.scrollTo(0, y); };
+    ed.appendChild(el('p', { class: 'help', html: 'Formatting: <code>**bold**</code> <code>*italic*</code> <code>[text](https://link)</code> <code>22^{nd}</code>. When a field uses formatting, the line under it shows how it will look.' }));
+
+    if (S.section === 'meta') {
+      var m = S.data.meta = S.data.meta || {};
+      ed.prepend(el('h2', { text: 'Header & contact' }));
+      ed.appendChild(el('div', { class: 'card' }, [
+        el('div', { class: 'row' }, [field('Name', m, 'name'), field('Location', m, 'location')]),
+        el('div', { class: 'row' }, [field('Email', m, 'email', { type: 'email' }), field('Phone (CV only)', m, 'phone')]),
+        field('LinkedIn URL', m, 'linkedin', { type: 'url' }),
+        field('Closing line on the PDF', m, 'closing'),
+        field('“As of” date on the PDF and site', m, 'asOf', { hint: 'Set to the current month automatically when you save, unless you untick the box below.' }),
+        el('label', { class: 'check' }, [(function () {
+          var cb = el('input', { type: 'checkbox' }); cb.checked = S.autoAsOf !== false;
+          cb.onchange = function () { S.autoAsOf = cb.checked; }; return cb;
+        })(), document.createTextNode(' Update the “As of” date when saving')])
+      ]));
+      return;
+    }
+
+    var sec = S.data.sections.filter(function (s) { return s.id === S.section; })[0];
+    ed.prepend(el('h2', { text: sec.title }));
+    ed.appendChild(el('div', { class: 'card' }, [field('Section title (PDF)', sec, 'title', { onchange: renderNav })]));
+
+    if (sec.type === 'entries') {
+      sec.groups = sec.groups || [];
+      sec.groups.forEach(function (g, gi) {
+        g.entries = g.entries || [];
+        var head = el('div', { class: 'group-head' }, [
+          field('Subheading', g, 'title', { hint: sec.groups.length > 1 || g.title ? 'Shown between ◇ marks on the PDF' : 'Leave blank for none' }),
+          sec.id === 'research' ? field('Homepage colour', g, 'field', { select: [['science', 'Science (blue)'], ['history', 'History (gold)']] }) : null,
+          mover(sec.groups, gi, rer)
+        ]);
+        var box = el('div', { class: 'group' }, [(sec.groups.length > 1 || g.title) ? head : null]);
+        g.entries.forEach(function (e, i) { box.appendChild(entryCard(sec, g, g.entries, i, rer)); });
+        box.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add entry' + (g.title ? ' to ' + g.title : ''), onclick: function () {
+          g.entries.unshift({ heading: '', dates: '', bullets: [] }); rer();
+        } })]));
+        ed.appendChild(box);
+      });
+      ed.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Add subheading group', onclick: function () { sec.groups.push({ title: '', entries: [] }); rer(); } })]));
+    }
+
+    if (sec.type === 'publications') {
+      sec.groups.forEach(function (g, gi) {
+        g.items = g.items || [];
+        var box = el('div', { class: 'group' }, [el('div', { class: 'group-head' }, [
+          field('Group', g, 'title'),
+          field('Status', g, 'status', { select: [['published', 'Published'], ['prep', 'In preparation']] }),
+          mover(sec.groups, gi, rer)])]);
+        g.items.forEach(function (p, i) {
+          box.appendChild(el('div', { class: 'card' }, [
+            el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Item ' + (i + 1) }), mover(g.items, i, rer)]),
+            field('Authors', p, 'authors', { area: true, preview: true, hint: 'Bold yourself: **K. Singh**' }),
+            field('Title', p, 'title', { area: true }),
+            field('Venue', p, 'venue', { area: true, preview: true }),
+            el('div', { class: 'row3' }, [field('DOI', p, 'doi', { type: 'text', hint: 'e.g. 10.1016/j.ejmech.2026.119173' }), field('Year', p, 'year', { type: 'number' }), field('Show on', p, 'show', { select: SHOW })])
+          ]));
+        });
+        box.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add to ' + (g.title || 'group'), onclick: function () {
+          g.items.unshift({ authors: '', title: '', venue: '', doi: '', year: new Date().getFullYear(), show: 'both' }); rer(); } })]));
+        ed.appendChild(box);
+      });
+    }
+
+    if (sec.type === 'presentations') {
+      sec.items = sec.items || [];
+      sec.items.forEach(function (p, i) {
+        p.venues = p.venues || [];
+        var vbox = el('div', { class: 'bullets' });
+        p.venues.forEach(function (v, vi) {
+          var mk = function (key, label) { var t = el('input', { type: 'text', 'aria-label': label + ' ' + (vi + 1), placeholder: label }); t.value = v[key] || ''; t.oninput = function () { v[key] = t.value; syncBar(); }; return t; };
+          vbox.appendChild(el('div', { class: 'venue' }, [mk('name', 'Venue'), mk('format', 'Format'), mk('year', 'Year'), mover(p.venues, vi, rer)]));
+        });
+        ed.appendChild(el('div', { class: 'card' }, [
+          el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Presentation ' + (i + 1) }), mover(sec.items, i, rer)]),
+          field('Authors', p, 'authors', { area: true, preview: true }),
+          field('Title', p, 'title', { area: true }),
+          el('div', { class: 'f' }, [el('span', { text: 'Venues (newest first)' }), vbox,
+            el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Venue', onclick: function () { p.venues.unshift({ name: '', format: 'Poster', year: String(new Date().getFullYear()) }); rer(); } })])]),
+          el('details', { class: 'adv' }, [el('summary', { text: 'More options' }), el('div', { class: 'row' }, [
+            field('Show on', p, 'show', { select: SHOW }),
+            field('Keep together (lines)', p, 'keep', { type: 'number', hint: 'Room to reserve on the PDF page (default 6)' })])])
+        ]));
+      });
+      ed.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add presentation', onclick: function () {
+        sec.items.unshift({ authors: '', title: '', show: 'both', venues: [{ name: '', format: 'Poster', year: String(new Date().getFullYear()) }] }); rer(); } })]));
+    }
+
+    if (sec.type === 'list' || sec.type === 'flatlist') {
+      sec.items = sec.items || [];
+      sec.items.forEach(function (it, i) {
+        var kids = [el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Item ' + (i + 1) }), mover(sec.items, i, rer)]),
+                    field('Text', it, 'text', { area: true, preview: true })];
+        if (sec.type === 'list') kids.push(el('div', { class: 'row3' }, [
+          field('Kind (homepage)', it, 'kind', { select: [['talk', 'Talk'], ['feature', 'Feature / article']] }),
+          field('Year (homepage)', it, 'year', { type: 'number', hint: 'Blank: taken from the text' }),
+          field('Show on', it, 'show', { select: SHOW })]));
+        else kids.push(field('Show on', it, 'show', { select: SHOW }));
+        ed.appendChild(el('div', { class: 'card' }, kids));
+      });
+      ed.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add item', onclick: function () {
+        sec.items.unshift(sec.type === 'list' ? { text: '', kind: 'talk', show: 'both' } : { text: '', show: 'both' }); rer(); } })]));
+    }
+  }
+
+  /* --------------------------------------------------------- toolbar -- */
+  $('save').onclick = save;
+  $('discard').onclick = function () {
+    if (!isDirty()) return;
+    var b = $('discard');
+    if (b.dataset.arm) { S.data = JSON.parse(S.saved); delete b.dataset.arm; b.textContent = 'Discard changes'; renderAll(); return; }
+    b.dataset.arm = '1'; b.textContent = 'Click again to discard';
+    setTimeout(function () { delete b.dataset.arm; b.textContent = 'Discard changes'; }, 4000);
+  };
+  $('download').onclick = function () {
+    if (!S.data) return;
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([json(S.data)], { type: 'application/json' }));
+    a.download = 'cv-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+  window.addEventListener('beforeunload', function (e) { if (isDirty()) { e.preventDefault(); e.returnValue = ''; } });
+
+  /* -------------------------------------------------------- settings -- */
+  function fillSettings() {
+    var c = cfg();
+    $('token').value = c.token; $('repo').value = c.repo; $('branch').value = c.branch;
+    $('remember').checked = !!store('adm.token') || !c.token;
+  }
+  $('connect').onclick = function () {
+    var t = $('token').value.trim(), repo = $('repo').value.trim() || DEFAULT_REPO, branch = $('branch').value.trim() || DEFAULT_BRANCH;
+    store('adm.repo', repo); store('adm.branch', branch);
+    if ($('remember').checked) { store('adm.token', t); sstore('adm.token', null); } else { sstore('adm.token', t); store('adm.token', null); }
+    var out = $('settings-note'); out.innerHTML = '<div class="note">Checking&hellip;</div>';
+    gh('/repos/' + repo).then(function (r) {
+      if (!r.permissions || !r.permissions.push) throw new Error('The token can read ' + repo + ' but cannot write to it. Give it Contents: Read and write.');
+      out.innerHTML = '<div class="note note--ok">Connected to <b>' + esc(r.full_name) + '</b>. You can save from the CV tab.</div>';
+      syncBar();
+      if (isDirty()) { note('warn', 'You have unsaved edits from the read-only copy. Download them before reloading from GitHub, or keep editing and reload later.'); return; }
+      return load();
+    }).catch(function (e) {
+      out.innerHTML = '<div class="note note--err">Could not connect: ' + esc(e.message) + '</div>';
+    });
+  };
+  $('forget').onclick = function () { store('adm.token', null); sstore('adm.token', null); $('token').value = ''; syncBar(); $('settings-note').innerHTML = '<div class="note">Token removed from this browser.</div>'; S.source = 'site'; syncBar(); };
+
+  /* ------------------------------------------------------------ boot -- */
+  function showTab(id) {
+    TABS.forEach(function (t) {
+      $('tab-' + t.id).setAttribute('aria-selected', t.id === id ? 'true' : 'false');
+      $('tab-' + t.id).tabIndex = t.id === id ? 0 : -1;
+      $('panel-' + t.id).hidden = t.id !== id;
+    });
+    if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+  }
+  TABS.forEach(function (t, i) {
+    var b = el('button', { type: 'button', role: 'tab', id: 'tab-' + t.id, 'aria-controls': 'panel-' + t.id, text: t.label });
+    b.onclick = function () { showTab(t.id); };
+    b.onkeydown = function (e) {
+      var k = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (k) { e.preventDefault(); var n = TABS[(i + k + TABS.length) % TABS.length].id; showTab(n); $('tab-' + n).focus(); }
+    };
+    $('tabs').appendChild(b);
+  });
+  var start = (location.hash || '').slice(1);
+  showTab(TABS.some(function (t) { return t.id === start; }) ? start : 'cv');
+  fillSettings();
+  syncBar();
+  load();
+})();
+</script>
+</body>
+</html>

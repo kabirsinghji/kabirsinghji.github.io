@@ -6,13 +6,15 @@
 (function () {
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  /* Images live next to this script, so resolve them from its own address. */
+  var base = ((document.currentScript && document.currentScript.src) || '').replace(/[^\/]*$/, '');
   var cast = [
-    { src: '/waldo-singh.webp',     w: 277, h: 360 },
-    { src: '/cat-singh.webp',       w: 369, h: 520 },
-    { src: '/chill-sikh.webp',      w: 409, h: 520 },
-    { src: '/sikh-bear.webp',       w: 306, h: 520 },
-    { src: '/polo-bear-daari.webp', w: 296, h: 482 },
-    { src: '/ranjit-singh.webp',    w: 213, h: 560 }
+    { src: 'waldo-singh.webp',     w: 277, h: 360 },
+    { src: 'cat-singh.webp',       w: 369, h: 520 },
+    { src: 'chill-sikh.webp',      w: 409, h: 520 },
+    { src: 'sikh-bear.webp',       w: 306, h: 520 },
+    { src: 'polo-bear-daari.webp', w: 296, h: 482 },
+    { src: 'ranjit-singh.webp',    w: 213, h: 560 }
   ];
   var edges = ['bottom', 'left', 'right'];
   var HOLD = 1500;
@@ -44,7 +46,7 @@
     var who  = cast[Math.floor(Math.random() * cast.length)];
     var edge = edges[Math.floor(Math.random() * edges.length)];
     var img  = document.createElement('img');
-    img.src = who.src; img.width = who.w; img.height = who.h;
+    img.src = base + who.src; img.width = who.w; img.height = who.h;
     img.alt = ''; img.setAttribute('aria-hidden', 'true');
     img.className = 'popup popup--' + edge;
     if (edge === 'bottom') img.style.left = (8 + Math.random() * 72) + '%';

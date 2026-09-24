@@ -19,6 +19,21 @@
     O: [190, 70, 62],
     paper: [244, 246, 248]
   };
+  /* Optional theming: a page may set --mol-light, --mol-heavy, --mol-c, --mol-n,
+     --mol-o and --mol-ground (hex) on the canvas. Unset ones keep the values
+     above. Re-read when the visitor's colour scheme changes. */
+  var DEF = JSON.parse(JSON.stringify(COL));
+  function hex(v) {
+    v = (v || '').trim().replace('#', '');
+    if (v.length === 3) v = v.replace(/./g, '$&$&');
+    return /^[0-9a-f]{6}$/i.test(v) ? [parseInt(v.slice(0, 2), 16), parseInt(v.slice(2, 4), 16), parseInt(v.slice(4, 6), 16)] : null;
+  }
+  function readTheme() {
+    var cs = getComputedStyle(canvas);
+    [['light', '--mol-light'], ['heavy', '--mol-heavy'], ['C', '--mol-c'], ['N', '--mol-n'], ['O', '--mol-o'], ['paper', '--mol-ground']]
+      .forEach(function (p) { COL[p[0]] = hex(cs.getPropertyValue(p[1])) || DEF[p[0]]; });
+  }
+  readTheme();
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---- geometry (computed once) ---- */
@@ -42,8 +57,8 @@
   }
   var ca = []; for (var i = 0; i < D.ca.length / 3; i++) ca.push(pt(D.ca, i));
   var chains = [
-    { pts: spline(ca.slice(0, 112)), col: COL.light },
-    { pts: spline(ca.slice(112)),    col: COL.heavy }
+    { pts: spline(ca.slice(0, 112)), key: 'light' },
+    { pts: spline(ca.slice(112)),    key: 'heavy' }
   ];
   var pep = []; for (var j = 0; j < D.pep.length / 3; j++) pep.push(pt(D.pep, j));
 
@@ -89,7 +104,7 @@
       ch.pts.forEach(function (p) {
         var q = apply(p);
         var s = [cx + q[0] * S, cy - q[1] * S, q[2]];
-        if (prev) prims.push({ t: 0, a: prev, b: s, z: (prev[2] + s[2]) / 2, col: ch.col });
+        if (prev) prims.push({ t: 0, a: prev, b: s, z: (prev[2] + s[2]) / 2, col: COL[ch.key] });
         prev = s;
       });
     });
@@ -167,6 +182,11 @@
   }
   document.addEventListener('visibilitychange', run);
   window.addEventListener('resize', function () { resize(); draw(); });
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var onScheme = function () { readTheme(); draw(); };
+    if (mq.addEventListener) mq.addEventListener('change', onScheme); else if (mq.addListener) mq.addListener(onScheme);
+  }
 
   resize(); draw(); run();
 })();

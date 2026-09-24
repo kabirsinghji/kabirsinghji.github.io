@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>About — Kabir Singh</title>
 <link rel="canonical" href="https://kabirsinghji.github.io/about.html">
 <meta name="description" content="About Kabir Singh — Mathematical Biology at NJIT, EMT, Sikh history and theology, Gurmat Sangeet.">
@@ -16,38 +16,60 @@
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=7">
-<script src="peek.js?v=7" defer></script>
+<link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=9">
+<script src="peek.js?v=9" defer></script>
+<script src="structure.js?v=9" defer></script>
 </head>
 <body>
-<div class="wrap">
-
-  <nav class="sitenav" aria-label="Site">
-    <a href="/">CV</a>
+<header class="wrap top">
+  <a class="brand" href="./">Kabir Singh</a>
+  <nav class="nav" aria-label="Site">
+    <a href="./">CV</a>
     <a href="science.html">Scientific Research</a>
     <a href="history.html">History Research</a>
     <a href="about.html" aria-current="page">About</a>
   </nav>
+</header>
+<main class="wrap page">
 
-  <header class="masthead masthead--sub">
-    <h1>About</h1>
-  </header>
-
-  <figure class="portrait">
-    <img src="photo.webp" alt="Kabir Singh" width="640" height="800" fetchpriority="high">
+  <figure class="about-photo">
+    <img src="about-photo.webp" alt="Kabir Singh in a patterned turban and a dark sweater, photographed on film" width="640" height="800" fetchpriority="high">
   </figure>
 
-  <section class="prose">
-    <p>
-      I'm a senior at the New Jersey Institute of Technology, in the Albert
-      Dorman Honors College, majoring in Mathematical Biology with minors in
-      Biomedical Engineering in Technology, Philosophy, and History. I hold
-      honors tracks in Medical Humanities and Global Studies &mdash; the first
-      student at ADHC to pursue two.
-    </p>
+  <header class="masthead masthead--center">
+    <h1>About</h1>
+    <p class="byline" lang="pa">ਕਬੀਰ ਸਿੰਘ</p>
+  </header>
+
+  <section class="about-intro" aria-labelledby="mathbio-h">
+    <div class="prose">
+      <h2 id="mathbio-h">What is mathematical biology?</h2>
+      <p class="dropcap">It&rsquo;s the question I get asked most, so here is my answer. Mathematical biology is the intersection of biology and mathematics &mdash; the point where math takes over from biology because of practical limits on what can be measured or tested directly. It covers everything from population modelling to cell growth to drug design, which is where I spend most of my time.</p>
+      <p>I&rsquo;m a senior in the Albert Dorman Honors College at NJIT, majoring in Mathematical Biology with minors in Biomedical Engineering in Technology, Philosophy, and History, and honors tracks in Medical Humanities and Global Studies &mdash; the first student at ADHC to pursue two. What ties those together is a conviction I keep coming back to: college should teach you how to think, not what to think. It&rsquo;s most of the reason I&rsquo;ve ended up in so many corners of academia at once.</p>
+    </div>
+
+    <figure class="viewport">
+      <div class="vp-head"><span><b>CAP8</b> &middot; anti-GlialCAM antibody fragment</span><span>Eur. J. Med. Chem. 2026</span></div>
+      <div class="vp-stage">
+        <canvas id="hero-structure" width="480" height="413" tabindex="0" role="img"
+                aria-label="Rotatable model of the cyclic peptide CAP8 bound to an anti-GlialCAM antibody fragment"></canvas>
+        <span class="vp-hint" aria-hidden="true">drag to rotate</span>
+      </div>
+      <figcaption class="vp-foot">
+        <ol class="seq" aria-label="CAP8 sequence: K P Y P F W D D; Phe5 and Trp6 sit deepest in the binding site">
+          <li><b>K</b><i>1</i></li><li><b>P</b><i>2</i></li><li><b>Y</b><i>3</i></li><li><b>P</b><i>4</i></li><li class="hot"><b>F</b><i>5</i></li><li class="hot"><b>W</b><i>6</i></li><li><b>D</b><i>7</i></li><li><b>D</b><i>8</i></li>
+        </ol>
+        <ul class="legend">
+          <li style="--c: var(--chain-l)">light chain</li><li style="--c: var(--chain-h)">heavy chain</li><li style="--c: var(--pep)">CAP8</li>
+        </ul>
+        <p class="vp-note">A cyclic 8-mer designed against the CDRL3 loop of MS autoantibodies. It bound anti-GlialCAM with a K<sub>d</sub> of 0.294&nbsp;mM, roughly an order of magnitude tighter than its linear counterpart. <a href="science.html">The project &rarr;</a></p>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="prose about-more" aria-label="More about me">
     <p>
       Most of my research is the computational design of therapeutic peptides:
       cyclic peptides built to bind one target and do one job. That work started
@@ -57,22 +79,22 @@
       neuronal dynamics. Alongside all of it, I ride as an EMT.
     </p>
     <p>
-      Beyond my studies, I'm passionate about Sikh history and theology. I teach
+      Beyond my studies, I&rsquo;m passionate about Sikh history and theology. I teach
       Sikh history at Khalsa School Virsa and help organise youth camps for the
       Sikh Sabha of New Jersey, working to build better resources for Sikh
-      students in Sunday classes and camps. I'd like to write in this area
-      eventually; for now I'm still mostly reading.
+      students in Sunday classes and camps. I&rsquo;d like to write in this area
+      eventually; for now I&rsquo;m still mostly reading.
     </p>
     <p>
       In my free time I wrestle and practise martial arts, work on my Punjabi,
       play ping-pong, and sing classical Indian music &mdash; Gurmat Sangeet in
-      particular. Since starting undergrad I've caught the travel bug. I read a
+      particular. Since starting undergrad I&rsquo;ve caught the travel bug. I read a
       great deal, mostly history, epistemology, and comparative theology.
     </p>
   </section>
 
-  <section class="prose">
-    <h2>Elsewhere</h2>
+  <section class="prose about-more" aria-labelledby="elsewhere-h">
+    <h2 id="elsewhere-h">Elsewhere</h2>
     <ul class="plain">
       <li><a href="https://njitvector.com/19044/features/undergraduate-student-researchers-on-campus/">Undergraduate Student Researchers on Campus</a> &mdash; The Vector, NJIT, 2024</li>
       <li><a href="https://www.linkedin.com/in/kabir-singh-ji">LinkedIn</a></li>
@@ -82,14 +104,16 @@
     </ul>
   </section>
 
-  <footer>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="meta"><a href="./">&larr; Back to the CV</a><br><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a></p>
     <div class="sign-off">
       <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
       <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     </div>
-    <p><a href="/">&larr; Back to CV</a></p>
-  </footer>
-
-</div>
+  </div>
+</footer>
 </body>
 </html>
