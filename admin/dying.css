@@ -1,0 +1,61 @@
+/* Present › Death & dying (admin/dying.js). Builds on admin/masters.css (ms-*), admin/research.css (rs-*) and style.css tokens. */
+.dd-n { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; margin-right: .5rem; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold);
+  font-family: var(--sans); font-size: .78rem; font-weight: 700; vertical-align: .15em; }
+.pc-toread, .pc-find { --pc: var(--faint); } .pc-reading { --pc: var(--sky); } .pc-read { --pc: var(--gold); } .pc-summarized, .pc-noted { --pc: var(--ok, #2f8a55); }
+.rs-src-m.rel { font-weight: 600; }
+.rel-agrees { color: var(--ok, #2f8a55); } .rel-extends { color: var(--sky); } .rel-complicates { color: var(--gold); } .rel-disagrees { color: var(--bad, #b3261e); }
+
+/* 2. comparison grid: scrolls sideways when there are many authors (the minmax(0,…) columns stop it widening the page) */
+.dd.ms, .dd .rs-sec { grid-template-columns: minmax(0, 1fr); }
+.dd-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; }
+.dd-matrix { border-collapse: collapse; width: 100%; min-width: 36rem; }
+.dd-matrix th, .dd-matrix td { padding: .5rem; border-bottom: 1px solid var(--rule); vertical-align: top; text-align: left; }
+.dd-matrix thead th { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); min-width: 11rem; background: var(--bg); }
+.dd-matrix thead td { background: var(--bg); }
+.dd-matrix thead th:first-child, .dd-matrix tbody th { min-width: 12rem; }
+.dd-matrix tbody th { font-weight: 400; }
+.dd-matrix tbody th textarea { font-weight: 600; }
+.dd-matrix textarea { font-size: .86rem; min-height: 4.6rem; resize: vertical; }
+.dd-matrix tbody tr:last-child > * { border-bottom: 0; }
+.dd-matrix .dd-del { width: 1%; }
+.dd-matrix .dd-empty { color: var(--soft); font-size: .88rem; padding: 1rem; }
+
+/* 3. claims and their quotes */
+.dd-claims { list-style: none; margin: 0; padding: 0; display: grid; gap: .8rem; }
+.dd-claim { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: .9rem 1.1rem 1rem; display: grid; gap: .6rem; }
+.dd-claim-h { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr) auto auto; gap: .6rem; align-items: start; }
+.dd-qn.ok { --pc: var(--ok, #2f8a55); } .dd-qn.over { --pc: var(--warn, #a86a00); } .dd-qn.none { --pc: var(--faint); }
+.dd-qn { margin-top: .3rem; }
+.dd-quotes, .dd-claim-f { margin-left: 2.2rem; }
+.dd-quotes { display: grid; gap: .5rem; }
+.dd-quotes:empty { display: none; }
+.dd-quote { display: grid; grid-template-columns: 11rem 4.5rem minmax(0, 1fr) auto; gap: .4rem; align-items: start; padding-left: .7rem; border-left: 3px solid var(--gold); }
+.dd-quote textarea { font-family: var(--display); font-size: 1rem; }
+.dd-claim-f { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .8rem; align-items: end; }
+.dd-claim-f > .btn { justify-self: start; }
+
+/* 4. secondary analyses, grouped by piece */
+.dd-group { display: grid; gap: .5rem; }
+.dd-group + .dd-group { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+.dd-group-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; }
+.dd-group-h .dd-on { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+.dd-group-h .c { font-size: .82rem; color: var(--soft); }
+.dd-group .rs-add2 { margin-top: 0; }
+
+/* steps: an unused date box stays faint until you reach for it */
+.dd .rs-date.empty { opacity: .35; }
+.dd .rs-ms li:hover .rs-date.empty, .dd .rs-date.empty:focus { opacity: 1; }
+
+/* outline rows have no per-section target here */
+.dd-sec-row .rs-sec-side input { font-size: .82rem; padding: .3rem .4rem; }
+.dd-logopts { grid-template-columns: repeat(2, minmax(0, 1fr)) auto; }
+
+@media (max-width: 860px) {
+  .dd-quotes, .dd-claim-f { margin-left: 0; }
+  .dd-claim-h { grid-template-columns: 1.4rem minmax(0, 1fr) auto; }
+  .dd-claim-h .dd-qn { grid-column: 2; grid-row: 2; justify-self: start; margin-top: 0; }
+  .dd-quote { grid-template-columns: minmax(0, 1fr) 4.5rem auto; }
+  .dd-quote textarea { grid-column: 1 / -1; grid-row: 2; }
+  .dd-claim-f { grid-template-columns: 1fr; }
+  .dd-logopts { grid-template-columns: 1fr 1fr; }
+}
