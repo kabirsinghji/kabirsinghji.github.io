@@ -300,7 +300,7 @@
         var n = daysUntil(r.x.a.d);
         return h('li', null,
           h('span', { class: 'ms-days ' + urgency(n), text: leftLabel(n) }),
-          h('a', { href: '#masters', text: uniTag(r.p.uni) + ' · ' + short(r.p.name), onclick: function (e) { e.preventDefault(); goCard(r.p.id); } }),
+          h('a', { href: '#future/masters', text: uniTag(r.p.uni) + ' · ' + short(r.p.name), onclick: function (e) { e.preventDefault(); goCard(r.p.id); } }),
           h('span', { class: 'm', text: r.x.k + ': ' + r.x.a.w + (r.x.a.c === 'e' ? ' (est.)' : '') + (status(r.p) ? ' · ' + STATUS_LABEL[status(r.p)] : '') }));
       })) : h('p', { class: 's', style: 'margin:0;color:var(--soft)', text: S.allUp ? 'No upcoming dates.' : 'Star a program or add it to your plan and its dates show up here.' }));
   }
@@ -398,7 +398,7 @@
           h('div', { class: 'wt', text: (g.sub || notes[k] || '') + ' · ' + g.items.length + (g.items.length === 1 ? ' program' : ' programs') }),
           h('div', { class: 'ms-chips' }, g.items.map(function (p) {
             var s = status(p);
-            return h('a', { class: 'ms-chip' + (p.aim[0].c === 'e' ? ' est' : '') + (s === 'skip' ? ' skip' : ''), href: '#masters', title: FIT[p.realism] + (s ? ' · ' + STATUS_LABEL[s] : ''),
+            return h('a', { class: 'ms-chip' + (p.aim[0].c === 'e' ? ' est' : '') + (s === 'skip' ? ' skip' : ''), href: '#future/masters', title: FIT[p.realism] + (s ? ' · ' + STATUS_LABEL[s] : ''),
               onclick: function (e) { e.preventDefault(); goCard(p.id); } },
               h('span', { class: 'ms-dot ' + (s ? 'st-' + s : 'fit-' + p.realism), style: s ? '' : 'background:var(--f)', 'aria-hidden': 'true' }),
               starred(p) ? '★' : null,
