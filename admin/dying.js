@@ -252,6 +252,9 @@
     R.sec = h('div'); R.secCount = h('span', { class: 'c' });
     R.outline = h('div', { class: 'rs-outline' }); R.outTotal = h('span', { class: 'c' });
     R.log = h('div', { class: 'ms-box ms-notes' });
+    R.logTa = h('textarea', { rows: 2, placeholder: 'What did you read, notice, decide or wonder about?', 'aria-label': 'New note' });
+    S.att = S.att || AdminAttach.composer('research/attachments/dying');   /* one per visit: a draft's files survive re-draws */
+    S.att.bind(R.logTa);
     fill(root, h('div', { class: 'ms rs dd' },
       h('div', { class: 'ms-head' }, h('div', null, R.eyebrow, R.title),
         h('div', { class: 'ms-sync-wrap' }, R.sync, h('button', { class: 'btn btn--small', type: 'button', text: 'Reload', onclick: load }))),
@@ -575,17 +578,16 @@
     ps.forEach(function (p) { byId[p.id] = p; });
     var tag = sel(TAGS, 'note', 'Kind of entry', function () {});
     var pc = h('select', { 'aria-label': 'Related piece (optional)' }, h('option', { value: '', text: 'No piece' }), ps.map(function (p) { return h('option', { value: p.id, 'data-pl': p.id, text: pieceName(p) }); }));
-    var ta = h('textarea', { rows: 2, placeholder: 'What did you read, notice, decide or wonder about?', 'aria-label': 'New note' });
+    var ta = R.logTa;
     var entries = live(S.doc.log).filter(function (e) { return !S.tag || e.tag === S.tag; }).sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     var chips = h('div', { class: 'ms-tracks' }, [['', 'All']].concat(TAGS).map(function (t) {
       return h('button', { type: 'button', 'aria-pressed': S.tag === t[0] ? 'true' : 'false', text: t[1], onclick: function () { S.tag = t[0]; renderLog(); } });
     }));
     fill(R.log,
       h('div', { class: 'ms-box-h' }, h('h3', { text: 'Notes' }), h('span', { class: 'opt', text: plural(live(S.doc.log).length, 'entry', 'entries') })),
-      ta, h('div', { class: 'rs-logopts dd-logopts' }, tag, pc, h('button', { class: 'btn', type: 'button', text: 'Add note', onclick: function () {
-        var v = ta.value.trim(); if (!v) { ta.focus(); return; }
-        S.doc.log.push(item({ date: now(), tag: tag.value, piece: pc.value || '', text: v, updated: now() })); changed(); renderLog();
-      } })),
+      ta, S.att.el, h('div', { class: 'rs-logopts dd-logopts' }, tag, pc, AdminAttach.addButton('Add note', S.att, ta, function (v, files) {
+        S.doc.log.push(item({ date: now(), tag: tag.value, piece: pc.value || '', text: v, files: files, updated: now() })); changed(); renderLog();
+      })),
       chips,
       entries.length ? h('ul', { class: 'ms-journal' }, entries.map(function (e) {
         var p = h('p', { text: e.text }), pp = e.piece && byId[e.piece];
@@ -603,7 +605,7 @@
                 ed.focus();
               } }),
               delBtn('note', function () { e.deleted = true; touch(e); renderLog(); }))),
-          p);
+          p, AdminAttach.view(e.files));
       })) : hint(S.tag ? 'No notes of this kind yet.' : 'Readings, ideas, questions and meetings with your instructor go here.'));
   }
 

@@ -1,0 +1,29 @@
+/* Attachments on notes (admin/attach.js). Tokens come from style.css. */
+.at { display: grid; gap: .5rem; }
+.at-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .6rem; }
+.at-tip { font-size: .8rem; color: var(--faint); }
+.at-rec::before { content: ""; display: inline-block; width: .55rem; height: .55rem; margin-right: .4rem; border-radius: 50%; background: var(--bad, #b3261e); vertical-align: .02em; }
+.at-rec.on { border-color: var(--bad, #b3261e); color: var(--bad, #b3261e); font-variant-numeric: tabular-nums; }
+.at-rec.on::before { animation: at-blink 1s steps(2, start) infinite; }
+@keyframes at-blink { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .at-rec.on::before { animation: none; } }
+.at-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.at-chips:empty, .at-msg:empty { display: none; }
+.at-chip { display: flex; align-items: center; gap: .5rem; max-width: 100%; padding: .3rem .3rem .3rem .35rem; border: 1px solid var(--rule); border-radius: 8px; background: var(--bg); font-size: .8rem; color: var(--soft); }
+.at-chip img { width: 3rem; height: 3rem; object-fit: cover; border-radius: 5px; flex: none; }
+.at-chip audio { height: 2rem; width: 13rem; max-width: 100%; }
+.at-chip.up { color: var(--ok, #2f8a55); padding-inline: .6rem; }
+.at-msg { margin: 0; font-size: .82rem; color: var(--soft); }
+.at-msg.err { color: var(--bad, #b3261e); }
+textarea.at-drop { outline: 2px dashed var(--sky); outline-offset: 2px; }
+
+/* files on a saved note */
+.at-view { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .5rem; margin-top: .45rem; }
+.at-img { display: block; overflow: hidden; border: 1px solid var(--rule); border-radius: 8px; background: var(--bg); }
+.at-img img { display: block; min-width: 4rem; min-height: 3rem; max-width: min(18rem, 100%); max-height: 12rem; object-fit: contain; }
+.at-play { font: inherit; font-size: .84rem; padding: .4rem .85rem; border: 1px solid var(--rule); border-radius: 999px; background: var(--bg); color: var(--ink); cursor: pointer; }
+.at-play:hover { border-color: var(--soft); }
+.at-view audio { max-width: 100%; }
+.at-deck { display: inline-grid; place-items: center; min-width: 2.6rem; height: 1.6rem; padding: 0 .3rem; border-radius: 4px; background: #C4502F; color: #fff; font-size: .68rem; font-weight: 700; letter-spacing: .04em; flex: none; }
+.at-file { display: inline-flex; align-items: center; gap: .5rem; padding-left: .4rem; border-radius: 8px; }
+.at-miss { font-size: .8rem; color: var(--bad, #b3261e); }

@@ -251,6 +251,9 @@
     R.outline = h('div', { class: 'rs-outline' }); R.outTotal = h('span', { class: 'c' });
     R.srcFilters = h('div', { class: 'ms-filters rs-filters' }); R.src = h('div', { class: 'rs-sources' }); R.srcCount = h('span', { class: 'c' });
     R.log = h('div', { class: 'ms-box ms-notes' });
+    R.logTa = h('textarea', { rows: 2, id: 'rs-newlog', placeholder: 'What did you read, find, decide or wonder about?', 'aria-label': 'New log entry' });
+    S.att = S.att || AdminAttach.composer('research/attachments/sikh');   /* one per visit: a draft's files survive re-draws */
+    S.att.bind(R.logTa);
     R.qs = h('div', { class: 'ms-box' });
     fill(root, h('div', { class: 'ms rs' },
       h('div', { class: 'ms-head' }, h('div', null, R.eyebrow, R.title),
@@ -465,7 +468,7 @@
     var srcs = live(S.doc.sources);
     var tag = sel(TAGS, 'note', 'Kind of entry', function () {}), scope = sel(SCOPE, 'paper', 'Scope of entry', function () {});
     var src = h('select', { 'aria-label': 'Related source (optional)' }, h('option', { value: '', text: 'No source' }), srcs.map(function (s) { return h('option', { value: s.id, text: s.title }); }));
-    var ta = h('textarea', { rows: 2, id: 'rs-newlog', placeholder: 'What did you read, find, decide or wonder about?', 'aria-label': 'New log entry' });
+    var ta = R.logTa;
     var entries = live(S.doc.log).filter(function (e) { return (!S.lf.tag || e.tag === S.lf.tag) && (!S.lf.scope || e.scope === S.lf.scope); })
       .sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     var chips = h('div', { class: 'ms-tracks' }, [['', 'All']].concat(TAGS).map(function (t) {
@@ -474,10 +477,9 @@
     var byId = {}; srcs.forEach(function (s) { byId[s.id] = s; });
     fill(R.log,
       h('div', { class: 'ms-box-h' }, h('h3', { text: 'Research log' }), h('span', { class: 'opt', text: live(S.doc.log).length + ' entries' })),
-      ta, h('div', { class: 'rs-logopts' }, tag, scope, src, h('button', { class: 'btn', type: 'button', text: 'Add to log', onclick: function () {
-        var v = ta.value.trim(); if (!v) { ta.focus(); return; }
-        S.doc.log.push(item({ date: now(), tag: tag.value, scope: scope.value, source: src.value || '', text: v, updated: now() })); changed(); renderLog();
-      } })),
+      ta, S.att.el, h('div', { class: 'rs-logopts' }, tag, scope, src, AdminAttach.addButton('Add to log', S.att, ta, function (v, files) {
+        S.doc.log.push(item({ date: now(), tag: tag.value, scope: scope.value, source: src.value || '', text: v, files: files, updated: now() })); changed(); renderLog();
+      })),
       chips,
       entries.length ? h('ul', { class: 'ms-journal' }, entries.map(function (e) {
         var p = h('p', { text: e.text });
@@ -496,7 +498,7 @@
                 ed.focus();
               } }),
               delBtn('log entry', function () { e.deleted = true; touch(e); renderLog(); }))),
-          p);
+          p, AdminAttach.view(e.files));
       })) : h('p', { class: 'rs-hint', text: S.lf.tag ? 'No entries of this kind yet.' : 'Log readings, findings, ideas and mentor meetings here, for the paper or for your wider research.' }));
   }
 
