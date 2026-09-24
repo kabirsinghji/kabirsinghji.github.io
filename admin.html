@@ -12,6 +12,8 @@
 <script src="admin/masters.js?v=1" defer></script>
 <link rel="stylesheet" href="admin/research.css?v=1">
 <script src="admin/research.js?v=1" defer></script>
+<link rel="stylesheet" href="admin/dying.css?v=1">
+<script src="admin/dying.js?v=1" defer></script>
 <style>
 /* Admin-only styles; tokens and fonts come from style.css */
 body { font-size: 15px; }
@@ -165,6 +167,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   <section class="panel" role="tabpanel" id="panel-present" aria-labelledby="tab-present" hidden>
     <nav class="subtabs" role="tablist" aria-label="Present" id="subtabs-present"></nav>
     <section class="subpanel" role="tabpanel" id="panel-sikh" aria-labelledby="subtab-sikh" hidden></section>
+    <section class="subpanel" role="tabpanel" id="panel-dying" aria-labelledby="subtab-dying" hidden></section>
   </section>
 
   <!-- ===================== Future: a parent tab with sub-tabs ===================== -->
@@ -214,7 +217,8 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   var TABS = [
     { id: 'cv', label: 'CV', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' },
     { id: 'present', label: 'Present', lock: '4d4c7eee2e28d03cb2dbf3df639c3290ade66e18755e83caade2d8f37bd8c044', sub: [
-      { id: 'sikh', label: 'Sikh research' }
+      { id: 'sikh', label: 'Sikh research' },
+      { id: 'dying', label: 'Death & dying' }
     ] },
     { id: 'future', label: 'Future', lock: 'ebb3de8a3d9a40366132eb5deb5af44e4c96c11696f8fc34ea2c1d8bd8399171', sub: [
       { id: 'masters', label: 'UK master\u2019s' }
