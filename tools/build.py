@@ -401,6 +401,7 @@ def build_index(cv):
 <link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css?v=9">
+<script src="theme.js?v=1"></script>
 <script src="peek.js?v=9" defer></script>
 <script type="application/ld+json">
 {{
