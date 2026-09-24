@@ -100,6 +100,10 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
 .gate-card .btn { width: 100%; margin-top: .4rem; }
 .gate-err { color: #c0392b !important; font-size: .86rem !important; margin: -.2rem 0 .6rem !important; }
 .tabs button .lk { font-size: .72rem; font-weight: 400; color: var(--faint); margin-left: .35rem; }
+.subtabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1.6rem; }
+.subtabs button { font: inherit; font-size: .88rem; padding: .4rem .95rem; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--soft); cursor: pointer; }
+.subtabs button:hover { border-color: var(--soft); color: var(--ink); }
+.subtabs button[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); font-weight: 600; }
 [hidden] { display: none !important; }
 
 @media (max-width: 860px) {
@@ -154,8 +158,11 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     </div>
   </section>
 
-  <!-- ===================== UK master's tab (admin/masters.js) ===================== -->
-  <section class="panel" role="tabpanel" id="panel-masters" aria-labelledby="tab-masters" hidden></section>
+  <!-- ===================== Future: a parent tab with sub-tabs ===================== -->
+  <section class="panel" role="tabpanel" id="panel-future" aria-labelledby="tab-future" hidden>
+    <nav class="subtabs" role="tablist" aria-label="Future" id="subtabs-future"></nav>
+    <section class="subpanel" role="tabpanel" id="panel-masters" aria-labelledby="subtab-masters" hidden></section>
+  </section>
 
   <!-- ===================== Settings tab ===================== -->
   <section class="panel settings" role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" hidden>
@@ -188,13 +195,18 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
 
   /* ------------------------------------------------------------ tabs --
      Add a tab by adding an entry here and a matching <section id="panel-…">.
+     A parent tab lists its sub-tabs in `sub`; each sub-tab has its own
+     <section id="panel-…"> inside the parent's panel and shares the parent's
+     password.
      lock: SHA-256 (lowercase hex) of the tab's password. One password can open
      several tabs. To make one:  printf %s 'the-password' | shasum -a 256
      This only keeps casual visitors out: the page is public, so anything it
      protects must also need the GitHub token (as saving does). */
   var TABS = [
     { id: 'cv', label: 'CV', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' },
-    { id: 'masters', label: 'UK master\u2019s', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' },
+    { id: 'future', label: 'Future', lock: 'ebb3de8a3d9a40366132eb5deb5af44e4c96c11696f8fc34ea2c1d8bd8399171', sub: [
+      { id: 'masters', label: 'UK master\u2019s' }
+    ] },
     { id: 'settings', label: 'Settings', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' }
   ];
 
@@ -693,7 +705,12 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   /* ------------------------------------------------------------ lock -- */
   var open = {};
   try { (JSON.parse(sessionStorage.getItem('adm.unlocked') || '[]') || []).forEach(function (id) { open[id] = true; }); } catch (e) {}
-  function isOpen(id) { var t = TABS.filter(function (x) { return x.id === id; })[0]; return !!t && (!t.lock || !!open[t.id]); }
+  function tabById(id) { return TABS.filter(function (x) { return x.id === id; })[0]; }
+  function ownerOf(id) {                      /* a sub-tab's parent, or the tab itself */
+    var t = TABS.filter(function (x) { return x.id === id || (x.sub || []).some(function (s) { return s.id === id; }); })[0];
+    return t ? t.id : null;
+  }
+  function isOpen(id) { var t = tabById(ownerOf(id)); return !!t && (!t.lock || !!open[t.id]); }
   function anyOpen() { return TABS.some(function (t) { return isOpen(t.id); }); }
   function remember() { sstore('adm.unlocked', JSON.stringify(Object.keys(open))); }
   function sha256(text) {
@@ -702,7 +719,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
     });
   }
-  var wanted = null;                          /* the tab the visitor was trying to open */
+  var wanted = null, wantedSub = null;       /* the tab (and sub-tab) the visitor was trying to open */
   function showGate(id) {
     wanted = id || wanted;
     var t = TABS.filter(function (x) { return x.id === wanted; })[0];
@@ -730,15 +747,18 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       opened.forEach(function (t) { open[t.id] = true; });
       remember(); syncLocks();
       var next = isOpen(wanted) ? wanted : opened[0].id;
-      showTab(next);
+      showTab(next, next === wanted ? wantedSub : null);
       if (isOpen('cv') && !S.data) load();
     }).catch(function (err) { $('gate-err').textContent = err.message; $('gate-err').hidden = false; });
   });
   $('lock').onclick = function () { open = {}; remember(); syncLocks(); showGate(wanted); };
 
   /* ------------------------------------------------------------ boot -- */
-  function showTab(id) {
-    if (!isOpen(id)) { showGate(id); return; }
+  function showTab(id, sub) {
+    var owner = ownerOf(id);
+    if (!owner) owner = id = 'cv';
+    if (owner !== id) { sub = id; id = owner; }
+    if (!isOpen(id)) { wantedSub = sub || null; showGate(id); return; }
     wanted = id;
     $('gate').hidden = true;
     TABS.forEach(function (t) {
@@ -746,8 +766,19 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       $('tab-' + t.id).tabIndex = t.id === id ? 0 : -1;
       $('panel-' + t.id).hidden = t.id !== id;
     });
-    if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
-    initTab(id);
+    var t = tabById(id), hash = id, show = id;
+    if (t.sub) {
+      if (!sub || !t.sub.some(function (s) { return s.id === sub; })) sub = t.lastSub || t.sub[0].id;
+      t.lastSub = sub;
+      t.sub.forEach(function (s) {
+        $('subtab-' + s.id).setAttribute('aria-selected', s.id === sub ? 'true' : 'false');
+        $('subtab-' + s.id).tabIndex = s.id === sub ? 0 : -1;
+        $('panel-' + s.id).hidden = s.id !== sub;
+      });
+      hash = id + '/' + sub; show = sub;
+    }
+    if (location.hash !== '#' + hash) history.replaceState(null, '', '#' + hash);
+    initTab(show);
   }
 
   /* ------------------------------------------ helpers for tab modules --
@@ -772,10 +803,19 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       if (k) { e.preventDefault(); var n = TABS[(i + k + TABS.length) % TABS.length].id; showTab(n); $('tab-' + n).focus(); }
     };
     $('tabs').appendChild(b);
+    (t.sub || []).forEach(function (s, j) {
+      var sb = el('button', { type: 'button', role: 'tab', id: 'subtab-' + s.id, 'aria-controls': 'panel-' + s.id, text: s.label });
+      sb.onclick = function () { showTab(t.id, s.id); };
+      sb.onkeydown = function (e) {
+        var k = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (k) { e.preventDefault(); var n = t.sub[(j + k + t.sub.length) % t.sub.length].id; showTab(t.id, n); $('subtab-' + n).focus(); }
+      };
+      $('subtabs-' + t.id).appendChild(sb);
+    });
   });
-  var start = (location.hash || '').slice(1);
+  var start = (location.hash || '').slice(1).split('/');   /* #future/masters, or an old #masters link */
   syncLocks();
-  showTab(TABS.some(function (t) { return t.id === start; }) ? start : 'cv');
+  showTab(ownerOf(start[0]) ? start[0] : 'cv', start[1]);
   fillSettings();
   syncBar();
   if (isOpen('cv')) load();
