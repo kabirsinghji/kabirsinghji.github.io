@@ -92,6 +92,14 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
 .settings li { margin-bottom: .35rem; }
 .check { display: flex; gap: .5rem; align-items: center; font-size: .9rem; margin: .4rem 0 1rem; }
 
+.gate-card { max-width: 24rem; margin: 3.5rem auto 0; padding: 1.6rem 1.6rem 1.8rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; }
+.gate-card h2 { font-family: var(--display); font-weight: 300; font-size: 2rem; margin: 0 0 .3rem; }
+.gate-card p { color: var(--soft); margin: 0 0 1rem; font-size: .92rem; }
+.gate-card .btn { width: 100%; margin-top: .4rem; }
+.gate-err { color: #c0392b !important; font-size: .86rem !important; margin: -.2rem 0 .6rem !important; }
+.tabs button .lk { font-size: .72rem; font-weight: 400; color: var(--faint); margin-left: .35rem; }
+[hidden] { display: none !important; }
+
 @media (max-width: 860px) {
   .toolbar { position: static; }
   .cv-layout { grid-template-columns: 1fr; }
@@ -110,11 +118,23 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   <header class="bar">
     <a class="brand" href="./">Kabir Singh<small>Admin</small></a>
     <span class="spacer"></span>
-    <span class="conn" id="conn">Not connected</span>
+    <span class="conn" id="conn" hidden>Not connected</span>
+    <button class="btn btn--small" type="button" id="lock" hidden>Lock</button>
     <a class="btn btn--small" href="./" target="_blank" rel="noopener">View site &nearr;</a>
   </header>
 
-  <nav class="tabs" role="tablist" aria-label="Admin sections" id="tabs"></nav>
+  <nav class="tabs" role="tablist" aria-label="Admin sections" id="tabs" hidden></nav>
+
+  <!-- ===================== Password gate ===================== -->
+  <section class="panel" id="gate" aria-labelledby="gate-h">
+    <form class="gate-card" id="gate-form">
+      <h2 id="gate-h">Admin</h2>
+      <p id="gate-for">Enter the password to continue.</p>
+      <label class="f"><span>Password</span><input type="password" id="gate-pw" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" required></label>
+      <p class="gate-err" id="gate-err" role="alert" hidden>That password doesn&rsquo;t open this tab.</p>
+      <button class="btn btn--primary" type="submit">Unlock</button>
+    </form>
+  </section>
 
   <!-- ===================== CV tab ===================== -->
   <section class="panel" role="tabpanel" id="panel-cv" aria-labelledby="tab-cv" hidden>
@@ -161,10 +181,14 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   'use strict';
 
   /* ------------------------------------------------------------ tabs --
-     Add a tab by adding an entry here and a matching <section id="panel-…">. */
+     Add a tab by adding an entry here and a matching <section id="panel-…">.
+     lock: SHA-256 (lowercase hex) of the tab's password. One password can open
+     several tabs. To make one:  printf %s 'the-password' | shasum -a 256
+     This only keeps casual visitors out: the page is public, so anything it
+     protects must also need the GitHub token (as saving does). */
   var TABS = [
-    { id: 'cv', label: 'CV' },
-    { id: 'settings', label: 'Settings' }
+    { id: 'cv', label: 'CV', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' },
+    { id: 'settings', label: 'Settings', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' }
   ];
 
   var FILE = 'data/cv.json';
@@ -646,8 +670,57 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   };
   $('forget').onclick = function () { store('adm.token', null); sstore('adm.token', null); $('token').value = ''; syncBar(); $('settings-note').innerHTML = '<div class="note">Token removed from this browser.</div>'; S.source = 'site'; syncBar(); };
 
+  /* ------------------------------------------------------------ lock -- */
+  var open = {};
+  try { (JSON.parse(sessionStorage.getItem('adm.unlocked') || '[]') || []).forEach(function (id) { open[id] = true; }); } catch (e) {}
+  function isOpen(id) { var t = TABS.filter(function (x) { return x.id === id; })[0]; return !!t && (!t.lock || !!open[t.id]); }
+  function anyOpen() { return TABS.some(function (t) { return isOpen(t.id); }); }
+  function remember() { sstore('adm.unlocked', JSON.stringify(Object.keys(open))); }
+  function sha256(text) {
+    if (!(window.crypto && crypto.subtle)) return Promise.reject(new Error('This browser cannot check the password here. Open the page over https.'));
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function (buf) {
+      return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+    });
+  }
+  var wanted = null;                          /* the tab the visitor was trying to open */
+  function showGate(id) {
+    wanted = id || wanted;
+    var t = TABS.filter(function (x) { return x.id === wanted; })[0];
+    $('gate-for').textContent = anyOpen() && t ? 'Enter the password for the ' + t.label + ' tab.' : 'Enter the password to continue.';
+    $('gate-err').hidden = true; $('gate-pw').value = '';
+    TABS.forEach(function (x) { $('panel-' + x.id).hidden = true; $('tab-' + x.id).setAttribute('aria-selected', x.id === wanted ? 'true' : 'false'); });
+    $('gate').hidden = false;
+    setTimeout(function () { $('gate-pw').focus(); }, 0);
+  }
+  function syncLocks() {
+    var some = anyOpen();
+    $('tabs').hidden = !some; $('lock').hidden = !some; $('conn').hidden = !some;
+    TABS.forEach(function (t) {
+      var b = $('tab-' + t.id);
+      b.innerHTML = esc(t.label) + (isOpen(t.id) ? '' : '<span class="lk">locked</span>');
+    });
+  }
+  $('gate-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    sha256($('gate-pw').value.trim()).then(function (h) {
+      var opened = TABS.filter(function (t) { return t.lock === h; });
+      /* asked for a particular tab: only its own password counts */
+      var fits = anyOpen() && wanted ? opened.some(function (t) { return t.id === wanted; }) : opened.length > 0;
+      if (!fits) { $('gate-err').hidden = false; $('gate-pw').select(); return; }
+      opened.forEach(function (t) { open[t.id] = true; });
+      remember(); syncLocks();
+      var next = isOpen(wanted) ? wanted : opened[0].id;
+      showTab(next);
+      if (isOpen('cv') && !S.data) load();
+    }).catch(function (err) { $('gate-err').textContent = err.message; $('gate-err').hidden = false; });
+  });
+  $('lock').onclick = function () { open = {}; remember(); syncLocks(); showGate(wanted); };
+
   /* ------------------------------------------------------------ boot -- */
   function showTab(id) {
+    if (!isOpen(id)) { showGate(id); return; }
+    wanted = id;
+    $('gate').hidden = true;
     TABS.forEach(function (t) {
       $('tab-' + t.id).setAttribute('aria-selected', t.id === id ? 'true' : 'false');
       $('tab-' + t.id).tabIndex = t.id === id ? 0 : -1;
@@ -665,10 +738,11 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     $('tabs').appendChild(b);
   });
   var start = (location.hash || '').slice(1);
+  syncLocks();
   showTab(TABS.some(function (t) { return t.id === start; }) ? start : 'cv');
   fillSettings();
   syncBar();
-  load();
+  if (isOpen('cv')) load();
 })();
 </script>
 </body>
