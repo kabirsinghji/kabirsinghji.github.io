@@ -16,6 +16,8 @@
 <script src="admin/research.js?v=4" defer></script>
 <link rel="stylesheet" href="admin/dying.css?v=1">
 <script src="admin/dying.js?v=4" defer></script>
+<link rel="stylesheet" href="admin/tags.css?v=1">
+<script src="admin/tags.js?v=1" defer></script>
 <style>
 /* Admin-only styles; tokens and fonts come from style.css */
 body { font-size: 15px; }
@@ -447,6 +449,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   function renderNav() {
     var nav = $('secnav'); nav.innerHTML = '';
     var list = S.data.sections.map(function (s) { return { id: s.id, label: s.title, n: countOf(s) }; });
+    list.push({ id: 'tags', label: 'Tags', n: S.data.tagset ? S.data.tagset.length : '' });
     list.push({ id: 'meta', label: 'Header & contact', n: '' });
     list.forEach(function (it) {
       var b = document.createElement('button');
@@ -520,6 +523,13 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   }
   function swap(a, i, j) { if (j < 0 || j >= a.length) return; var t = a[i]; a[i] = a[j]; a[j] = t; }
   function after() { renderNav(); syncBar(); }
+  var TAGUI = {             /* what admin/tags.js needs from this page */
+    el: el, esc: esc, note: note,
+    sync: function () { syncBar(); renderNav(); },
+    rerender: function () { var y = window.scrollY; renderEditor(); after(); window.scrollTo(0, y); },
+    go: function (id) { S.section = id; renderNav(); renderEditor(); window.scrollTo({ top: 0 }); }
+  };
+  function tagBlock(e) { return window.AdminTags ? AdminTags.block(e, S.data, TAGUI) : null; }
 
   function bulletsEditor(entry, rerender) {
     entry.bullets = entry.bullets || [];
@@ -549,6 +559,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       field('Dates', e, 'dates', { area: true, hint: 'New line = line break on the PDF' })
     ]));
     card.appendChild(bulletsEditor(e, rerender));
+    card.appendChild(tagBlock(e));
     var adv = el('details', { class: 'adv' }, [el('summary', { text: 'More options' })]);
     adv.appendChild(el('div', { class: 'row3' }, [
       field('Show on', e, 'show', { select: SHOW, dropDefault: true }),
@@ -564,6 +575,13 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     if (!S.data) return;
     var rer = function () { var y = window.scrollY; renderEditor(); after(); window.scrollTo(0, y); };
     ed.appendChild(el('p', { class: 'help', html: 'Formatting: <code>**bold**</code> <code>*italic*</code> <code>[text](https://link)</code> <code>22^{nd}</code>. When a field uses formatting, the line under it shows how it will look.' }));
+
+    if (S.section === 'tags') {
+      ed.innerHTML = '';
+      ed.appendChild(el('h2', { text: 'Tags' }));
+      if (window.AdminTags) AdminTags.page(ed, S.data, TAGUI);
+      return;
+    }
 
     if (S.section === 'meta') {
       var m = S.data.meta = S.data.meta || {};
@@ -618,7 +636,8 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
             field('Authors', p, 'authors', { area: true, preview: true, hint: 'Bold yourself: **K. Singh**' }),
             field('Title', p, 'title', { area: true }),
             field('Venue', p, 'venue', { area: true, preview: true }),
-            el('div', { class: 'row3' }, [field('DOI', p, 'doi', { type: 'text', hint: 'e.g. 10.1016/j.ejmech.2026.119173' }), field('Year', p, 'year', { type: 'number' }), field('Show on', p, 'show', { select: SHOW })])
+            el('div', { class: 'row3' }, [field('DOI', p, 'doi', { type: 'text', hint: 'e.g. 10.1016/j.ejmech.2026.119173' }), field('Year', p, 'year', { type: 'number' }), field('Show on', p, 'show', { select: SHOW })]),
+            tagBlock(p)
           ]));
         });
         box.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add to ' + (g.title || 'group'), onclick: function () {
@@ -642,6 +661,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
           field('Title', p, 'title', { area: true }),
           el('div', { class: 'f' }, [el('span', { text: 'Venues (newest first)' }), vbox,
             el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Venue', onclick: function () { p.venues.unshift({ name: '', format: 'Poster', year: String(new Date().getFullYear()) }); rer(); } })])]),
+          tagBlock(p),
           el('details', { class: 'adv' }, [el('summary', { text: 'More options' }), el('div', { class: 'row' }, [
             field('Show on', p, 'show', { select: SHOW }),
             field('Keep together (lines)', p, 'keep', { type: 'number', hint: 'Room to reserve on the PDF page (default 6)' })])])
@@ -661,6 +681,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
           field('Year (homepage)', it, 'year', { type: 'number', hint: 'Blank: taken from the text' }),
           field('Show on', it, 'show', { select: SHOW })]));
         else kids.push(field('Show on', it, 'show', { select: SHOW }));
+        kids.push(tagBlock(it));
         ed.appendChild(el('div', { class: 'card' }, kids));
       });
       ed.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add item', onclick: function () {
