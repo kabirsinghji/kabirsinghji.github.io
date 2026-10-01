@@ -1024,17 +1024,23 @@
       "site": "talk",
       "items": [
         {
-          "text": "Invited Speaker (forthcoming). Presentation on interdisciplinary research in medicine and healthcare to NJIT leadership, including the Interim President and Interim Provost. University Advancement Dinner, NJIT, 2026",
+          "text": "Invited Speaker. Presentation on interdisciplinary research in medicine and healthcare to NJIT leadership, including the Interim President and Interim Provost. University Advancement Dinner, NJIT, 2026",
           "kind": "talk",
           "show": "both",
           "year": 2026,
           "tags": [
-            "leading-organizing",
+            "research",
             "speaking",
+            "leading-organizing",
+            "peptide-protein-design",
             "medicine-emergency-care",
             "adaptability",
             "oral-communication",
-            "leadership"
+            "leadership",
+            "persuasion-negotiation",
+            "planning-organisation",
+            "problem-solving-creativity",
+            "customer-discovery"
           ],
           "short": "Invited talk, research in medicine"
         },
