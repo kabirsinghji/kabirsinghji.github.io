@@ -11,6 +11,8 @@ Markup allowed in any text field:
     **bold**   *italic*   [text](https://link)   ^{nd} (superscript)
 In "dates", a new line is a line break on the PDF (a space on the site).
 "show" on an entry, bullet or item: "both" (default), "cv" or "site".
+"tags" on an entry or item lists ids from the top-level "tagset"; they shape the homepage protein
+(and never print on the PDF). "short" is the entry's label on the protein.
 """
 import html
 import json
@@ -311,9 +313,127 @@ def timeline(cv):
     return items, certs
 
 
+# ──────────────────────────────────────────────────────────── protein ──
+# The homepage "protein" is generated from the tags in cv.json ("tagset", and "tags" on each entry).
+# Visible tags are named on the page; hidden ones still shape it, but only their kind is published.
+KIND = {"activity": "a", "subject": "i", "quality": "q", "keyword": "k"}
+LEAD_VERB = re.compile(r"^(Led|Leads?|Started|Taught|Teach\w*|Received|Won|Designed|Ran|Built|Develop\w*|Co-?founded|Founded|Organi[sz]ed|"
+                       r"Coordinated|Mentored|Trained|Wrote|Edited|Reviewed|Presented|Created|Managed?|Model+ed|Analy[sz]ed|Conducted|"
+                       r"Contributed|Selected|Awarded|Served?|Planned|Instructed|Represented|Translated|Supported|Investigat\w+|Stud\w+|"
+                       r"Examin\w+|Explor\w+|Mapp?\w*|Help\w*|Design\w*|Running|Establish\w*|Recruit\w*|Host\w*|Moderat\w+|Assist\w*|"
+                       r"Guid\w*|Oversaw|Overs\w+|Direct\w*|Deriving|Applying|Synthesi[sz]ing|Arguing|Examining)$", re.I)
+
+
+def plain(s):
+    return html.unescape(re.sub(r"<[^>]+>", "", to_html(s or "", strip_bold=True))).strip()
+
+
+def short_of(text):
+    t = re.split(r"(?<=\w)[.,;:]\s", plain(text), maxsplit=1)[0]
+    return t if len(t) <= 38 else t[:36].rstrip() + "…"
+
+
+def decimal_start(dates, fallback):
+    s = start_of(dates)
+    return round(s[0] + (max(s[1], 1) - 1) / 12, 3) if s else fallback
+
+
+def protein_data(cv):
+    tagset = cv.get("tagset") or []
+    if not tagset:
+        return None
+    index = {t["id"]: i for i, t in enumerate(tagset)}
+    tags = []
+    for t in tagset:
+        d = {"k": KIND.get(t.get("kind"), "k")}
+        if t.get("visible"):
+            d["n"] = t.get("name", "")
+            if d["k"] == "a" and t.get("verb"):
+                d["v"] = t["verb"]
+            if d["k"] == "q" and t.get("verbs"):
+                d["v"] = "Verbs: " + t["verbs"]
+        else:
+            d["h"] = 1
+        tags.append(d)
+    m = re.search(r"([A-Za-z]{3})[a-z]*\.?\s+((?:19|20)\d\d)", cv["meta"].get("asOf", ""))
+    now = int(m.group(2)) + (MONTHS.get(m.group(1).title(), 6) - 1) / 12 if m else 2026.5
+    undated = round(now - 1, 3)
+    out = []
+
+    def add(sec, obj, text, dates, t, verbs=()):
+        g = [index[x] for x in obj.get("tags", []) if x in index]
+        out.append({"s": obj.get("short") or short_of(text), "title": plain(text), "sec": sec["title"], "d": dates,
+                    "v": list(verbs)[:3], "t": t, "g": g})
+
+    for sec in cv["sections"]:
+        t = sec["type"]
+        for g in sec.get("groups", []):
+            for e in g.get("entries", []):
+                if shown(e, "site"):
+                    vs = []
+                    for b in bullets(e, "site"):
+                        w = plain(b).split(" ", 1)[0]
+                        if LEAD_VERB.match(w) and w.lower() not in vs:
+                            vs.append(w.lower())
+                    add(sec, e, e["heading"], plain(re.sub(r"\s*\n\s*", " ", e.get("dates") or "")), decimal_start(e.get("dates"), undated), vs)
+            for p in g.get("items", []):
+                if shown(p, "site"):
+                    y = int(p.get("year") or 0)
+                    add(sec, p, p["title"], ("Published " if g.get("status") == "published" else "In preparation, ") + (str(y) if y else ""),
+                        y + .5 if y else undated)
+        for it in sec.get("items", []):
+            if not shown(it, "site"):
+                continue
+            if t == "presentations":
+                ys = sorted({int(x.group()) for v in it.get("venues", []) for x in [re.search(r"(19|20)\d\d", v.get("year", ""))] if x})
+                add(sec, it, it["title"], (str(ys[0]) + ("–" + str(ys[-1]) if ys[-1] != ys[0] else "")) if ys else "", ys[0] + .5 if ys else undated)
+            elif it.get("text", "").strip():
+                y = it.get("year") or (re.findall(r"\b(?:19|20)\d\d\b", it["text"]) or [None])[-1]
+                add(sec, it, it["text"], str(y or ""), int(y) + .5 if y else undated)
+    if not any(e["g"] for e in out):
+        return None
+    return {"now": round(max([now] + [e["t"] for e in out]) + .08, 3), "tags": tags, "entries": out}
+
+
+def protein_section(data):
+    blob = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    n = len(data["entries"])
+    return f'''<section class="wrap sec" id="protein" aria-labelledby="pr-h">
+  <div class="sec-h"><h2 id="pr-h">The CV as a protein</h2><p>Every dot is one of the {n} entries in the timeline below. The surface bulges toward the kinds of work I do, and its colours show what the work is about. Drag to turn it; tap a dot to see the entry.</p></div>
+  <div class="protein" id="protein-stage">
+    <canvas class="pr-gl" aria-hidden="true"></canvas>
+    <canvas class="pr-ov" tabindex="0" role="img" aria-label="A turning 3D surface built from the entries in Kabir's CV. Use the arrow keys to turn it. The same entries are listed in the timeline below."></canvas>
+    <div class="pr-axes"></div>
+    <div class="pr-switches" role="group" aria-label="Show on the protein">
+      <button type="button" class="pr-sw" data-k="axis" aria-pressed="true">Axis</button>
+      <button type="button" class="pr-sw" data-k="nodes" aria-pressed="true">Nodes</button>
+      <button type="button" class="pr-sw" data-k="names" aria-pressed="false">Names</button>
+    </div>
+    <div class="pr-hot"><p class="kicker">Hotspots &middot; what the work is about</p><div class="pr-chips"></div></div>
+    <div class="pr-grow">
+      <button type="button" class="pr-play" aria-label="Watch it grow"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></button>
+      <label class="sr-only" for="pr-year">Grow the protein up to a date</label>
+      <input type="range" id="pr-year" step="0.01">
+      <output for="pr-year"></output>
+    </div>
+    <div class="pr-pill" hidden></div>
+    <aside class="pr-card" aria-live="polite" hidden>
+      <button type="button" class="pr-x" aria-label="Close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button>
+      <p class="pr-meta"></p><h3></h3><p class="pr-verbs"></p><ul class="pr-tags"></ul><p class="pr-rel"></p>
+    </aside>
+    <p class="pr-nogl" hidden>This view needs WebGL, which this browser has turned off. Every entry is in the timeline below.</p>
+  </div>
+  <script type="application/json" id="protein-data">{blob}</script>
+</section>
+'''
+
+
 def build_index(cv):
     m = cv["meta"]
     esc = html.escape
+    pdata = protein_data(cv)
+    protein_html = protein_section(pdata) if pdata else ""
+    protein_js = '\n<script src="protein.js?v=1" defer></script>' if pdata else ""
     projects = cv.get("site", {}).get("projects", [])
 
     def leaf(kind, field, kicker, question, img, alt, cap, href, go):
@@ -400,9 +520,9 @@ def build_index(cv):
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 <script src="theme.js?v=1"></script>
-<script src="peek.js?v=9" defer></script>
+<script src="peek.js?v=9" defer></script>{protein_js}
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
@@ -469,6 +589,7 @@ def build_index(cv):
   </div>
 </section>
 
+{protein_html}
 <section class="wrap sec" id="timeline" aria-labelledby="tl-h">
   <div class="sec-h"><h2 id="tl-h">Since {first_year}</h2><p>Every entry on the CV, newest first, under the year it began. Filter by kind; certifications are listed at the end.</p></div>
   <div class="filters" role="group" aria-label="Filter the timeline">{btns}</div>
