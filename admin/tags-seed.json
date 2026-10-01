@@ -1,0 +1,1087 @@
+{
+ "_readme": "First-pass tags for Kabir's CV, used once by admin.html (CV > Tags > Set up tags). Entries are keyed by their own text (lower case, letters and digits, first 60). After setup the tags live in data/cv.json and this file is no longer read; it can be deleted.",
+ "version": "2026-10-01",
+ "tagset": [
+  {
+   "id": "research",
+   "name": "Research",
+   "kind": "activity",
+   "visible": true,
+   "verb": "Asks a question, then designs and models until it answers"
+  },
+  {
+   "id": "writing-editing",
+   "name": "Writing & editing",
+   "kind": "activity",
+   "visible": true,
+   "verb": "Edits, reviews and publishes research"
+  },
+  {
+   "id": "speaking",
+   "name": "Speaking",
+   "kind": "activity",
+   "visible": true,
+   "verb": "Presents work to labs, conferences and boards"
+  },
+  {
+   "id": "teaching-mentoring",
+   "name": "Teaching & mentoring",
+   "kind": "activity",
+   "visible": true,
+   "verb": "Teaches until someone else can do it"
+  },
+  {
+   "id": "clinical-care",
+   "name": "Clinical care",
+   "kind": "activity",
+   "visible": true,
+   "verb": "Treats patients and trains bystanders"
+  },
+  {
+   "id": "leading-organizing",
+   "name": "Leading & organizing",
+   "kind": "activity",
+   "visible": true,
+   "verb": "Starts groups, runs them, hands them on"
+  },
+  {
+   "id": "funding-ventures",
+   "name": "Funding & ventures",
+   "kind": "activity",
+   "visible": true,
+   "verb": "Wins backing and turns ideas into ventures"
+  },
+  {
+   "id": "peptide-protein-design",
+   "name": "Peptide & protein design",
+   "kind": "subject",
+   "visible": true
+  },
+  {
+   "id": "neuroscience-modelling",
+   "name": "Neuroscience & modelling",
+   "kind": "subject",
+   "visible": true
+  },
+  {
+   "id": "medicine-emergency-care",
+   "name": "Medicine & emergency care",
+   "kind": "subject",
+   "visible": true
+  },
+  {
+   "id": "history-of-medicine-ethics",
+   "name": "History of medicine & ethics",
+   "kind": "subject",
+   "visible": true
+  },
+  {
+   "id": "sikh-studies-community",
+   "name": "Sikh studies & community",
+   "kind": "subject",
+   "visible": true
+  },
+  {
+   "id": "digital-medieval-history",
+   "name": "Digital & medieval history",
+   "kind": "subject",
+   "visible": true
+  },
+  {
+   "id": "research-culture-publishing",
+   "name": "Research culture & publishing",
+   "kind": "subject",
+   "visible": true
+  },
+  {
+   "id": "adaptability",
+   "name": "Adaptability",
+   "kind": "quality",
+   "visible": false,
+   "also": "flexibility, quick to learn, cross-disciplinary",
+   "verbs": "adapted, explored, learned, extended, combined, improvised"
+  },
+  {
+   "id": "ambition-commitment",
+   "name": "Ambition & commitment",
+   "kind": "quality",
+   "visible": false,
+   "also": "drive, resilience, determination",
+   "verbs": "aimed, attained, awarded, improved, succeeded, persevered"
+  },
+  {
+   "id": "analysis-research",
+   "name": "Analysis & research",
+   "kind": "quality",
+   "visible": false,
+   "also": "critical thinking, attention to detail, research",
+   "verbs": "analysed, assessed, identified, interpreted, investigated, researched, reviewed"
+  },
+  {
+   "id": "client-facing",
+   "name": "Client-facing",
+   "kind": "quality",
+   "visible": false,
+   "also": "customer service, patient care, stakeholders",
+   "verbs": "demonstrated, solved, negotiated, conducted, represented, responded"
+  },
+  {
+   "id": "commercial-awareness",
+   "name": "Commercial awareness",
+   "kind": "quality",
+   "visible": false,
+   "also": "business sense, entrepreneurship",
+   "verbs": "budgeted, advised, fundraised, networked, set up, delivered, managed"
+  },
+  {
+   "id": "oral-communication",
+   "name": "Oral communication",
+   "kind": "quality",
+   "visible": false,
+   "also": "presenting, public speaking, teaching",
+   "verbs": "briefed, debated, explained, informed, publicised, reported, taught"
+  },
+  {
+   "id": "written-communication",
+   "name": "Written communication",
+   "kind": "quality",
+   "visible": false,
+   "also": "writing, editing, publishing",
+   "verbs": "corresponded, corrected, translated, published, wrote, reviewed, revised"
+  },
+  {
+   "id": "independence-confidence",
+   "name": "Independence & confidence",
+   "kind": "quality",
+   "visible": false,
+   "also": "initiative, self-motivation",
+   "verbs": "chose, initiated, transformed, performed, supervised, followed up"
+  },
+  {
+   "id": "interpersonal",
+   "name": "Interpersonal",
+   "kind": "quality",
+   "visible": false,
+   "also": "relationship building, mentoring, cross-cultural",
+   "verbs": "advised, assisted, coached, enabled, liaised, guided, resolved"
+  },
+  {
+   "id": "leadership",
+   "name": "Leadership",
+   "kind": "quality",
+   "visible": false,
+   "also": "influence, developing others, team building, motivating",
+   "verbs": "chaired, delegated, directed, launched, motivated, initiated, inspired"
+  },
+  {
+   "id": "persuasion-negotiation",
+   "name": "Persuasion & negotiation",
+   "kind": "quality",
+   "visible": false,
+   "also": "influence, advocacy",
+   "verbs": "advocated, convinced, enlisted, persuaded, negotiated, consulted"
+  },
+  {
+   "id": "planning-organisation",
+   "name": "Planning & organisation",
+   "kind": "quality",
+   "visible": false,
+   "also": "organising, time management, project management",
+   "verbs": "designed, implemented, mapped, organised, scheduled, prioritised"
+  },
+  {
+   "id": "problem-solving-creativity",
+   "name": "Problem solving & creativity",
+   "kind": "quality",
+   "visible": false,
+   "also": "innovation, troubleshooting, design",
+   "verbs": "created, designed, developed, invented, solved, simplified"
+  },
+  {
+   "id": "teamwork",
+   "name": "Teamwork",
+   "kind": "quality",
+   "visible": false,
+   "also": "cooperation, working with others, collaboration",
+   "verbs": "contributed, engaged, involved, joined, participated, supported"
+  },
+  {
+   "id": "molecular-dynamics",
+   "name": "Molecular dynamics",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "machine-learning",
+   "name": "Machine learning",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "mathematical-modelling",
+   "name": "Mathematical modelling",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "statistical-mechanics",
+   "name": "Statistical mechanics",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "pymol",
+   "name": "PyMOL",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "gurmukhi-persian-sources",
+   "name": "Gurmukhi & Persian sources",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "digital-mapping",
+   "name": "Digital mapping",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "field-research",
+   "name": "Field research",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "peer-review",
+   "name": "Peer review",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "customer-discovery",
+   "name": "Customer discovery",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "emergency-care-emt-bls",
+   "name": "Emergency care (EMT, BLS)",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "punjabi",
+   "name": "Punjabi",
+   "kind": "keyword",
+   "visible": false
+  },
+  {
+   "id": "curriculum-design",
+   "name": "Curriculum design",
+   "kind": "keyword",
+   "visible": false
+  }
+ ],
+ "entries": {
+  "albertdormanhonorscollegeadhcjordanhucollegeofscienceslibera": {
+   "short": "NJIT Honors College",
+   "tags": [
+    "mathematical-modelling"
+   ]
+  },
+  "facultyofengineeringlundstekniskahgskolalundsuniversitetlund": {
+   "short": "Lund University, exchange",
+   "tags": []
+  },
+  "undergraduateresearchercomputationalbiologyteamleadatkumarla": {
+   "short": "KumarLab, computational biology",
+   "tags": [
+    "leading-organizing",
+    "research",
+    "teaching-mentoring",
+    "peptide-protein-design",
+    "adaptability",
+    "analysis-research",
+    "oral-communication",
+    "independence-confidence",
+    "interpersonal",
+    "leadership",
+    "problem-solving-creativity"
+   ]
+  },
+  "undergraduateresearchercomputationalbionanotechnologypidrste": {
+   "short": "Imperial, bionanotechnology",
+   "tags": [
+    "research",
+    "peptide-protein-design",
+    "adaptability",
+    "analysis-research",
+    "independence-confidence",
+    "problem-solving-creativity",
+    "molecular-dynamics",
+    "machine-learning",
+    "mathematical-modelling",
+    "statistical-mechanics"
+   ]
+  },
+  "undergraduateresearchermathematicalneurosciencepidrhoracioro": {
+   "short": "Mathematical neuroscience",
+   "tags": [
+    "research",
+    "neuroscience-modelling",
+    "analysis-research",
+    "problem-solving-creativity",
+    "mathematical-modelling"
+   ]
+  },
+  "undergraduateresearchermathematicalmodelingpidrjamesmaclauri": {
+   "short": "Mathematical modeling",
+   "tags": [
+    "research",
+    "neuroscience-modelling",
+    "analysis-research",
+    "problem-solving-creativity",
+    "mathematical-modelling"
+   ]
+  },
+  "emergingscholarsresearchfellowearlymodernsikhhistorymentorsa": {
+   "short": "Harvard Sikh Center fellowship",
+   "tags": [
+    "research",
+    "teaching-mentoring",
+    "sikh-studies-community",
+    "ambition-commitment",
+    "analysis-research",
+    "oral-communication",
+    "independence-confidence",
+    "interpersonal",
+    "gurmukhi-persian-sources"
+   ]
+  },
+  "undergraduateresearcherhistoryofmedicinebioethicspidrstephen": {
+   "short": "History of medicine & bioethics",
+   "tags": [
+    "research",
+    "history-of-medicine-ethics",
+    "analysis-research",
+    "written-communication",
+    "problem-solving-creativity",
+    "peer-review"
+   ]
+  },
+  "undergraduateresearcherdigitalhistoryurbanstudiespidrlouisha": {
+   "short": "Digital history & urban studies",
+   "tags": [
+    "research",
+    "digital-medieval-history",
+    "adaptability",
+    "analysis-research",
+    "independence-confidence",
+    "digital-mapping",
+    "field-research"
+   ]
+  },
+  "undergraduateresearchopportunitiesprogrammeuropimperialcolle": {
+   "short": "UROP, Imperial",
+   "tags": [
+    "funding-ventures",
+    "peptide-protein-design",
+    "adaptability",
+    "ambition-commitment",
+    "independence-confidence",
+    "persuasion-negotiation",
+    "problem-solving-creativity",
+    "machine-learning"
+   ]
+  },
+  "nsficorpsregionalprogramnortheasthub": {
+   "short": "NSF I-Corps",
+   "tags": [
+    "funding-ventures",
+    "leading-organizing",
+    "peptide-protein-design",
+    "ambition-commitment",
+    "client-facing",
+    "commercial-awareness",
+    "independence-confidence",
+    "leadership",
+    "persuasion-negotiation",
+    "problem-solving-creativity",
+    "customer-discovery"
+   ]
+  },
+  "gracehopperairesearchinstitutecomputationalproteindesign": {
+   "short": "Grace Hopper AI Institute",
+   "tags": [
+    "funding-ventures",
+    "teaching-mentoring",
+    "peptide-protein-design",
+    "oral-communication",
+    "interpersonal",
+    "persuasion-negotiation",
+    "problem-solving-creativity",
+    "machine-learning",
+    "curriculum-design"
+   ]
+  },
+  "thehonorscollegemoonshotgrantsforengagedscholarship": {
+   "short": "Moonshot Grant",
+   "tags": [
+    "funding-ventures",
+    "peptide-protein-design",
+    "adaptability",
+    "ambition-commitment",
+    "persuasion-negotiation",
+    "problem-solving-creativity"
+   ]
+  },
+  "malecontraceptiveinitiativemci": {
+   "short": "Male Contraceptive Initiative",
+   "tags": [
+    "funding-ventures",
+    "leading-organizing",
+    "peptide-protein-design",
+    "ambition-commitment",
+    "interpersonal",
+    "leadership",
+    "persuasion-negotiation",
+    "problem-solving-creativity",
+    "teamwork"
+   ]
+  },
+  "njitundergraduateresearchinnovationuri": {
+   "short": "NJIT URI funding",
+   "tags": [
+    "funding-ventures",
+    "peptide-protein-design",
+    "ambition-commitment",
+    "persuasion-negotiation",
+    "problem-solving-creativity"
+   ]
+  },
+  "travelawardnationalcontraceptionmeeting": {
+   "short": "Contraception Meeting travel award",
+   "tags": [
+    "funding-ventures",
+    "peptide-protein-design",
+    "ambition-commitment",
+    "persuasion-negotiation"
+   ]
+  },
+  "njithonorssummerresearchinstitutehsri": {
+   "short": "Honors Summer Research Institute",
+   "tags": [
+    "funding-ventures",
+    "peptide-protein-design",
+    "ambition-commitment",
+    "persuasion-negotiation"
+   ]
+  },
+  "anovelcyclicpeptidethatblockshumanautoimmuneantibodiesforthe": {
+   "short": "Cyclic peptide for MS, EJMC",
+   "tags": [
+    "research",
+    "writing-editing",
+    "peptide-protein-design",
+    "analysis-research",
+    "written-communication",
+    "teamwork"
+   ]
+  },
+  "machinelearningforrationaldesignofatargetingcyclicpeptidebas": {
+   "short": "Male contraceptive design, in prep.",
+   "tags": [
+    "research",
+    "writing-editing",
+    "peptide-protein-design",
+    "analysis-research",
+    "written-communication",
+    "problem-solving-creativity",
+    "teamwork",
+    "machine-learning"
+   ]
+  },
+  "academicpublishingasalaunchpadhowpublishingresearchinanunder": {
+   "short": "Academic publishing as a launchpad",
+   "tags": [
+    "research",
+    "writing-editing",
+    "research-culture-publishing",
+    "analysis-research",
+    "written-communication",
+    "teamwork"
+   ]
+  },
+  "putativecomputationaldesignofnovelinhibitorstomodulatedenovo": {
+   "short": "CB1 receptor inhibitors, talk",
+   "tags": [
+    "research",
+    "speaking",
+    "peptide-protein-design",
+    "analysis-research",
+    "oral-communication",
+    "problem-solving-creativity"
+   ]
+  },
+  "developmentofanovelmalecontraceptiveusingcyclicpeptidestoinh": {
+   "short": "Male contraceptive peptides, talk",
+   "tags": [
+    "research",
+    "speaking",
+    "peptide-protein-design",
+    "analysis-research",
+    "oral-communication",
+    "problem-solving-creativity"
+   ]
+  },
+  "mitigatingknowledgedrainacasestudyinoptimizingworkflowandtra": {
+   "short": "Mitigating knowledge drain, talk",
+   "tags": [
+    "research",
+    "speaking",
+    "research-culture-publishing",
+    "analysis-research",
+    "oral-communication"
+   ]
+  },
+  "22ndeditorinchiefassociateeditorformerjournalofyounginvestig": {
+   "short": "Editor-in-Chief, JYI",
+   "tags": [
+    "leading-organizing",
+    "writing-editing",
+    "research-culture-publishing",
+    "analysis-research",
+    "written-communication",
+    "leadership",
+    "planning-organisation",
+    "problem-solving-creativity",
+    "peer-review"
+   ]
+  },
+  "grantreviewermciyabundergraduateprojectgrant": {
+   "short": "Grant reviewer, MCI YAB",
+   "tags": [
+    "funding-ventures",
+    "writing-editing",
+    "peptide-protein-design",
+    "research-culture-publishing",
+    "analysis-research",
+    "written-communication",
+    "persuasion-negotiation",
+    "peer-review"
+   ]
+  },
+  "researchleadgovernorsstemscholarsresearchdevelopmentcouncilo": {
+   "short": "Research Lead, Governor's STEM Scholars",
+   "tags": [
+    "leading-organizing",
+    "teaching-mentoring",
+    "research-culture-publishing",
+    "ambition-commitment",
+    "commercial-awareness",
+    "oral-communication",
+    "interpersonal",
+    "leadership",
+    "planning-organisation",
+    "problem-solving-creativity",
+    "teamwork"
+   ]
+  },
+  "teachingassistanthonorsfirstyearseminar": {
+   "short": "TA, Honors First Year Seminar",
+   "tags": [
+    "teaching-mentoring",
+    "oral-communication",
+    "interpersonal"
+   ]
+  },
+  "teachingassistantgracehopperairesearchinstitute": {
+   "short": "TA, Grace Hopper Institute",
+   "tags": [
+    "teaching-mentoring",
+    "peptide-protein-design",
+    "oral-communication",
+    "interpersonal",
+    "problem-solving-creativity",
+    "machine-learning"
+   ]
+  },
+  "researchchairamericanassociationofphysiciansofindianoriginaa": {
+   "short": "Research Chair, AAPI PreMed",
+   "tags": [
+    "leading-organizing",
+    "medicine-emergency-care",
+    "research-culture-publishing",
+    "leadership",
+    "teamwork"
+   ]
+  },
+  "boardmembermciyouthadvisoryboardyab": {
+   "short": "MCI Youth Advisory Board",
+   "tags": [
+    "leading-organizing",
+    "peptide-protein-design",
+    "interpersonal",
+    "leadership",
+    "teamwork"
+   ]
+  },
+  "memberpremedicaladhoccommitteeapsa": {
+   "short": "APSA Pre-Medical Committee",
+   "tags": [
+    "leading-organizing",
+    "medicine-emergency-care",
+    "teamwork"
+   ]
+  },
+  "membergoldwaterambassadorsprogram": {
+   "short": "Goldwater Ambassador",
+   "tags": [
+    "leading-organizing",
+    "research-culture-publishing",
+    "ambition-commitment",
+    "persuasion-negotiation",
+    "problem-solving-creativity",
+    "teamwork"
+   ]
+  },
+  "memberartisanprogram": {
+   "short": "ARTISAN Program",
+   "tags": [
+    "leading-organizing",
+    "research-culture-publishing",
+    "persuasion-negotiation",
+    "teamwork"
+   ]
+  },
+  "memberstudentconductboard": {
+   "short": "Student Conduct Board",
+   "tags": [
+    "leading-organizing",
+    "history-of-medicine-ethics",
+    "analysis-research",
+    "interpersonal",
+    "teamwork"
+   ]
+  },
+  "chairchairintrainingformerhighlanderintegritycouncil": {
+   "short": "Chair, Integrity Council",
+   "tags": [
+    "leading-organizing",
+    "history-of-medicine-ethics",
+    "leadership",
+    "teamwork"
+   ]
+  },
+  "memberinclusiveexcellencestudentadvisoryboard": {
+   "short": "Inclusive Excellence Board",
+   "tags": [
+    "leading-organizing",
+    "interpersonal",
+    "leadership",
+    "teamwork"
+   ]
+  },
+  "membermultifaithcouncil": {
+   "short": "Multifaith Council",
+   "tags": [
+    "leading-organizing",
+    "sikh-studies-community",
+    "interpersonal",
+    "teamwork"
+   ]
+  },
+  "organizeritsdifferentforgirlsdocumentaryscreeningpanelnjitad": {
+   "short": "'It's Different for Girls' screening",
+   "tags": [
+    "leading-organizing",
+    "history-of-medicine-ethics",
+    "leadership",
+    "planning-organisation"
+   ]
+  },
+  "njitrepresentativebionj33rdannualdinnermeetinginnovationcele": {
+   "short": "BioNJ representative",
+   "tags": [
+    "leading-organizing",
+    "client-facing",
+    "commercial-awareness",
+    "persuasion-negotiation",
+    "problem-solving-creativity"
+   ]
+  },
+  "steeringcommitteeleadadhcfirstyearretreat": {
+   "short": "First Year Retreat lead",
+   "tags": [
+    "leading-organizing",
+    "leadership",
+    "planning-organisation",
+    "teamwork"
+   ]
+  },
+  "advisorpresidentformersecretaryformerhonorshallcouncil": {
+   "short": "Honors Hall Council",
+   "tags": [
+    "leading-organizing",
+    "interpersonal",
+    "leadership",
+    "planning-organisation",
+    "teamwork"
+   ]
+  },
+  "adhcrepresentativenationalcollegiatehonorscouncilannualconfe": {
+   "short": "NCHC conference delegate",
+   "tags": [
+    "leading-organizing",
+    "client-facing",
+    "persuasion-negotiation",
+    "teamwork"
+   ]
+  },
+  "invitedspeakerforthcomingpresentationoninterdisciplinaryrese": {
+   "short": "Invited talk, research in medicine",
+   "tags": [
+    "leading-organizing",
+    "speaking",
+    "medicine-emergency-care",
+    "adaptability",
+    "oral-communication",
+    "leadership"
+   ]
+  },
+  "lectureseriesethicsinscienceandresearchsciencementorshipinst": {
+   "short": "Ethics in Science lectures",
+   "tags": [
+    "speaking",
+    "teaching-mentoring",
+    "history-of-medicine-ethics",
+    "oral-communication",
+    "interpersonal"
+   ]
+  },
+  "sessionmoderatorstudentoralpresentationcommunicationsncur202": {
+   "short": "NCUR session moderator",
+   "tags": [
+    "speaking",
+    "research-culture-publishing",
+    "oral-communication"
+   ]
+  },
+  "featuredpresenternavigatingpeerreviewandthestudentjournallan": {
+   "short": "Navigating peer review, talk",
+   "tags": [
+    "speaking",
+    "research-culture-publishing",
+    "oral-communication",
+    "problem-solving-creativity",
+    "peer-review"
+   ]
+  },
+  "featuredpanelistitsdifferentforgirlsdocumentaryscreeningpane": {
+   "short": "'Different for Girls' panelist",
+   "tags": [
+    "speaking",
+    "history-of-medicine-ethics",
+    "oral-communication"
+   ]
+  },
+  "njitmakesundergraduateresearchinnovationnjitpromotionalmater": {
+   "short": "NJIT Makes feature",
+   "tags": [
+    "writing-editing",
+    "peptide-protein-design",
+    "written-communication",
+    "problem-solving-creativity"
+   ]
+  },
+  "invitedspeakerpresentationstothenjitboardoftrusteesandthepre": {
+   "short": "Talk to NJIT Board of Trustees",
+   "tags": [
+    "clinical-care",
+    "leading-organizing",
+    "speaking",
+    "medicine-emergency-care",
+    "client-facing",
+    "oral-communication",
+    "leadership",
+    "teamwork",
+    "emergency-care-emt-bls"
+   ]
+  },
+  "albertdormanhonorscollegehonorsinaction2025researchawardands": {
+   "short": "Honors in Action 2025",
+   "tags": [
+    "writing-editing",
+    "research-culture-publishing",
+    "ambition-commitment",
+    "written-communication"
+   ]
+  },
+  "nayibmorn150honorsscholarsshowcasefindingsatinterdisciplinar": {
+   "short": "Research Forum feature",
+   "tags": [
+    "writing-editing",
+    "research-culture-publishing",
+    "ambition-commitment",
+    "written-communication"
+   ]
+  },
+  "featuredspeakeradhcadvisingdaynjit20242025": {
+   "short": "ADHC Advising Day speaker",
+   "tags": [
+    "speaking",
+    "research-culture-publishing",
+    "oral-communication"
+   ]
+  },
+  "albertdormanhonorscollegehonorsinaction2024researchandstudya": {
+   "short": "Honors in Action 2024",
+   "tags": [
+    "writing-editing",
+    "research-culture-publishing",
+    "written-communication"
+   ]
+  },
+  "gurnoorkaurundergraduatestudentresearchersoncampusarticlefea": {
+   "short": "Student researchers feature",
+   "tags": [
+    "writing-editing",
+    "research-culture-publishing",
+    "written-communication",
+    "interpersonal"
+   ]
+  },
+  "ksinghintroductiontopymolandlinearpeptidedesignlecturenjitge": {
+   "short": "PyMOL & peptide design lecture",
+   "tags": [
+    "speaking",
+    "peptide-protein-design",
+    "oral-communication",
+    "problem-solving-creativity",
+    "pymol"
+   ]
+  },
+  "newjerseyemtlicense": {
+   "short": "NJ EMT License",
+   "tags": [
+    "clinical-care",
+    "medicine-emergency-care",
+    "client-facing",
+    "interpersonal",
+    "emergency-care-emt-bls"
+   ]
+  },
+  "acsstopthebleedcertificationinstructorlicense": {
+   "short": "Stop the Bleed instructor license",
+   "tags": [
+    "clinical-care",
+    "teaching-mentoring",
+    "medicine-emergency-care",
+    "client-facing",
+    "oral-communication",
+    "interpersonal",
+    "emergency-care-emt-bls"
+   ]
+  },
+  "oshageneralindustrysafetyhealthcertification": {
+   "short": "OSHA safety certification",
+   "tags": [
+    "research",
+    "analysis-research"
+   ]
+  },
+  "citibiomedicalresearchcertification": {
+   "short": "CITI biomedical research",
+   "tags": [
+    "research",
+    "analysis-research"
+   ]
+  },
+  "citircrbasiccertification": {
+   "short": "CITI RCR",
+   "tags": [
+    "research",
+    "analysis-research"
+   ]
+  },
+  "americanheartassociationblscprforadultchildinfantcertificati": {
+   "short": "BLS & CPR",
+   "tags": [
+    "clinical-care",
+    "medicine-emergency-care",
+    "emergency-care-emt-bls"
+   ]
+  },
+  "ethicscoordinatormentorneurobioethicscurriculumdevformeradmi": {
+   "short": "Science Mentorship Institute",
+   "tags": [
+    "funding-ventures",
+    "leading-organizing",
+    "teaching-mentoring",
+    "neuroscience-modelling",
+    "history-of-medicine-ethics",
+    "client-facing",
+    "oral-communication",
+    "written-communication",
+    "interpersonal",
+    "leadership",
+    "persuasion-negotiation",
+    "planning-organisation",
+    "teamwork",
+    "curriculum-design"
+   ]
+  },
+  "publicrelationschairemtnjitfirstaidsquad": {
+   "short": "NJIT First Aid Squad",
+   "tags": [
+    "clinical-care",
+    "leading-organizing",
+    "medicine-emergency-care",
+    "client-facing",
+    "oral-communication",
+    "interpersonal",
+    "leadership",
+    "persuasion-negotiation",
+    "teamwork",
+    "emergency-care-emt-bls"
+   ]
+  },
+  "khalsaschoolvirsasikhhistoryteachersikhsabhaofnewjersey": {
+   "short": "Khalsa School Sikh history teacher",
+   "tags": [
+    "teaching-mentoring",
+    "sikh-studies-community",
+    "oral-communication",
+    "interpersonal"
+   ]
+  },
+  "youthcamporganizercoordinatorsikhsabhaofnewjersey": {
+   "short": "Sikh Sabha youth camp",
+   "tags": [
+    "leading-organizing",
+    "sikh-studies-community",
+    "interpersonal",
+    "leadership",
+    "planning-organisation"
+   ]
+  },
+  "contentmanagerthemardanaproject": {
+   "short": "The Mardana Project",
+   "tags": [
+    "writing-editing",
+    "sikh-studies-community",
+    "written-communication",
+    "planning-organisation"
+   ]
+  },
+  "stopthebleedinstructornjit": {
+   "short": "Stop the Bleed, NJIT",
+   "tags": [
+    "teaching-mentoring",
+    "medicine-emergency-care",
+    "client-facing",
+    "oral-communication",
+    "interpersonal",
+    "emergency-care-emt-bls"
+   ]
+  },
+  "stopthebleedinstructorhybridenglishpunjabinjgurdwarasnjoffic": {
+   "short": "Stop the Bleed in Punjabi",
+   "tags": [
+    "teaching-mentoring",
+    "medicine-emergency-care",
+    "sikh-studies-community",
+    "adaptability",
+    "client-facing",
+    "oral-communication",
+    "interpersonal",
+    "emergency-care-emt-bls",
+    "punjabi"
+   ]
+  },
+  "youthcampcounselorgurunanaksikhheritage": {
+   "short": "Guru Nanak Sikh Heritage camp",
+   "tags": [
+    "teaching-mentoring",
+    "sikh-studies-community",
+    "oral-communication",
+    "interpersonal"
+   ]
+  },
+  "vicepresidentpresidentformereventscoordinatorformersikhassoc": {
+   "short": "Sikh Association of NJIT",
+   "tags": [
+    "leading-organizing",
+    "sikh-studies-community",
+    "leadership",
+    "planning-organisation"
+   ]
+  },
+  "presidenttreasurerformercofoundernjitmediczero": {
+   "short": "NJIT MedicZero",
+   "tags": [
+    "clinical-care",
+    "leading-organizing",
+    "medicine-emergency-care",
+    "commercial-awareness",
+    "independence-confidence",
+    "leadership",
+    "planning-organisation",
+    "problem-solving-creativity"
+   ]
+  },
+  "cofounderdeltaepsilonmupremedicalprofessionalfraternity": {
+   "short": "Delta Epsilon Mu",
+   "tags": [
+    "leading-organizing",
+    "medicine-emergency-care",
+    "independence-confidence",
+    "leadership",
+    "problem-solving-creativity",
+    "teamwork"
+   ]
+  },
+  "fellowhonorssummerresearchinstitutefellowship": {
+   "short": "HSRI Fellow",
+   "tags": [
+    "leading-organizing",
+    "peptide-protein-design",
+    "ambition-commitment",
+    "independence-confidence"
+   ]
+  },
+  "emtseniorsquadmembercadetcrewchiefformermarlborofirstaidsqua": {
+   "short": "Marlboro First Aid Squad",
+   "tags": [
+    "clinical-care",
+    "medicine-emergency-care",
+    "client-facing",
+    "interpersonal",
+    "leadership",
+    "teamwork",
+    "emergency-care-emt-bls"
+   ]
+  },
+  "fellownopatientleftbehindfellowship": {
+   "short": "No Patient Left Behind Fellow",
+   "tags": [
+    "clinical-care",
+    "medicine-emergency-care",
+    "ambition-commitment",
+    "client-facing",
+    "independence-confidence",
+    "interpersonal"
+   ]
+  },
+  "youngscholaramericancollegeofcardiology": {
+   "short": "ACC Young Scholar",
+   "tags": [
+    "leading-organizing",
+    "medicine-emergency-care",
+    "ambition-commitment"
+   ]
+  }
+ }
+}

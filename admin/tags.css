@@ -1,0 +1,36 @@
+/* Tags (admin/tags.js): the Tags page and the tags block on each CV entry */
+.tg-intro p { margin: 0 0 .8rem; max-width: 46rem; }
+.tg-fam h3 { font-family: var(--display); font-weight: 400; font-size: 1.3rem; margin: 0 0 .15rem; }
+.tg-desc { font-size: .84rem; color: var(--soft); margin: 0 0 .6rem; }
+.tg-row { display: grid; grid-template-columns: minmax(0, 14rem) auto 5.5rem minmax(0, 1fr) auto; gap: .5rem .8rem; align-items: center; padding: .4rem 0; border-top: 1px solid var(--rule); }
+.tg-row.is-hidden > input[type="text"]:first-child { border-style: dashed; }
+.tg-vis { display: inline-flex; align-items: center; gap: .35rem; font-size: .82rem; white-space: nowrap; cursor: pointer; }
+.tg-n { font-size: .8rem; color: var(--soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tg-tools { display: inline-flex; align-items: center; gap: .3rem; }
+.tg-add { display: flex; gap: .5rem; align-items: center; padding-top: .6rem; border-top: 1px solid var(--rule); }
+.tg-add input { max-width: 18rem; }
+.tg-jump { display: block; width: 100%; text-align: left; font: inherit; font-size: .86rem; padding: .4rem .2rem; border: 0; border-top: 1px solid var(--rule); background: none; color: var(--sky); cursor: pointer; }
+.tg-jump:hover { text-decoration: underline; }
+
+.tagbox { display: grid; gap: .55rem; margin-top: .6rem; padding-top: .6rem; border-top: 1px dashed var(--rule); }
+.tb-head { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
+.tb-l { font-size: .74rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); margin-right: .3rem; }
+.tb-none { font-size: .84rem; color: var(--faint); margin-right: .3rem; }
+.tchip { display: inline-flex; align-items: center; gap: .15rem; font-size: .78rem; padding: .1rem .15rem .1rem .6rem; border-radius: 999px; border: 1px solid var(--rule); background: var(--bg); }
+.tchip.k-activity { font-weight: 600; }
+.tchip.hid { border-style: dashed; color: var(--soft); }
+.tchip button { font: inherit; font-size: .95rem; line-height: 1; width: 1.5rem; height: 1.5rem; border: 0; border-radius: 50%; background: none; color: var(--faint); cursor: pointer; }
+.tchip button:hover { color: var(--ink); background: var(--surface); }
+.tpick { display: grid; gap: .6rem; padding: .7rem; border: 1px solid var(--rule); border-radius: 8px; background: var(--bg); }
+.tpick .fam > span { font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); }
+.tpick .opts { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .3rem; }
+.topt { font: inherit; font-size: .78rem; min-height: 1.9rem; padding: .15rem .65rem; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); cursor: pointer; }
+.topt.hid { border-style: dashed; color: var(--soft); }
+.topt[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); border-style: solid; }
+.tb-short { margin: 0; max-width: 26rem; }
+
+@media (max-width: 860px) {
+  .tg-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .tg-row > :nth-child(3) { justify-self: start; }
+  .tg-row > :nth-child(4) { grid-column: 1 / -1; }
+}
