@@ -54,7 +54,15 @@
                   "show": "both"
                 }
               ],
-              "tags": [],
+              "tags": [
+                "research-culture-publishing",
+                "adaptability",
+                "ambition-commitment",
+                "analysis-research",
+                "planning-organisation",
+                "problem-solving-creativity",
+                "teamwork"
+              ],
               "short": "Lund University, exchange"
             }
           ]
