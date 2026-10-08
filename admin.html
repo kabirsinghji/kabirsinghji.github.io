@@ -365,7 +365,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   }
 
   function watchBuild(sha, box) {
-    var c = cfg(), start = Date.now(), seen = false;
+    var c = cfg(), start = Date.now(), seen = false, misses = 0;
     (function poll() {
       gh('/repos/' + c.repo + '/actions/runs?head_sha=' + sha + '&per_page=5').then(function (r) {
         var run = (r.workflow_runs || []).filter(function (w) { return /cv|build/i.test(w.name || ''); })[0] || (r.workflow_runs || [])[0];
@@ -385,6 +385,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
         }
         setTimeout(poll, 5000);
       }).catch(function (e) {
+        if (++misses < 4) { setTimeout(poll, 5000); return; }   /* a dropped connection: keep watching */
         box.step(1, 'fail', 'Could not check the build: ' + esc(e.message) + '. Your data is saved; see the Actions tab on GitHub.');
       });
     })();
