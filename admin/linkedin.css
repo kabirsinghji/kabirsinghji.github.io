@@ -1,0 +1,31 @@
+/* LinkedIn posts (admin/linkedin.js) */
+.li-intro p { margin: 0 0 .8rem; max-width: 46rem; }
+.li-intro p:last-child { margin-bottom: 0; }
+.li-add { display: flex; gap: .5rem; align-items: center; }
+.li-add input { flex: 1 1 auto; min-width: 0; font: inherit; font-size: .92rem; padding: .5rem .6rem; border-radius: 6px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); }
+.li-msg { font-size: .84rem; color: var(--soft); margin: 0; }
+.li-msg:empty { display: none; }
+.li-msg.is-err { color: #c0392b; }
+
+.li-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 1.2rem 0 .9rem; padding-bottom: .8rem; border-bottom: 2px solid var(--ink); }
+.li-show { display: inline-flex; align-items: center; gap: .45rem; font-size: .9rem; }
+.li-show select { width: auto; padding: .3rem .5rem; }
+.li-last { flex: 1 1 10rem; font-size: .82rem; color: var(--soft); }
+
+.li-post.is-on { border-left: 3px solid var(--ink); }
+.li-post .card-top { flex-wrap: wrap; row-gap: .4rem; }
+.li-post .card-top .n { white-space: nowrap; }
+.li-badge { font-size: .72rem; font-weight: 600; padding: .15rem .55rem; border-radius: 999px; background: var(--ink); color: var(--bg); white-space: nowrap; }
+.li-open { font-size: .82rem; color: var(--sky); margin-left: .5rem; white-space: nowrap; }
+.li-status { display: flex; gap: .8rem; align-items: flex-start; font-size: .86rem; color: var(--soft); margin: 0 0 .8rem; padding: .6rem .7rem; border-radius: 8px; border: 1px dashed var(--rule); }
+.li-status p { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.li-status.is-ok { border: 1px solid color-mix(in srgb, #2f9e5b 45%, var(--rule)); }
+.li-status.is-err { border: 1px solid #c0392b; color: var(--ink); background: color-mix(in srgb, #c0392b 8%, var(--surface)); }
+.li-thumb { flex: none; width: 6.5rem; aspect-ratio: 16 / 10; max-width: 100%; object-fit: cover; border-radius: 4px; background: var(--bg); }
+
+@media (max-width: 860px) {
+  .li-post .card-top .n { flex-basis: 100%; }
+  .li-open { margin-left: auto; }
+  .li-status { flex-direction: column; }
+  .li-thumb { width: 100%; max-width: 14rem; }
+}
