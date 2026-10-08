@@ -27,6 +27,9 @@ EXT = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif
 # post pictures live under these media.licdn.com paths; avatars and logos do not
 PICTURE = re.compile(r"feedshare|image-shrink|videocover|articleshare|article-cover|document-cover", re.I)
 NOT_PICTURE = re.compile(r"profile-displayphoto|profile-framedphoto|company-logo|background", re.I)
+# what LinkedIn's sign-in and error pages say about LinkedIn itself; never a post's text
+GENERIC = re.compile(r"million\+ members|billion\+? members|Manage your professional identity|"
+                     r"Welcome to your professional community|Sign in to view|Join now to see", re.I)
 
 
 def now():
@@ -75,6 +78,8 @@ def read_post(page):
         og = meta(page, "og:image")
         if og and not NOT_PICTURE.search(og):
             pic = og
+    if GENERIC.search(text):                  # a sign-in or error page, not the post
+        return "", ""
     return text, pic
 
 
@@ -122,6 +127,9 @@ def main():
     if os.path.exists(CACHE):
         with open(CACHE, encoding="utf-8") as f:
             cache = json.load(f)
+    for e in cache["posts"].values():         # an earlier read that kept LinkedIn's own page text
+        if GENERIC.search(e.get("text", "")):
+            e.update(text="", ok=False)
     if not posts and not cache["posts"]:
         return 0
     force = bool(li.get("sync")) and li["sync"] > (cache.get("syncedAt") or "")
@@ -142,7 +150,7 @@ def main():
             except (urllib.error.URLError, OSError, ValueError) as e:
                 err = err or "picture: %s" % e
         entry["ok"] = bool(text)
-        entry["note"] = "" if text else ("LinkedIn refused: %s" % err if err else "No text found. Is the post public?")
+        entry["note"] = "" if text else ("LinkedIn refused: %s" % err if err else "LinkedIn showed no text for it. It may be a repost or not public")
         cache["posts"][p["id"]] = entry
         print("linkedin %s: %s" % (p["id"], "ok" if text else entry["note"]) + (", picture" if entry["image"] else ""))
 
