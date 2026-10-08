@@ -456,6 +456,7 @@ def why_section(cv):
     if not (sci and his):
         return ""
     shared = f'\n    <figcaption class="why-shared">{to_html(w["shared"])}</figcaption>' if w.get("shared") else ""
+    shared += f'\n    <p class="why-intro">{INTRO}</p>'
     return f'''<section class="wrap why" aria-labelledby="why-h">
   <h2 class="sr-only" id="why-h">Why molecules and manuscripts</h2>
   <figure class="why-fig">
@@ -528,23 +529,107 @@ def linkedin_section(cv):
         body = f'<p class="li-text">{esc(text)}</p>' if text else ""
         cards.append(f'<a class="li-card {cls}" href="{esc(li_href(p))}" rel="noopener">{media}'
                      f'<div class="li-body"><p class="kicker li-kick">{kick}</p>{body}<span class="li-go">Read on LinkedIn &nearr;</span></div></a>')
-    profile = esc(cv["meta"].get("linkedin", ""))
-    more = f' <a href="{profile}">All posts on LinkedIn &nearr;</a>' if profile else ""
     return f'''<section class="wrap sec" id="linkedin" aria-labelledby="li-h">
-  <div class="sec-h"><h2 id="li-h">On LinkedIn</h2><p>The latest posts.{more}</p></div>
+  <h2 class="sr-only" id="li-h">Latest posts on LinkedIn</h2>
   <div class="li-row" tabindex="0" aria-label="Latest LinkedIn posts">{"".join(cards)}</div>
 </section>
 '''
 
 
+# ─────────────────────────────────────────────────────────── page parts ──
+CSS_V = 13
+# the menu, in order; { } (pager.js) steps through the same pages with Home in front
+NAV = [("cv.html", "CV"), ("science.html", "Science"), ("history.html", "History"), ("about.html", "About")]
+INTRO = ("I design therapeutic peptides with KumarLab, work on computational protein design at Imperial College London, "
+         "and build mathematical models of systems too messy to measure directly at NJIT. As an Emerging Scholars Research "
+         "Fellow at the Harvard Sikh Center, I study how the early Khalsa came to speak for the Sikh panth.")
+
+
+def site_header(current=None):
+    links = "".join('\n    <a href="{}"{}>{}</a>'.format(h, ' aria-current="page"' if h == current else "", n) for h, n in NAV)
+    return f'''<header class="wrap top">
+  <a class="brand" href="./">Kabir Singh</a>
+  <nav class="nav" aria-label="Site">{links}
+  </nav>
+</header>'''
+
+
+def site_footer(m):
+    esc = html.escape
+    return f'''<footer class="foot">
+  <div class="wrap">
+    <p class="meta">Last updated {esc(m.get("asOf", ""))}. Plain HTML; CV typeset in LaTeX.<br><a href="mailto:{esc(m.get("email", ""))}">{esc(m.get("email", ""))}</a> &middot; <a href="admin.html">Admin</a></p>
+    <div class="sign-off">
+      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
+      <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
+    </div>
+  </div>
+</footer>'''
+
+
+def timeline_section(cv):
+    """Every CV entry by year, with the kind filters and the certifications (the CV page)."""
+    items, certs = timeline(cv)
+    counts = {k: sum(1 for i in items if i["cat"] == k) for k, _, _ in CATS}
+    btns = '<button type="button" aria-pressed="true" data-c="all">All<span>{}</span></button>'.format(len(items)) + "".join(
+        '<button type="button" aria-pressed="false" data-c="{}">{}<span>{}</span></button>'.format(k, n, counts[k]) for k, n, _ in CATS if counts[k])
+    singular = {k: s for k, _, s in CATS}
+    groups = {}
+    for i in items:
+        groups.setdefault(i["key"][0] if i["key"] else None, []).append(i)
+    years = []
+    order = sorted([y for y in groups if y], reverse=True) + ([None] if None in groups else [])
+    for y in order:
+        rows = []
+        for i in sorted(groups[y], key=lambda i: i["key"] or (0, 0), reverse=True):
+            sub = f'<span class="sub">{i["sub"]}</span>' if i["sub"] else ""
+            if i["bl"]:
+                sub += '<ul class="bl">' + "".join(f"<li>{b}</li>" for b in i["bl"]) + "</ul>"
+            title = f'<span class="plain">{i["title"]}</span>' if i["plain"] else f'<b>{i["title"]}</b>'
+            rows.append(f'<li data-c="{i["cat"]}" class="{i["cls"]}"><span class="cat">{singular.get(i["cat"], i["cat"].title())}</span>'
+                        f'<div>{title}{sub}</div><span class="d">{i["dates"]}</span></li>')
+        label = str(y) if y else "Undated"
+        years.append(f'<section class="year" aria-label="{label}"><h3><span>{label}</span></h3><ul class="items">{"".join(rows)}</ul></section>')
+    first_year = min(y for y in groups if y) if any(groups) else ""
+    cert_html = "".join(f"<li>{c}</li>" for c in certs)
+    return f'''<section class="wrap sec" id="timeline" aria-labelledby="tl-h">
+  <div class="sec-h"><h2 id="tl-h">Since {first_year}</h2><p>Every entry on the CV, newest first, under the year it began. Filter by kind; certifications are listed at the end.</p></div>
+  <div class="filters" role="group" aria-label="Filter the timeline">{btns}</div>
+  <div id="years">{"".join(years)}</div>
+  <div class="sec-h sec-h--small"><h2>Certifications &amp; licenses</h2></div>
+  <ul class="certs">{cert_html}</ul>
+</section>'''
+
+
+TIMELINE_JS = """<script>
+/* Timeline filter: hides rows of other kinds and any year left empty. */
+(function () {
+  var btns = [].slice.call(document.querySelectorAll('.filters button'));
+  var years = [].slice.call(document.querySelectorAll('#years .year'));
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var c = b.getAttribute('data-c');
+      btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      years.forEach(function (y) {
+        var any = false;
+        [].forEach.call(y.querySelectorAll('.items > li'), function (li) {
+          var on = c === 'all' || li.getAttribute('data-c') === c;
+          li.hidden = !on; if (on) any = true;
+        });
+        y.hidden = !any;
+      });
+    });
+  });
+})();
+</script>"""
+
+
 def build_index(cv):
     m = cv["meta"]
     esc = html.escape
-    pdata = protein_data(cv)
-    protein_html = protein_section(pdata) if pdata else ""
     linkedin_html = linkedin_section(cv)
     why_html = why_section(cv)
-    protein_js = '\n<script src="protein.js?v=1" defer></script>' if pdata else ""
+    intro_html = "" if why_html else f'\n    <p class="intro">{INTRO}</p>'   # with the coin, the paragraph sits under it
     coin_js = '\n<script src="coin.js?v=1" defer></script>' if why_html else ""
     projects = cv.get("site", {}).get("projects", [])
 
@@ -585,29 +670,6 @@ def build_index(cv):
       <div class="img"><img src="structures/cap8-glialcam.webp" alt="CAP8 (green) bound in the antigen-binding site of an anti-GlialCAM autoantibody" loading="lazy" width="733" height="894"></div>
     </a>'''
 
-    items, certs = timeline(cv)
-    counts = {k: sum(1 for i in items if i["cat"] == k) for k, _, _ in CATS}
-    btns = '<button type="button" aria-pressed="true" data-c="all">All<span>{}</span></button>'.format(len(items)) + "".join(
-        '<button type="button" aria-pressed="false" data-c="{}">{}<span>{}</span></button>'.format(k, n, counts[k]) for k, n, _ in CATS if counts[k])
-    singular = {k: s for k, _, s in CATS}
-    groups = {}
-    for i in items:
-        groups.setdefault(i["key"][0] if i["key"] else None, []).append(i)
-    years = []
-    order = sorted([y for y in groups if y], reverse=True) + ([None] if None in groups else [])
-    for y in order:
-        rows = []
-        for i in sorted(groups[y], key=lambda i: i["key"] or (0, 0), reverse=True):
-            sub = f'<span class="sub">{i["sub"]}</span>' if i["sub"] else ""
-            if i["bl"]:
-                sub += '<ul class="bl">' + "".join(f"<li>{b}</li>" for b in i["bl"]) + "</ul>"
-            title = f'<span class="plain">{i["title"]}</span>' if i["plain"] else f'<b>{i["title"]}</b>'
-            rows.append(f'<li data-c="{i["cat"]}" class="{i["cls"]}"><span class="cat">{singular.get(i["cat"], i["cat"].title())}</span>'
-                        f'<div>{title}{sub}</div><span class="d">{i["dates"]}</span></li>')
-        label = str(y) if y else "Undated"
-        years.append(f'<section class="year" aria-label="{label}"><h3><span>{label}</span></h3><ul class="items">{"".join(rows)}</ul></section>')
-    first_year = min(y for y in groups if y) if any(groups) else ""
-    cert_html = "".join(f"<li>{c}</li>" for c in certs)
     linkedin = esc(m.get("linkedin", ""))
 
     return f'''<!DOCTYPE html>
@@ -632,9 +694,10 @@ def build_index(cv):
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v={CSS_V}">
 <script src="theme.js?v=1"></script>
-<script src="peek.js?v=9" defer></script>{protein_js}{coin_js}
+<script src="peek.js?v=9" defer></script>
+<script src="pager.js?v=1" defer></script>{coin_js}
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
@@ -649,23 +712,14 @@ def build_index(cv):
 </script>
 </head>
 <body class="home">
-<header class="wrap top">
-  <a class="brand" href="./">Kabir Singh</a>
-  <nav class="nav" aria-label="Site">
-    <a href="./" aria-current="page">CV</a>
-    <a href="science.html">Scientific Research</a>
-    <a href="history.html">History Research</a>
-    <a href="about.html">About</a>
-  </nav>
-</header>
+{site_header()}
 <main>
 
 <section class="wrap hero" aria-label="Introduction">
   <div>
     <p class="kicker">Mathematical Biology &middot; NJIT Honors College &middot; Class of 2027</p>
     <div class="names"><h1>Kabir Singh</h1><p class="pa-name" lang="pa">ਕਬੀਰ ਸਿੰਘ</p></div>
-    <p class="thesis">I study <em class="s">molecules</em> and <em class="h">manuscripts</em>.</p>
-    <p class="intro">I design therapeutic peptides with KumarLab, work on computational protein design at Imperial College London, and build mathematical models of systems too messy to measure directly at NJIT. As an Emerging Scholars Research Fellow at the Harvard Sikh Center, I study how the early Khalsa came to speak for the Sikh panth.</p>
+    <p class="thesis">I study <em class="s">molecules</em> and <em class="h">manuscripts</em>.</p>{intro_html}
     <ul class="contact">
       <li><a class="pill" href="cv/cv.pdf">Full CV (PDF)</a></li>
       <li><a href="mailto:{esc(m.get("email", ""))}">{esc(m.get("email", ""))}</a></li>
@@ -677,7 +731,7 @@ def build_index(cv):
   <figure class="arch"><img src="photo-arch.webp" alt="Portrait of Kabir Singh in a khaki turban and dark suit" width="716" height="895" fetchpriority="high"></figure>
 </section>
 
-{why_html}<section class="wrap" aria-label="Two lines of work">
+{linkedin_html}{why_html}<section class="wrap" aria-label="Two lines of work">
   <div class="diptych">
     {leaf("s", "science", "Science", "How do you design a peptide to do one specific thing to one specific target?",
           "research-lab-800.webp", "Kabir Singh at a workstation running PyMOL beside an RMSD-versus-energy docking plot", "Docking analysis, KumarLab", "science.html", "Scientific research")}
@@ -701,58 +755,59 @@ def build_index(cv):
   </div>
 </section>
 
-{linkedin_html}{protein_html}
-<section class="wrap sec" id="timeline" aria-labelledby="tl-h">
-  <div class="sec-h"><h2 id="tl-h">Since {first_year}</h2><p>Every entry on the CV, newest first, under the year it began. Filter by kind; certifications are listed at the end.</p></div>
-  <div class="filters" role="group" aria-label="Filter the timeline">{btns}</div>
-  <div id="years">{"".join(years)}</div>
-  <div class="sec-h sec-h--small"><h2>Certifications &amp; licenses</h2></div>
-  <ul class="certs">{cert_html}</ul>
-</section>
-
-<section class="wrap sec" aria-labelledby="beyond-h">
-  <div class="sec-h"><h2 id="beyond-h">Beyond research</h2></div>
-  <div class="beyond">
-    <div><h3>On call</h3><p>A New Jersey&ndash;licensed EMT, riding with the NJIT First Aid Squad and previously the Marlboro First Aid Squad.</p></div>
-    <div><h3>In the gurdwara</h3><p>Teaching Sikh history at Khalsa School Virsa since 2020, and Stop the Bleed in hybrid English and Punjabi at New Jersey gurdwaras.</p></div>
-    <div><h3>Gurmat Sangeet</h3><p>Classical Indian music in the Sikh devotional tradition; an ongoing practice rather than a project.</p></div>
-    <div><h3>Off hours</h3><p>Wrestling and martial arts, Punjabi, ping-pong, and travel. Reading mostly history, epistemology, and comparative theology.</p></div>
-  </div>
-  <p class="more-link"><a href="about.html">More about me &rarr;</a></p>
-</section>
 </main>
 
-<footer class="foot">
-  <div class="wrap">
-    <p class="meta">Last updated {esc(m.get("asOf", ""))}. Plain HTML; CV typeset in LaTeX.<br><a href="mailto:{esc(m.get("email", ""))}">{esc(m.get("email", ""))}</a> &middot; <a href="admin.html">Admin</a></p>
-    <div class="sign-off">
-      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
-      <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
-    </div>
-  </div>
-</footer>
+{site_footer(m)}
+</body>
+</html>
+'''
 
-<script>
-/* Timeline filter: hides rows of other kinds and any year left empty. */
-(function () {{
-  var btns = [].slice.call(document.querySelectorAll('.filters button'));
-  var years = [].slice.call(document.querySelectorAll('#years .year'));
-  btns.forEach(function (b) {{
-    b.addEventListener('click', function () {{
-      var c = b.getAttribute('data-c');
-      btns.forEach(function (x) {{ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }});
-      years.forEach(function (y) {{
-        var any = false;
-        [].forEach.call(y.querySelectorAll('.items > li'), function (li) {{
-          var on = c === 'all' || li.getAttribute('data-c') === c;
-          li.hidden = !on; if (on) any = true;
-        }});
-        y.hidden = !any;
-      }});
-    }});
-  }});
-}})();
-</script>
+
+def build_cv(cv):
+    """cv.html: the whole record, with the protein drawn from it and the PDF."""
+    m = cv["meta"]
+    esc = html.escape
+    pdata = protein_data(cv)
+    protein_html = protein_section(pdata) if pdata else ""
+    protein_js = '\n<script src="protein.js?v=1" defer></script>' if pdata else ""
+    return f'''<!DOCTYPE html>
+<!-- GENERATED from data/cv.json by tools/build.py. Edit through admin.html; changes made here are overwritten on the next build. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CV — Kabir Singh</title>
+<link rel="canonical" href="https://kabirsinghji.github.io/cv.html">
+<meta name="description" content="Kabir Singh's CV: every entry, newest first, the whole record drawn as a protein, certifications, and the PDF.">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v={CSS_V}">
+<script src="theme.js?v=1"></script>
+<script src="peek.js?v=9" defer></script>
+<script src="pager.js?v=1" defer></script>{protein_js}
+</head>
+<body class="cv-page">
+{site_header("cv.html")}
+<main>
+
+<section class="wrap cv-head" aria-labelledby="cv-h">
+  <div>
+    <p class="kicker">Curriculum vitae &middot; as of {esc(m.get("asOf", ""))}</p>
+    <h1 id="cv-h">CV</h1>
+  </div>
+  <p class="cv-pdf"><a class="pill" href="cv/cv.pdf">Download the PDF</a></p>
+</section>
+
+{protein_html}
+{timeline_section(cv)}
+</main>
+
+{site_footer(m)}
+
+{TIMELINE_JS}
 </body>
 </html>
 '''
@@ -762,7 +817,7 @@ def build_index(cv):
 def main():
     with open(os.path.join(ROOT, "data", "cv.json"), encoding="utf-8") as f:
         cv = json.load(f)
-    outputs = {"cv/cv.tex": build_tex(cv), "index.html": build_index(cv)}
+    outputs = {"cv/cv.tex": build_tex(cv), "index.html": build_index(cv), "cv.html": build_cv(cv)}
     for rel, text in outputs.items():
         with open(os.path.join(ROOT, rel), "w", encoding="utf-8") as f:
             f.write(text)
