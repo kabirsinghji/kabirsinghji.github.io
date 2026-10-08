@@ -1,24 +1,24 @@
 {
-  "syncedAt": "2026-10-08T16:27:14.733Z",
+  "syncedAt": "2026-10-08T16:46:07.640Z",
   "posts": {
     "7513611221267529729": {
       "text": "Last Wednesday, I had the privilege of speaking at NJIT's \"Shaping the Future of Healthcare & Innovation\" dinner alongside Dr. Genoa R. Warner, PhD and Dr. Bryan Pfister, PhD.\n\nI shared my work designing peptide therapeutics in Dr. Vivek Kumar's lab, including the multiple sclerosis project that was published this summer. I also talked about being an EMT--on the ambulance, medicine is about the next ten minutes; in the lab, it is about the next ten years. Translational medicine sits between the two, and that is where I want to spend my career.\n\nAt dinner after the presentations, I sat with Ray Chan, Michelle Cirillo, Mark Bagarazzi, John Pelesko, and Jack Shea, and we talked the whole night. Being the only undergraduate student at the dinner surprisingly was not too uncomfortable! I was really enjoying the conversation and topics that we talked about, and to me, this dinner was one of many signs that I am on the right career path. I could see many dinners like this in the future... Getting a treatment from the lab to a patient takes scientists, doctors, and people who believe in the work early on, and nights like this are where they meet.\n\nThank you to Dean Louis Hamilton for recommending me and for the introduction, and to everyone who came over to talk afterward!\n\nNew Jersey Institute of Technology | Albert Dorman Honors College at NJIT\n\n#NJIT #TranslationalMedicalResearch #HealthcareInnovation #PhysicianScientist",
       "image": "linkedin/7513611221267529729.jpg",
-      "checked": "2026-10-08T16:40:42+00:00",
+      "checked": "2026-10-08T16:46:19+00:00",
       "ok": true,
       "note": ""
     },
     "7511064648058675200": {
       "text": "Over the summer, my first peer-reviewed paper was published in the European Journal of Medicinal Chemistry!\n\nMany current multiple sclerosis drugs work by suppressing whole populations of immune cells. That helps many patients, but it can come with serious side effects, like infections, much like how chemotherapy can affect healthy cells in the body. What if we could selectively target the harmful antibodies themselves instead?\n\nIn MS, some antibodies mistakenly target myelin, the protective coating around nerves. One of their targets, a protein called GlialCAM, was recently linked to Epstein-Barr virus: antibodies made against the virus can cross-react with it. Rather than design a separate drug for every harmful antibody (which is very inefficient!), we asked whether one molecule could block many of them.\n\nWhat we found:\n🔬 We designed CAP8, a ring-shaped (cyclic) peptide just 8 amino acids long, to plug the binding site of 23 different human MS autoantibodies.\n💻 In the molecular dynamics simulations I ran, CAP8 stayed stably in the binding pocket in most cases.\n🧪 In vitro, CAP8 bound the anti-GlialCAM autoantibody about 9 times more tightly than a control peptide and cut its binding to its target by 69% (vs. 27% for the control).\n🛡️ It showed no preferential binding to a normal human antibody against the flu, an early hint that it could leave healthy immunity alone.\n\nThese are early results, and the paper is upfront about what comes next: safety, dosing, delivery, and testing in animal models. That road ahead is what excites me most.\n\nTranslational medical research means carrying an idea from a computer model to the lab bench and, one day, to patients. This project, funded by NJIT's Collaborative Early Research Translation (CERT) grant, gave me my first real look at that journey. It's the kind of work I hope to build my career around as a future physician-scientist.\n\nA massive thank you to my PI, Vivek Kumar, to Corey Heffernan Ph.D. for leading this work, to Owen West, Joseph Dodd-o, Meera J., Aditya Baradi, Katelan Rybak and Abdul Lateef, and to our collaborator Stella Elkabes at Rutgers New Jersey Medical School.\n\n📄 Link to the paper in the comments!\n\nNew Jersey Institute of Technology | Albert Dorman Honors College at NJIT | University of Houston\n\n#MultipleSclerosis #TranslationalMedicalResearch #DrugDiscovery #PhysicianScientist",
       "image": "",
-      "checked": "2026-10-08T16:40:43+00:00",
+      "checked": "2026-10-08T16:46:19+00:00",
       "ok": true,
       "note": ""
     },
     "7510711756919533568": {
       "text": "",
       "image": "",
-      "checked": "2026-10-08T16:42:59+00:00",
+      "checked": "2026-10-08T16:46:20+00:00",
       "ok": false,
       "note": "LinkedIn refused: HTTP 404"
     }
