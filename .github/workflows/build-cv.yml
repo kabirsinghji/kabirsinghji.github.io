@@ -33,7 +33,7 @@ jobs:
       - name: Read the LinkedIn posts listed in data/cv.json (never fails the build)
         run: python3 tools/linkedin.py
 
-      - name: Generate cv.tex and index.html from data/cv.json
+      - name: Generate cv.tex, index.html and cv.html from data/cv.json
         run: python3 tools/build.py
 
       - name: Compile cv.tex
@@ -46,7 +46,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add cv/cv.tex cv/cv.pdf index.html
+          git add cv/cv.tex cv/cv.pdf index.html cv.html
           if [ -f data/linkedin.json ]; then git add data/linkedin.json; fi
           if [ -d linkedin ]; then git add -A linkedin; fi
           git diff --staged --quiet && exit 0
