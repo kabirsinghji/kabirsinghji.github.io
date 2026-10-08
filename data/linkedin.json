@@ -16,11 +16,11 @@
       "note": ""
     },
     "7510711756919533568": {
-      "text": "500 million+ members | Manage your professional identity. Build and engage with your professional network. Access knowledge, insights and opportunities.",
+      "text": "",
       "image": "",
-      "checked": "2026-10-08T16:40:44+00:00",
-      "ok": true,
-      "note": ""
+      "checked": "2026-10-08T16:42:59+00:00",
+      "ok": false,
+      "note": "LinkedIn refused: HTTP 404"
     }
   }
 }
