@@ -1,8 +1,9 @@
 /* LinkedIn posts (admin.html, CV tab).
    data/cv.json keeps the list in site.linkedin = {show, posts: [{url, id, kind, field, text?}], sync?}.
-   The GitHub Action runs tools/linkedin.py, which reads each post's text and picture from LinkedIn
-   into data/linkedin.json and linkedin/<id>.*; this page shows that status. "Sync" saves and asks
-   the build to read every post again. */
+   Posts are added by link, or by the "Get LinkedIn posts" bookmark, which opens admin.html?li=<ids>.
+   The GitHub Action runs tools/linkedin.py, which reads the newest posts' text and picture from
+   LinkedIn into data/linkedin.json and linkedin/<id>.*; this page shows that status. "Sync" saves
+   and asks the build to read them again. */
 window.AdminLinkedIn = (function () {
   'use strict';
   var FIELDS = [['other', 'Other (grey)'], ['science', 'Science (blue)'], ['history', 'History (gold)']];
@@ -38,17 +39,87 @@ window.AdminLinkedIn = (function () {
       .then(function (c) { cache = c || { posts: {} }; cache.posts = cache.posts || {}; done(); });
   }
 
-  function page(ed, data, ui) {
-    var el = ui.el;
+  /* The bookmark. It runs on LinkedIn, so it stays plain ES5 with block comments only:
+     it is turned into a javascript: link. On Kabir's own posts page it collects the newest
+     post ids (skipping reposts) and opens admin.html?li=<id>,<id>…; anywhere else it goes
+     to that page first. */
+  function grab(admin, slug) {
+    var page = 'https://www.linkedin.com/in/' + slug + '/recent-activity/all/';
+    var here = decodeURIComponent(location.pathname).toLowerCase();
+    if (!/(^|\.)linkedin\.com$/.test(location.hostname) || here.indexOf('/in/' + slug.toLowerCase() + '/recent-activity/') !== 0) {
+      alert('Opening your LinkedIn posts. Once they have loaded, click the bookmark again.');
+      location.href = page;
+      return;
+    }
+    var seen = {}, ids = [];
+    function add(id) { if (!seen[id]) { seen[id] = 1; ids.push(id); } }
+    var items = document.querySelectorAll('[data-urn^="urn:li:activity:"]');
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      if (it.parentElement && it.parentElement.closest('[data-urn^="urn:li:activity:"]')) continue;   /* a post shown inside another */
+      var head = it.querySelector('.update-components-header') || it;
+      if (/reposted this/i.test((head.textContent || '').replace(/\s+/g, ' ').slice(0, 400))) continue;   /* someone else's post */
+      add(it.getAttribute('data-urn').split(':').pop());
+    }
+    if (!ids.length) (document.body.innerHTML.match(/urn:li:activity:\d{15,22}/g) || []).forEach(function (u) { add(u.split(':').pop()); });
+    if (!ids.length) { alert('No posts found yet. Wait for your posts to load, then click the bookmark again.'); return; }
+    ids.sort(function (a, b) { return b.length - a.length || (b > a ? 1 : -1); });
+    var url = admin + '?li=' + ids.slice(0, 6).join(',');
+    if (!window.open(url, '_blank')) location.href = url;
+  }
+
+  /* admin.html calls this after loading the CV: adds the posts the bookmark sent, if any.
+     Returns a message for the page, or null when the bookmark sent nothing. */
+  function take(data) {
+    var m = location.search.match(/[?&]li=([\d,]+)/);
+    if (!m) return null;
+    history.replaceState(null, '', location.pathname + location.hash);
     data.site = data.site || {};
     var li = data.site.linkedin = data.site.linkedin || { show: 3, posts: [] };
     li.posts = li.posts || [];
+    var added = 0;
+    m[1].split(',').forEach(function (id) {
+      if (!/^\d{15,22}$/.test(id) || li.posts.some(function (p) { return p.id === id; })) return;
+      li.posts.push({ url: 'https://www.linkedin.com/feed/update/urn:li:activity:' + id + '/', id: id, kind: 'activity', field: 'other' });
+      added++;
+    });
+    li.posts.sort(newestFirst);
+    return added
+      ? 'Added ' + added + ' new post' + (added > 1 ? 's' : '') + ' from LinkedIn. Check the list below, then press <b>Sync</b>.'
+      : 'Your newest LinkedIn posts are already on the list. Press <b>Sync</b> only if you want the site to read them again.';
+  }
+
+  function page(ed, data, ui) {
+    var el = ui.el;
+    /* only stored in the CV once something is added or changed, so just looking isn't an edit */
+    var li = (data.site || {}).linkedin || { show: 3, posts: [] };
+    li.posts = li.posts || [];
+    function keep() { data.site = data.site || {}; data.site.linkedin = li; }
     if (!cache) { ed.appendChild(el('p', { class: 'help', text: 'Loading…' })); loadCache(ui.rerender); return; }
 
     ed.appendChild(el('div', { class: 'card li-intro' }, [
-      el('p', { html: 'Paste the link to a post, then press <b>Sync</b>. The site reads the post&rsquo;s text and picture from LinkedIn and shows the newest ones on the homepage, under Selected work. It takes about two minutes, like any save.' }),
-      el('p', { class: 'help', html: 'To copy a link on LinkedIn: open the post&rsquo;s <b>&middot;&middot;&middot;</b> menu and choose <b>Copy link to post</b>. LinkedIn&rsquo;s &ldquo;Embed this post&rdquo; code works too. Only public posts can be read.' })
+      el('p', { html: 'The newest posts show on the homepage, under Selected work. Add them with the bookmark below (or one at a time by link), then press <b>Sync</b>: the site reads each post&rsquo;s text and picture from LinkedIn. It takes about two minutes, like any save. Only public posts can be read.' })
     ]));
+
+    /* the bookmark */
+    var slug = (String((data.meta || {}).linkedin || '').match(/linkedin\.com\/in\/([^\/?#\s]+)/i) || [])[1];
+    if (slug) {
+      var code = 'void (' + grab + ')(' + JSON.stringify(location.origin + location.pathname) + ',' + JSON.stringify(slug) + ')';
+      var mine = 'https://www.linkedin.com/in/' + slug + '/recent-activity/all/';
+      ed.appendChild(el('div', { class: 'card li-bm' }, [
+        el('p', { class: 'li-h', text: 'Get the newest posts with one click' }),
+        el('ol', {}, [
+          el('li', {}, [document.createTextNode('Drag this button to the bookmarks bar (once on each computer): '),
+            el('a', { class: 'btn li-bm-btn', href: 'javascript:' + encodeURIComponent(code), title: 'Drag me to the bookmarks bar', text: 'Get LinkedIn posts',
+              onclick: function (e) { e.preventDefault(); ui.note('warn', 'Drag the <b>Get LinkedIn posts</b> button to the bookmarks bar instead of clicking it here.'); } })]),
+          el('li', { html: 'On LinkedIn, open <a href="' + ui.esc(mine) + '" target="_blank" rel="noopener">your posts</a> and click the bookmark. This page opens with the new posts added. (Clicked anywhere else, it takes you to your posts first.)' }),
+          el('li', { html: 'Check the list and press <b>Sync</b>.' })
+        ]),
+        el('p', { class: 'help', html: 'No bookmarks bar? Press Ctrl+Shift+B (Windows) or &#8984;+Shift+B (Mac). Reposts of other people&rsquo;s posts are skipped. The bookmark works in a desktop browser, not on a phone.' })
+      ]));
+    } else {
+      ed.appendChild(el('p', { class: 'help', html: 'Add the LinkedIn URL under <b>Header &amp; contact</b> to get the one-click bookmark.' }));
+    }
 
     /* add a post */
     var inp = el('input', { type: 'url', id: 'li-new', placeholder: 'https://www.linkedin.com/posts/…', spellcheck: 'false', 'aria-label': 'Link to a LinkedIn post' });
@@ -58,15 +129,15 @@ window.AdminLinkedIn = (function () {
       if (!p) { msg.textContent = 'That isn’t a link to a LinkedIn post. Copy it from the post’s ··· menu (Copy link to post) and paste the whole thing.'; msg.className = 'li-msg is-err'; return; }
       if (li.posts.some(function (q) { return q.id === p.id; })) { msg.textContent = 'That post is already in the list.'; msg.className = 'li-msg is-err'; return; }
       p.field = 'other';
-      li.posts.push(p); li.posts.sort(newestFirst);
+      li.posts.push(p); li.posts.sort(newestFirst); keep();
       ui.rerender();
       ui.note('ok', 'Post added. Press <b>Sync</b> to put it on the site.');
     }
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); add(); } });
     ed.appendChild(el('div', { class: 'card' }, [
-      el('label', { class: 'f', for: 'li-new' }, [el('span', { text: 'Add a post' }), el('div', { class: 'li-add' }, [
+      el('label', { class: 'f', for: 'li-new' }, [el('span', { text: 'Or add one post by its link' }), el('div', { class: 'li-add' }, [
         inp, el('button', { type: 'button', class: 'btn', text: 'Add', onclick: add })
-      ])]),
+      ]), el('small', { text: 'On LinkedIn, open the post’s ··· menu and choose Copy link to post. Its “Embed this post” code works too.' })]),
       msg
     ]));
 
@@ -74,7 +145,7 @@ window.AdminLinkedIn = (function () {
     var shown = el('select', { id: 'li-show' });
     SHOWN.forEach(function (o) { shown.appendChild(el('option', { value: o[0], text: o[1] })); });
     shown.value = String(li.show || 3);
-    shown.onchange = function () { li.show = Number(shown.value); ui.rerender(); };
+    shown.onchange = function () { li.show = Number(shown.value); keep(); ui.rerender(); };
     var last = cache.syncedAt ? 'Last sync ' + new Date(cache.syncedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) + '.' : 'Not synced yet.';
     var syncBtn = el('button', { type: 'button', class: 'btn btn--primary', text: 'Sync',
       title: 'Save, then read every post from LinkedIn again',
@@ -97,7 +168,8 @@ window.AdminLinkedIn = (function () {
     li.posts.forEach(function (p, i) {
       var got = cache.posts[p.id];
       var status;
-      if (!got) status = el('p', { class: 'li-status', text: 'Not read yet. Press Sync.' });
+      if (i >= n) status = el('p', { class: 'li-status', text: 'Not on the homepage: only the newest ' + n + ' are shown, so this one isn’t read.' });
+      else if (!got) status = el('p', { class: 'li-status', text: 'Not read yet. Press Sync.' });
       else if (got.ok) status = el('div', { class: 'li-status is-ok' }, [
         got.image ? el('img', { class: 'li-thumb', src: got.image, alt: '', loading: 'lazy' }) : null,
         el('p', { text: 'Read from LinkedIn: “' + String(got.text || '').replace(/\s+/g, ' ').slice(0, 160) + (String(got.text || '').length > 160 ? '…' : '') + '”' })
@@ -150,5 +222,5 @@ window.AdminLinkedIn = (function () {
     return el('label', { class: 'f', for: id }, [el('span', { text: label }), input, o.hint ? el('small', { text: o.hint }) : null]);
   }
 
-  return { page: page };
+  return { page: page, take: take };
 })();

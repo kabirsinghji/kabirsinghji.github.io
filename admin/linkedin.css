@@ -29,3 +29,8 @@
   .li-status { flex-direction: column; }
   .li-thumb { width: 100%; max-width: 14rem; }
 }
+
+.li-bm .li-h { font-weight: 600; margin: 0 0 .4rem; }
+.li-bm ol { margin: 0 0 .7rem; padding-left: 1.2rem; display: grid; gap: .45rem; max-width: 46rem; }
+.li-bm .li-bm-btn { display: inline-block; margin-left: .3rem; text-decoration: none; cursor: grab; border-style: dashed; }
+.li-bm p.help { margin: 0; }
