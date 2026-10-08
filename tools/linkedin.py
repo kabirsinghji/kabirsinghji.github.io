@@ -6,9 +6,9 @@ For each post this reads LinkedIn's public embed page (the one an "Embed this po
 takes the post's text and first picture, and saves:
   data/linkedin.json   text, picture path and status per post (admin.html shows the status)
   linkedin/<id>.<ext>  the picture, kept in the repo because LinkedIn's image links expire
-A post is read when it is new, when its last read failed, or when admin's Sync button set a newer
-"sync" time. Nothing here can fail the build: if LinkedIn refuses, the post keeps its previous text
-(or none) and admin shows why.
+Only the newest posts (as many as the homepage shows) are read. A post is read when it is new,
+when its last read failed, or when admin's Sync button set a newer "sync" time. Nothing here can
+fail the build: if LinkedIn refuses, the post keeps its previous text (or none) and admin shows why.
 """
 import datetime
 import html
@@ -116,7 +116,8 @@ def save_picture(post_id, url):
 def main():
     with open(os.path.join(ROOT, "data", "cv.json"), encoding="utf-8") as f:
         li = json.load(f).get("site", {}).get("linkedin") or {}
-    posts = [p for p in li.get("posts", []) if str(p.get("id", "")).isdigit()]
+    posts = sorted((p for p in li.get("posts", []) if str(p.get("id", "")).isdigit()),
+                   key=lambda p: int(p["id"]), reverse=True)[:max(1, min(6, int(li.get("show", 3))))]
     cache = {"syncedAt": "", "posts": {}}
     if os.path.exists(CACHE):
         with open(CACHE, encoding="utf-8") as f:
