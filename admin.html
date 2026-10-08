@@ -18,6 +18,8 @@
 <script src="admin/dying.js?v=4" defer></script>
 <link rel="stylesheet" href="admin/tags.css?v=1">
 <script src="admin/tags.js?v=1" defer></script>
+<link rel="stylesheet" href="admin/linkedin.css?v=1">
+<script src="admin/linkedin.js?v=1" defer></script>
 <style>
 /* Admin-only styles; tokens and fonts come from style.css */
 body { font-size: 15px; }
@@ -449,6 +451,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   function renderNav() {
     var nav = $('secnav'); nav.innerHTML = '';
     var list = S.data.sections.map(function (s) { return { id: s.id, label: s.title, n: countOf(s) }; });
+    list.push({ id: 'linkedin', label: 'LinkedIn', n: ((S.data.site || {}).linkedin || {}).posts ? S.data.site.linkedin.posts.length : '' });
     list.push({ id: 'tags', label: 'Tags', n: S.data.tagset ? S.data.tagset.length : '' });
     list.push({ id: 'meta', label: 'Header & contact', n: '' });
     list.forEach(function (it) {
@@ -529,6 +532,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     rerender: function () { var y = window.scrollY; renderEditor(); after(); window.scrollTo(0, y); },
     go: function (id) { S.section = id; renderNav(); renderEditor(); window.scrollTo({ top: 0 }); }
   };
+  var LIUI = { el: el, esc: esc, note: note, sync: TAGUI.sync, rerender: TAGUI.rerender, publish: function () { save(); } };   /* admin/linkedin.js */
   function tagBlock(e) { return window.AdminTags ? AdminTags.block(e, S.data, TAGUI) : null; }
 
   function bulletsEditor(entry, rerender) {
@@ -575,6 +579,13 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     if (!S.data) return;
     var rer = function () { var y = window.scrollY; renderEditor(); after(); window.scrollTo(0, y); };
     ed.appendChild(el('p', { class: 'help', html: 'Formatting: <code>**bold**</code> <code>*italic*</code> <code>[text](https://link)</code> <code>22^{nd}</code>. When a field uses formatting, the line under it shows how it will look.' }));
+
+    if (S.section === 'linkedin') {
+      ed.innerHTML = '';
+      ed.appendChild(el('h2', { text: 'LinkedIn posts' }));
+      if (window.AdminLinkedIn) AdminLinkedIn.page(ed, S.data, LIUI);
+      return;
+    }
 
     if (S.section === 'tags') {
       ed.innerHTML = '';
