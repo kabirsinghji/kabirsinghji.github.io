@@ -429,6 +429,52 @@ def protein_section(data):
 '''
 
 
+# ──────────────────────────────────────────────────────────────── coin ──
+# site.why in cv.json (edited in admin): {"shared", "molecules", "manuscripts"}, the two stories split
+# into paragraphs by blank lines. A coin turns over between them (coin.js); one side carries CAP8's
+# sequence round its rim, the other the first eight letters of the Gurmukhi alphabet.
+COIN = {"s": ("KPYPFWDD", "CAP8", "MOLECULES"), "h": ("ੳਅੲਸਹਕਖਗ", "ਅੱਖਰ", "MANUSCRIPTS")}
+
+
+def coin_face(side):
+    rim, mid, sub = COIN[side]
+    lang = ' lang="pa"' if side == "h" else ""
+    letters = "".join(f'<text x="170" y="42" transform="rotate({45 * i} 170 170)">{c}</text>' for i, c in enumerate(rim))
+    return (f'<span class="coin-face coin-face--{side}"><svg viewBox="0 0 340 340" aria-hidden="true" focusable="false">'
+            f'<circle class="c-disc" cx="170" cy="170" r="168"/><circle class="c-line" cx="170" cy="170" r="160"/>'
+            f'<circle class="c-dash" cx="170" cy="170" r="100"/><g class="c-rim"{lang}>{letters}</g>'
+            f'<text class="c-mid" x="170" y="158"{lang}>{mid}</text><text class="c-sub" x="170" y="202">{sub}</text></svg></span>')
+
+
+def why_paras(text):
+    return "".join(f"<p>{to_html(p.strip())}</p>" for p in re.split(r"\n\s*\n", text or "") if p.strip())
+
+
+def why_section(cv):
+    w = cv.get("site", {}).get("why") or {}
+    sci, his = why_paras(w.get("molecules")), why_paras(w.get("manuscripts"))
+    if not (sci and his):
+        return ""
+    shared = f'\n    <figcaption class="why-shared">{to_html(w["shared"])}</figcaption>' if w.get("shared") else ""
+    return f'''<section class="wrap why" aria-labelledby="why-h">
+  <h2 class="sr-only" id="why-h">Why molecules and manuscripts</h2>
+  <figure class="why-fig">
+    <div class="why-card">
+      <button class="coin" type="button" aria-pressed="false" aria-label="Turn the coin over for the other story. One side shows the peptide CAP8, the other the first eight letters of the Gurmukhi alphabet.">
+        <span class="coin-tip"><span class="coin-turn">{coin_face("s")}{coin_face("h")}</span></span>
+      </button>
+      <p class="coin-hint" aria-live="polite"></p>
+    </div>{shared}
+  </figure>
+  <div class="why-stories">
+    <div class="why-story why-story--s" data-side="molecules">{sci}</div>
+    <div class="why-story why-story--h" data-side="manuscripts">{his}</div>
+  </div>
+</section>
+
+'''
+
+
 # ──────────────────────────────────────────────────────────── linkedin ──
 # site.linkedin in cv.json lists post links (added in admin); tools/linkedin.py, run just before this
 # script by the GitHub Action, reads each post's text and picture into data/linkedin.json.
@@ -497,7 +543,9 @@ def build_index(cv):
     pdata = protein_data(cv)
     protein_html = protein_section(pdata) if pdata else ""
     linkedin_html = linkedin_section(cv)
+    why_html = why_section(cv)
     protein_js = '\n<script src="protein.js?v=1" defer></script>' if pdata else ""
+    coin_js = '\n<script src="coin.js?v=1" defer></script>' if why_html else ""
     projects = cv.get("site", {}).get("projects", [])
 
     def leaf(kind, field, kicker, question, img, alt, cap, href, go):
@@ -584,9 +632,9 @@ def build_index(cv):
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=11">
+<link rel="stylesheet" href="style.css?v=12">
 <script src="theme.js?v=1"></script>
-<script src="peek.js?v=9" defer></script>{protein_js}
+<script src="peek.js?v=9" defer></script>{protein_js}{coin_js}
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
@@ -629,7 +677,7 @@ def build_index(cv):
   <figure class="arch"><img src="photo-arch.webp" alt="Portrait of Kabir Singh in a khaki turban and dark suit" width="716" height="895" fetchpriority="high"></figure>
 </section>
 
-<section class="wrap" aria-label="Two lines of work">
+{why_html}<section class="wrap" aria-label="Two lines of work">
   <div class="diptych">
     {leaf("s", "science", "Science", "How do you design a peptide to do one specific thing to one specific target?",
           "research-lab-800.webp", "Kabir Singh at a workstation running PyMOL beside an RMSD-versus-energy docking plot", "Docking analysis, KumarLab", "science.html", "Scientific research")}
