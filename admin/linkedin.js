@@ -98,7 +98,7 @@ window.AdminLinkedIn = (function () {
     if (!cache) { ed.appendChild(el('p', { class: 'help', text: 'Loading…' })); loadCache(ui.rerender); return; }
 
     ed.appendChild(el('div', { class: 'card li-intro' }, [
-      el('p', { html: 'The newest posts show on the homepage, under Selected work. Add them with the bookmark below (or one at a time by link), then press <b>Sync</b>: the site reads each post&rsquo;s text and picture from LinkedIn. It takes about two minutes, like any save. Only public posts can be read.' })
+      el('p', { html: 'The newest posts show on the homepage, right under the opening. Add them with the bookmark below (or one at a time by link), then press <b>Sync</b>: the site reads each post&rsquo;s text and picture from LinkedIn. It takes about two minutes, like any save. Only public posts can be read.' })
     ]));
 
     /* the bookmark */
