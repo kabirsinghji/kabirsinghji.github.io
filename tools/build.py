@@ -14,6 +14,7 @@ In "dates", a new line is a line break on the PDF (a space on the site).
 "tags" on an entry or item lists ids from the top-level "tagset"; they shape the homepage protein
 (and never print on the PDF). "short" is the entry's label on the protein.
 """
+import datetime
 import html
 import json
 import os
@@ -428,11 +429,74 @@ def protein_section(data):
 '''
 
 
+# ──────────────────────────────────────────────────────────── linkedin ──
+# site.linkedin in cv.json lists post links (added in admin); tools/linkedin.py, run just before this
+# script by the GitHub Action, reads each post's text and picture into data/linkedin.json.
+LI_FIELDS = {"science": ("li--sci", "Science"), "history": ("li--his", "History")}
+
+
+def li_date(post_id):
+    # LinkedIn post ids carry their own timestamp: the top bits are milliseconds since 1970
+    ms = int(post_id) >> 22
+    return datetime.datetime.fromtimestamp(ms / 1000, datetime.timezone.utc).strftime("%b %Y")
+
+
+def li_href(p):
+    u = (p.get("url") or "").split("?")[0]
+    if re.match(r"https://(www\.)?linkedin\.com/(posts|feed/update)/", u):
+        return u
+    return "https://www.linkedin.com/feed/update/urn:li:%s:%s/" % (p.get("kind", "activity"), p["id"])
+
+
+def linkedin_section(cv):
+    li = cv.get("site", {}).get("linkedin") or {}
+    posts = [p for p in li.get("posts", []) if str(p.get("id", "")).isdigit()]
+    if not posts:
+        return ""
+    cache = {}
+    path = os.path.join(ROOT, "data", "linkedin.json")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            cache = json.load(f).get("posts", {})
+    posts.sort(key=lambda p: int(p["id"]), reverse=True)
+    esc = html.escape
+    cards = []
+    for p in posts[:max(1, min(6, int(li.get("show", 3))))]:
+        got = cache.get(p["id"], {})
+        text = " ".join((p.get("text") or got.get("text") or "").split())
+        img = got.get("image", "")
+        if img and not os.path.exists(os.path.join(ROOT, img)):
+            img = ""
+        cls, label = LI_FIELDS.get(p.get("field"), ("li--other", ""))
+        kick = (label + " &middot; " if label else "") + li_date(p["id"])
+        if img:
+            media = f'<div class="li-media"><img src="{esc(img)}" alt="" loading="lazy"></div>'
+        else:
+            parts = re.split(r"(?<=[.!?])\s+", text, maxsplit=1) if text else ["A post on LinkedIn"]
+            first, rest = parts[0], (parts[1] if len(parts) > 1 else "")
+            if len(first) <= 140:
+                quote, text = esc(first), rest.strip()     # the card goes on from the second sentence
+            else:
+                quote = esc(first[:137].rsplit(" ", 1)[0]) + "&hellip;"
+            media = f'<div class="li-media li-media--quote"><p>{quote}</p></div>'
+        body = f'<p class="li-text">{esc(text)}</p>' if text else ""
+        cards.append(f'<a class="li-card {cls}" href="{esc(li_href(p))}" rel="noopener">{media}'
+                     f'<div class="li-body"><p class="kicker li-kick">{kick}</p>{body}<span class="li-go">Read on LinkedIn &nearr;</span></div></a>')
+    profile = esc(cv["meta"].get("linkedin", ""))
+    more = f' <a href="{profile}">All posts on LinkedIn &nearr;</a>' if profile else ""
+    return f'''<section class="wrap sec" id="linkedin" aria-labelledby="li-h">
+  <div class="sec-h"><h2 id="li-h">On LinkedIn</h2><p>The latest posts.{more}</p></div>
+  <div class="li-row" tabindex="0" aria-label="Latest LinkedIn posts">{"".join(cards)}</div>
+</section>
+'''
+
+
 def build_index(cv):
     m = cv["meta"]
     esc = html.escape
     pdata = protein_data(cv)
     protein_html = protein_section(pdata) if pdata else ""
+    linkedin_html = linkedin_section(cv)
     protein_js = '\n<script src="protein.js?v=1" defer></script>' if pdata else ""
     projects = cv.get("site", {}).get("projects", [])
 
@@ -520,7 +584,7 @@ def build_index(cv):
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 <script src="theme.js?v=1"></script>
 <script src="peek.js?v=9" defer></script>{protein_js}
 <script type="application/ld+json">
@@ -589,7 +653,7 @@ def build_index(cv):
   </div>
 </section>
 
-{protein_html}
+{linkedin_html}{protein_html}
 <section class="wrap sec" id="timeline" aria-labelledby="tl-h">
   <div class="sec-h"><h2 id="tl-h">Since {first_year}</h2><p>Every entry on the CV, newest first, under the year it began. Filter by kind; certifications are listed at the end.</p></div>
   <div class="filters" role="group" aria-label="Filter the timeline">{btns}</div>
