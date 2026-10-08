@@ -1629,7 +1629,49 @@
         "status": "Two StoryMaps, 18 and 22 sites",
         "href": "medieval-italy.html"
       }
-    ]
+    ],
+    "linkedin": {
+      "show": 3,
+      "posts": [
+        {
+          "url": "https://www.linkedin.com/feed/update/urn:li:activity:7513611221267529729/",
+          "id": "7513611221267529729",
+          "kind": "activity",
+          "field": "other"
+        },
+        {
+          "url": "https://www.linkedin.com/feed/update/urn:li:activity:7511064648058675200/",
+          "id": "7511064648058675200",
+          "kind": "activity",
+          "field": "other"
+        },
+        {
+          "url": "https://www.linkedin.com/feed/update/urn:li:activity:7510711756919533568/",
+          "id": "7510711756919533568",
+          "kind": "activity",
+          "field": "other"
+        },
+        {
+          "url": "https://www.linkedin.com/feed/update/urn:li:activity:7508528126252138496/",
+          "id": "7508528126252138496",
+          "kind": "activity",
+          "field": "other"
+        },
+        {
+          "url": "https://www.linkedin.com/feed/update/urn:li:activity:7473006578124664833/",
+          "id": "7473006578124664833",
+          "kind": "activity",
+          "field": "other"
+        },
+        {
+          "url": "https://www.linkedin.com/feed/update/urn:li:activity:7462563146122244099/",
+          "id": "7462563146122244099",
+          "kind": "activity",
+          "field": "other"
+        }
+      ],
+      "sync": "2026-10-08T16:27:07.974Z"
+    }
   },
   "tagset": [
     {
