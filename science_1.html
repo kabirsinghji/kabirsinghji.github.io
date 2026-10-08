@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scientific Research — Kabir Singh</title>
+<link rel="canonical" href="https://kabirsinghji.github.io/science.html">
+<meta name="description" content="Computational protein and peptide design, mathematical neuroscience, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
+<meta property="og:title" content="Scientific Research — Kabir Singh">
+<meta property="og:description" content="Computational protein and peptide design, mathematical neuroscience, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
+<meta property="og:url" content="https://kabirsinghji.github.io/science.html">
+<meta property="og:image" content="https://kabirsinghji.github.io/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=13">
+<script src="theme.js?v=1"></script>
+<script src="peek.js?v=9" defer></script>
+<script src="pager.js?v=1" defer></script>
+</head>
+<body>
+<header class="wrap top">
+  <a class="brand" href="./">Kabir Singh</a>
+  <nav class="nav" aria-label="Site">
+    <a href="cv.html">CV</a>
+    <a href="science.html" aria-current="page">Science</a>
+    <a href="history.html">History</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+<main class="wrap page">
+
+  <figure class="illustration illustration--wide">
+    <img src="science-header.webp"
+         alt="Close-up of a protein surface rendered in blue, grey and pink, with a peptide drawn as green and violet sticks entering a pocket at the right"
+         width="1398" height="350" fetchpriority="high">
+  </figure>
+
+
+  <header class="masthead masthead--sub">
+    <h1>Scientific Research</h1>
+    <p class="tagline">
+      Computational design of peptides that have to do one specific thing to one
+      specific target, and mathematics applied to systems too messy to measure
+      directly.
+    </p>
+  </header>
+
+  <figure class="lab-photo">
+    <img src="research-lab.webp"
+         srcset="research-lab-800.webp 800w, research-lab.webp 1600w"
+         sizes="(max-width: 68rem) calc(100vw - 3rem), 65rem"
+         alt="Kabir Singh at a workstation running PyMOL alongside an RMSD-versus-energy docking plot"
+         width="1600" height="1066" loading="lazy">
+    <figcaption>
+      Docking analysis at KumarLab &mdash; an RMSD-versus-energy funnel on the
+      left, the corresponding peptide&ndash;target complex in PyMOL on the right.
+    </figcaption>
+  </figure>
+
+  <!-- ================= PROJECTS =================
+       Each block below is a template. The facts are from your CV; the
+       "Question / Approach / Where it stands" lines are for you to fill in
+       properly. Delete any block you don't want.
+  ============================================== -->
+
+  <section class="project">
+    <h2>Cyclic peptides that block fertilization</h2>
+    <p class="project-meta"><img class="mark" src="logos/njit.webp" alt="" width="264" height="263"><img class="mark" src="logos/uh.webp" alt="">KumarLab &middot; NJIT, then University of Houston &middot; PI: Dr. Vivek Kumar &middot; 2023&ndash;present</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>Can a cyclic peptide be designed to interrupt sperm&ndash;egg
+          recognition selectively enough to work as a non-hormonal male
+          contraceptive?</dd>
+      <dt>Approach</dt>
+      <dd>Machine-learning-guided design of cyclic peptides against
+          sperm-specific protein targets, followed by docking and refinement.</dd>
+      <dt>Where it stands</dt>
+      <dd>Manuscript and patent application both in preparation. Presented at the
+          AAP/ASCI/APSA Joint Meeting and the National Contraception Meeting;
+          took first place at the NJIT Honors Interdisciplinary Research Forum.</dd>
+    </dl>
+  </section>
+
+  <section class="project project--split">
+    <div class="split-text">
+    <h2>A cyclic peptide for multiple sclerosis</h2>
+    <p class="project-meta"><img class="mark" src="logos/njit.webp" alt="" width="264" height="263"><img class="mark" src="logos/uh.webp" alt="">KumarLab &middot; NJIT, then University of Houston &middot; PI: Dr. Vivek Kumar &middot; published 2026</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>MS therapies mostly suppress whole B- and T-cell populations, which works
+          but carries serious infection and malignancy risk. Could you instead block
+          just the autoantibodies doing the damage &mdash; and with a single peptide,
+          rather than one per target?</dd>
+      <dt>Approach</dt>
+      <dd>Rational <em>in silico</em> design against the CDRL3 loops of 23 human MS
+          autoantibodies. CDRL3 loops are structurally homogeneous where CDRH3 loops
+          are not, so one 8-mer scaffold can plausibly fit many targets. Rosetta
+          design and FlexPepDock produced CAP8 (KPYPFWDD), validated by 100&nbsp;ns
+          GROMACS simulations and alanine scanning.</dd>
+      <dt>Result</dt>
+      <dd>CAP8 bound anti-GlialCAM autoantibody with a K<sub>d</sub> of 0.294&nbsp;mM,
+          roughly an order of magnitude tighter than the linear peptide
+          (4.82&nbsp;mM) or an unrelated cyclic 8-mer (2.61&nbsp;mM), and cut
+          autoantibody detection of its epitope by 69% on Western blot, against 27%
+          for the cyclic control and 5% for the linear one. Binding to a non-pathological influenza antibody was indistinguishable
+          from controls, which is the selectivity the approach needs.</dd>
+      <dt>Where it stands</dt>
+      <dd>Published in <em>European Journal of Medicinal Chemistry</em>, and
+          preliminary by the paper's own account. Inhibition is partial rather than
+          complete; the control peptides showed modest effects of their own; of the
+          three design templates it was anti-MBP and anti-MOG, not anti-GlialCAM,
+          whose simulated binding passed the stationarity tests; and one of the 23
+          autoantibodies designed against has been tested at the bench. Nothing has
+          been done <em>in vivo</em>.
+          <a href="https://doi.org/10.1016/j.ejmech.2026.119173">Read the paper &rarr;</a></dd>
+    </dl>
+    </div>
+    <aside class="split-figure">
+      <figure class="structure-fig">
+      <img src="structures/cap8-glialcam.webp" alt="Cyclic peptide CAP8 in green, bound in the antigen-binding site of an anti-GlialCAM autoantibody; light chain blue, heavy chain red" width="733" height="894" loading="lazy">
+      <div id="viewer" class="viewer"
+           role="img"
+           aria-label="Interactive three-dimensional structure of the cyclic peptide CAP8 bound to an anti-GlialCAM autoantibody"></div>
+      </figure>
+      <p class="caption">
+      The designed 8-mer cyclic peptide CAP8 (sequence KPYPFWDD, shown in green)
+      at the antigen-binding site of a human anti-GlialCAM autoantibody &mdash; the
+      autoantibody that cross-reacts with EBV EBNA1 and drives demyelination. CAP8
+      was designed against the CDRL3 loop; in this model it lies across the site,
+      touching five of the six CDR loops, with Phe5 and Trp6 of the PFW motif
+      closest in. Light chain in blue, heavy chain in red. Where supported, the view
+      is interactive &mdash; drag to rotate, scroll to zoom.
+    </p>
+      <p class="caption">
+      <a href="structures/glialcam-cap8.pdb" download>Download coordinates (PDB)</a>
+      &nbsp;·&nbsp;
+      <a href="https://doi.org/10.1016/j.ejmech.2026.119173">Read the paper &rarr;</a>
+    </p>
+    </aside>
+  </section>
+
+  <section class="project">
+    <h2>BAGEL — searching biomolecular energy landscapes</h2>
+    <p class="project-meta"><img class="mark" src="logos/imperial.webp" alt="" width="224" height="360">Imperial College London &middot; PI: Prof. Stefano Angioletti-Uberti &middot; 2026&ndash;present</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>How do you guide a search through an energy landscape toward sequences
+          that fold and bind the way you intended?</dd>
+      <dt>Approach</dt>
+      <dd>Statistical mechanics, molecular dynamics, and protein language models
+          applied to enzyme and binder design.</dd>
+    </dl>
+  </section>
+
+  <section class="project">
+    <h2>Amyloid aggregation as a self-exciting process</h2>
+    <p class="project-meta"><img class="mark" src="logos/njit.webp" alt="" width="264" height="263">NJIT &middot; PI: Dr. James Maclaurin &middot; 2025&ndash;2026</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>Secondary nucleation makes amyloid growth accelerate itself. Can that
+          feedback be captured by a point process instead of a rate equation?</dd>
+      <dt>Approach</dt>
+      <dd>Hawkes self-exciting point processes applied to nucleation dynamics in
+          amyloid formation.</dd>
+    </dl>
+  </section>
+
+  <section class="project">
+    <h2>Reducing biophysical neuron models</h2>
+    <p class="project-meta"><img class="mark" src="logos/njit.webp" alt="" width="264" height="263">NJIT &middot; PI: Dr. Horacio Rotstein &middot; 2026&ndash;present</p>
+    <dl class="qa">
+      <dt>Question</dt>
+      <dd>Detailed neuronal models have too many parameters to reason about.
+          Which reduced descriptions preserve the dynamics that matter?</dd>
+    </dl>
+  </section>
+
+
+
+
+
+
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="meta"><a href="./">&larr; Back to the CV</a><br><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a> &middot; <a href="admin.html">Admin</a></p>
+    <div class="sign-off">
+      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
+      <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/* The still image is the baseline and always shows. 3Dmol and the coordinates
+   are fetched only once the figure is near the viewport; if either fails, or
+   WebGL is unavailable, the image simply stays. */
+(function () {
+  var el = document.getElementById('viewer');
+  if (!el || !('IntersectionObserver' in window)) return;
+
+  function start() {
+    var coords = fetch('structures/cap8-glialcam-view.pdb').then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    });
+    var lib = document.createElement('script');
+    lib.src = 'https://cdn.jsdelivr.net/npm/3dmol@2.4.0/build/3Dmol-min.js';
+    lib.onload = function () {
+      coords.then(function (pdb) {
+        var v = $3Dmol.createViewer(el, { backgroundColor: '#FFFFFF' });
+        v.addModel(pdb, 'pdb');
+        v.setStyle({ chain: 'A', resi: '1-112'   }, { cartoon: { color: '#3B5BA5' } });
+        v.setStyle({ chain: 'A', resi: '113-225' }, { cartoon: { color: '#B0413E' } });
+        v.setStyle({ chain: 'C' }, { stick: { colorscheme: 'greenCarbon', radius: 0.22 } });
+        v.addStyle({ chain: 'C' }, { sphere: { colorscheme: 'greenCarbon', scale: 0.22 } });
+        v.zoomTo();
+        v.render();
+        if (el.querySelector('canvas')) el.classList.add('is-live');
+      }).catch(function () { /* image stays */ });
+    };
+    document.body.appendChild(lib);
+  }
+
+  new IntersectionObserver(function (entries, obs) {
+    if (entries.some(function (e) { return e.isIntersecting; })) { obs.disconnect(); start(); }
+  }, { rootMargin: '400px 0px' }).observe(el);
+})();
+</script>
+</body>
+</html>

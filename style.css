@@ -134,10 +134,9 @@ h1, h2, h3 { text-wrap: balance; }
 
 /* The coin under the hero (tools/build.py why_section; coin.js turns it). One face carries CAP8's
    sequence round its rim, the other the first Gurmukhi letters; each side has its own story. */
-.why { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 2rem 4rem; align-items: center; padding-block: .5rem 3.5rem; }
+.why { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 2rem 4rem; align-items: center; padding-block: 3.5rem; }
 .why-fig { margin: 0; display: grid; gap: 1.1rem; }
-.why-card { display: grid; justify-items: center; gap: 1.1rem; padding: 2.4rem 1.6rem 1.4rem; border: 1px solid var(--rule); border-radius: 8px;
-  background-color: var(--surface); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 24px 24px; }
+.why-card { display: grid; justify-items: center; gap: 1.1rem; }
 .coin { width: min(340px, 100%); aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; perspective: 1200px; transition: transform .35s ease; }
 .coin:focus-visible { outline: 2px solid var(--sky); outline-offset: 6px; }
 @media (hover: hover) { .coin:hover { transform: scale(1.04); } }
@@ -162,6 +161,7 @@ h1, h2, h3 { text-wrap: balance; }
 @keyframes coin-peek { 0%, 100% { transform: rotateY(0deg); } 50% { transform: rotateY(34deg); } }
 .coin-hint { margin: 0; min-height: 1.3em; font-size: .82rem; color: var(--soft); text-align: center; }
 .why-shared { font-family: var(--display); font-style: italic; font-weight: 300; font-size: 1.2rem; line-height: 1.5; color: var(--ink); }
+.why-intro { margin: 0; color: var(--soft); font-size: 1.02rem; }
 .why-story { display: grid; gap: 1.3rem; animation: why-in .45s ease both; }
 .why-story[hidden] { display: none; }
 .why-story p { margin: 0; font-size: 1.05rem; line-height: 1.65; }
@@ -176,6 +176,12 @@ h1, h2, h3 { text-wrap: balance; }
 [data-side="molecules"] .leaf--s, [data-side="manuscripts"] .leaf--h { outline: 2px solid var(--c); outline-offset: -2px; }
 
 .sec { padding-block: 4rem 0; }
+.home #linkedin { padding-top: .5rem; }      /* right under the opening */
+
+/* The CV page (tools/build.py build_cv) */
+.cv-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1.2rem 3rem; padding-block: clamp(1.5rem, 5vw, 3.5rem) 0; }
+.cv-head h1 { font-family: var(--display); font-weight: 300; font-size: clamp(3.2rem, 8vw, 5rem); line-height: .95; letter-spacing: -.02em; margin: .8rem 0 0; }
+.cv-pdf { margin: 0; }
 .sec-h { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .6rem 2rem; margin-bottom: 1.4rem; }
 .sec-h h2 { font-family: var(--display); font-weight: 300; font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1.1; margin: 0; letter-spacing: -.01em; }
 .sec-h p { margin: 0; color: var(--soft); max-width: 34em; }
@@ -530,4 +536,35 @@ ul.plain li { padding: .55rem 0; border-bottom: 1px solid var(--rule); }
   body { background: #fff; color: #000; }
   .nav, .filters, .foot .sign-off, .popup, .catch-count, .viewport, .embed, .dock-controls, #protein { display: none !important; }
   .year[hidden], .items > li[hidden] { display: grid !important; }
+}
+
+/* ---------- { } between pages (pager.js) ----------
+   Home, CV, Science, History, About and round again. Pointing at a brace fades the page and
+   shows a manuscript rosette with where it goes. Without hover the pair sits under the menu. */
+.pager-row { height: 0; }
+.pager { position: fixed; top: 50%; z-index: 30; display: flex; align-items: center; gap: .35rem; padding: 1rem .55rem; transform: translateY(-50%);
+  color: var(--soft); text-decoration: none; transition: color .3s ease; }
+.pager--prev { left: .15rem; }
+.pager--next { right: .15rem; }
+.pager:hover, .pager:focus-visible { color: var(--gold); }
+.pager:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
+.pager-b { font-family: var(--display); font-weight: 300; font-size: 4.6rem; line-height: .8; }
+.pager-n { display: none; font-size: .86rem; }
+body > * { transition: opacity .35s ease; }
+html.paging body > *:not(.pager-row):not(.pager-veil) { opacity: .08; }
+.pager-veil { position: fixed; left: 50%; top: 50%; z-index: 29; display: flex; flex-direction: column; align-items: center; gap: .75rem; text-align: center;
+  pointer-events: none; opacity: 0; transform: translate(-50%, -50%) scale(.92); transition: opacity .35s ease, transform .5s cubic-bezier(.2, .7, .2, 1); }
+html.paging .pager-veil { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.pager-veil svg { display: block; width: 8.5rem; height: 8.5rem; }
+.ro-out { fill: var(--gold-t); stroke: var(--gold); stroke-width: 1.1; stroke-linejoin: round; }
+.ro-in { fill: var(--sky-t); stroke: var(--sky); stroke-width: 1; stroke-linejoin: round; }
+.ro-dot { fill: var(--gold); }
+.ro-eye { fill: var(--bg); stroke: var(--gold); stroke-width: 1.1; }
+.pager-dir { font-size: .74rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--soft); }
+.pager-to { font-family: var(--display); font-weight: 300; font-size: 2.75rem; line-height: 1; color: var(--ink); }
+@media (hover: none), (max-width: 700px) {
+  .pager-row { height: auto; max-width: var(--w); margin: -.9rem auto 0; padding-inline: clamp(1rem, 4vw, 2.5rem); display: flex; justify-content: space-between; }
+  .pager { position: static; transform: none; min-height: 44px; padding: 0; }
+  .pager-b { font-size: 2rem; }
+  .pager-n { display: inline; }
 }
