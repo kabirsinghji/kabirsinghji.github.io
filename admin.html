@@ -455,6 +455,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   function renderNav() {
     var nav = $('secnav'); nav.innerHTML = '';
     var list = S.data.sections.map(function (s) { return { id: s.id, label: s.title, n: countOf(s) }; });
+    list.push({ id: 'why', label: 'Coin & why', n: '' });
     list.push({ id: 'linkedin', label: 'LinkedIn', n: ((S.data.site || {}).linkedin || {}).posts ? S.data.site.linkedin.posts.length : '' });
     list.push({ id: 'tags', label: 'Tags', n: S.data.tagset ? S.data.tagset.length : '' });
     list.push({ id: 'meta', label: 'Header & contact', n: '' });
@@ -536,6 +537,17 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     rerender: function () { var y = window.scrollY; renderEditor(); after(); window.scrollTo(0, y); },
     go: function (id) { S.section = id; renderNav(); renderEditor(); window.scrollTo({ top: 0 }); }
   };
+  /* The coin under the homepage hero (tools/build.py why_section): site.why, one story per side.
+     A blank line starts a paragraph; *italic* sets a phrase in the serif, **bold** colours it. */
+  var WHY_DRAFT = {
+    shared: 'Molecules and manuscripts are two different interests, but they are two sides of one coin, and that coin is who I am. University is meant to teach you how to think, and each turban I wear teaches me a different way.',
+    molecules: '*I stumbled into research.* It started as a box to check on the way to medicine. In my first semester I joined a peptide lab as a math major, surrounded by chemists, with no clue what I was getting myself into. I took it seriously anyway, and **it became the career I want**.\n\n' +
+      '*Not everything goes to plan.* When our lab moved to Houston, **our team kept the work going from Newark**.\n\n' +
+      '*On the ambulance, medicine is about the next ten minutes. In the lab, it is about the next ten years.* **Translational medicine sits between the two**, and that is where I want to work: treating patients, and helping build treatments that reach far more than one person.',
+    manuscripts: '*I stumbled into history too.* While studying abroad in Sweden, I met Satnam Singh, a Danish historian. I read his work and **wanted to add to the field myself**.\n\n' +
+      '*The tools are getting extraordinary.* Soon we will design molecules faster than we can test them, and the hardest questions will not be computational: who gets these therapies, who patients trust, how we care for people at the end of life. **History helps me think about those.**\n\n' +
+      '*Sikh history stays with me too,* as **a pursuit of its own**.'
+  };
   var LIUI = { el: el, esc: esc, note: note, sync: TAGUI.sync, rerender: TAGUI.rerender, publish: function () { save(); } };   /* admin/linkedin.js */
   function tagBlock(e) { return window.AdminTags ? AdminTags.block(e, S.data, TAGUI) : null; }
 
@@ -583,6 +595,31 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     if (!S.data) return;
     var rer = function () { var y = window.scrollY; renderEditor(); after(); window.scrollTo(0, y); };
     ed.appendChild(el('p', { class: 'help', html: 'Formatting: <code>**bold**</code> <code>*italic*</code> <code>[text](https://link)</code> <code>22^{nd}</code>. When a field uses formatting, the line under it shows how it will look.' }));
+
+    if (S.section === 'why') {
+      ed.prepend(el('h2', { text: 'Coin & why' }));
+      var why = (S.data.site || {}).why;
+      if (!why) {
+        ed.appendChild(el('div', { class: 'card' }, [
+          el('p', { html: 'A coin under your name on the homepage turns over between <b>molecules</b> and <b>manuscripts</b>, with a short story for each side. It isn&rsquo;t on the site yet.' }),
+          el('button', { type: 'button', class: 'btn btn--primary', text: 'Start from the draft text', onclick: function () {
+            (S.data.site = S.data.site || {}).why = JSON.parse(JSON.stringify(WHY_DRAFT)); rer();
+          } })
+        ]));
+        return;
+      }
+      ed.appendChild(el('div', { class: 'card' }, [
+        field('Under the coin (both sides)', why, 'shared', { area: true, preview: true }),
+        field('Molecules side', why, 'molecules', { area: true, preview: true, rows: 8, hint: 'A blank line starts a new paragraph. *Italic* sets a phrase in the serif; **bold** colours it blue.' }),
+        field('Manuscripts side', why, 'manuscripts', { area: true, preview: true, rows: 8, hint: 'The same, with **bold** in gold. Both sides need some text for the coin to show.' })
+      ]));
+      var off = el('span', {});
+      off.appendChild(el('button', { type: 'button', class: 'btn btn--small btn--danger', text: 'Take the coin off the homepage', onclick: function () {
+        if (confirmInline(off, function () { delete S.data.site.why; rer(); })) return;
+      } }));
+      ed.appendChild(el('div', { class: 'add' }, [off]));
+      return;
+    }
 
     if (S.section === 'linkedin') {
       ed.innerHTML = '';
