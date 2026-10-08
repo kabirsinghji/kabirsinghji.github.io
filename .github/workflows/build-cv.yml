@@ -25,6 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # the branch as it is now, not the commit that started this run: a build queued
+          # behind another (two quick saves) then includes that build's commit and can push
+          ref: ${{ github.ref_name }}
 
       - name: Read the LinkedIn posts listed in data/cv.json (never fails the build)
         run: python3 tools/linkedin.py
