@@ -1646,12 +1646,6 @@
           "field": "other"
         },
         {
-          "url": "https://www.linkedin.com/feed/update/urn:li:activity:7510711756919533568/",
-          "id": "7510711756919533568",
-          "kind": "activity",
-          "field": "other"
-        },
-        {
           "url": "https://www.linkedin.com/feed/update/urn:li:activity:7508528126252138496/",
           "id": "7508528126252138496",
           "kind": "activity",
@@ -1670,7 +1664,7 @@
           "field": "other"
         }
       ],
-      "sync": "2026-10-08T16:46:07.640Z"
+      "sync": "2026-10-08T16:54:51.091Z"
     }
   },
   "tagset": [
