@@ -2,7 +2,8 @@
    One of three, picked at random each time:
    - procession: figures cut from Mughal, Persian and Sikh paintings parade before the walls of
      Surat (arrival/procession.js)
-   - unfold: a protein whose surface is this very page turns, then unfolds into it (arrival/unfold.js)
+   - unfold: the page threaded along Kabir's antibody structure; a simulation unfolds it and its
+     chains settle onto the page (arrival/unfold.js)
    - darbar: a painted court welcome, drawn from scratch (arrival/darbar.js)
    It plays when the visitor arrives at a homepage from outside the site; not when they come from
    another page here, reload or go back, follow a link to a #section, or their device asks for
