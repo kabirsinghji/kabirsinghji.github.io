@@ -679,6 +679,7 @@ def build_index(cv):
 <head>
 <meta charset="utf-8">
 <script src="home.js?v={HOME_JS_V}"></script>
+<script src="arrival.js?v={ARRIVAL_JS_V}"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kabir Singh</title>
 <link rel="canonical" href="https://kabirsinghji.github.io/">
@@ -819,8 +820,10 @@ def build_cv(cv):
 # The homepage comes in five designs: index.html (build_index, above) and the four built here.
 # home.js picks one per visit, or the one the visitor kept. All five read the same cv.json, so a
 # save in admin.html updates every design. home.css styles these four; style.css everything else.
-HOME_JS_V = 1
+HOME_JS_V = 2
 HOME_CSS_V = 1
+# arrival.js plays a short welcome on a visitor's first arrival (arrival/: the procession and the fold)
+ARRIVAL_JS_V = 1
 ORCID = "https://orcid.org/0009-0002-5159-5879"
 SCHOLAR = "https://scholar.google.com/citations?user=-RpJmPsAAAAJ"
 PA_DIGITS = str.maketrans("0123456789", "੦੧੨੩੪੫੬੭੮੯")
@@ -834,6 +837,7 @@ def design_page(design, body_class, body):
 <head>
 <meta charset="utf-8">
 <script src="home.js?v={HOME_JS_V}"></script>
+<script src="arrival.js?v={ARRIVAL_JS_V}"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kabir Singh</title>
 <link rel="canonical" href="https://kabirsinghji.github.io/">

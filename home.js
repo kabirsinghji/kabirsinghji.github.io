@@ -32,6 +32,11 @@
     var want = find(params.get('design'));
     if (!want && !location.hash) want = kept() || DESIGNS[Math.floor(Math.random() * DESIGNS.length)];
     if (want && want.id !== 'diptych') {
+      /* the next page sees this one as its referrer; arrival.js there needs the real one */
+      try {
+        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        sessionStorage.setItem('arrivalRef', JSON.stringify([document.referrer, Date.now(), nav ? nav.type : 'navigate']));
+      } catch (e) {}
       root.style.visibility = 'hidden';
       location.replace(want.file);
       return;
@@ -58,6 +63,7 @@
       '.hs button[aria-pressed="true"]{background:#ECEDEF;color:#121316;border-color:#ECEDEF}' +
       '.hs button:focus-visible{outline:2px solid #8BBEEA;outline-offset:2px}' +
       '@media (max-width:520px){.hs-t{display:none}.hs{padding-left:.3rem}}' +
+      '.foot{padding-bottom:2.5rem}' +                /* room for the switch, so it never covers the footer's links */
       '@media print{.hs{display:none}}';
     document.head.appendChild(style);
 
