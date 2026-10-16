@@ -17,6 +17,7 @@ In "dates", a new line is a line break on the PDF (a space on the site).
 import datetime
 import html
 import json
+import math
 import os
 import re
 import sys
@@ -674,9 +675,10 @@ def build_index(cv):
 
     return f'''<!DOCTYPE html>
 <!-- GENERATED from data/cv.json by tools/build.py. Edit through admin.html; changes made here are overwritten on the next build. -->
-<html lang="en">
+<html lang="en" data-home="diptych">
 <head>
 <meta charset="utf-8">
+<script src="home.js?v={HOME_JS_V}"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kabir Singh</title>
 <link rel="canonical" href="https://kabirsinghji.github.io/">
@@ -813,11 +815,438 @@ def build_cv(cv):
 '''
 
 
+# ──────────────────────────────────────────────────── homepage designs ──
+# The homepage comes in five designs: index.html (build_index, above) and the four built here.
+# home.js picks one per visit, or the one the visitor kept. All five read the same cv.json, so a
+# save in admin.html updates every design. home.css styles these four; style.css everything else.
+HOME_JS_V = 1
+HOME_CSS_V = 1
+ORCID = "https://orcid.org/0009-0002-5159-5879"
+SCHOLAR = "https://scholar.google.com/citations?user=-RpJmPsAAAAJ"
+PA_DIGITS = str.maketrans("0123456789", "੦੧੨੩੪੫੬੭੮੯")
+KICKER = "Mathematical Biology &middot; NJIT Honors College &middot; Class of 2027"
+
+
+def design_page(design, body_class, body):
+    return f'''<!DOCTYPE html>
+<!-- GENERATED from data/cv.json by tools/build.py. Edit through admin.html; changes made here are overwritten on the next build. -->
+<html lang="en" data-home="{design}">
+<head>
+<meta charset="utf-8">
+<script src="home.js?v={HOME_JS_V}"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kabir Singh</title>
+<link rel="canonical" href="https://kabirsinghji.github.io/">
+<meta name="description" content="Kabir Singh — Mathematical Biology, NJIT. Computational protein and peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="home.css?v={HOME_CSS_V}">
+<script src="peek.js?v=9" defer></script>
+</head>
+<body class="{body_class}">
+{body}
+</body>
+</html>
+'''
+
+
+def design_parts(cv):
+    """What every design shares: projects by field, the menu, the contact links, the footer line."""
+    m = cv["meta"]
+    esc = html.escape
+    projects = cv.get("site", {}).get("projects", [])
+    sci = [p for p in projects if p.get("field") == "science"]
+    his = [p for p in projects if p.get("field") == "history"]
+    nav = "".join(f'<a href="{h}">{n}</a>' for h, n in NAV)
+    contact = (f'<li><a class="pill" href="cv/cv.pdf">Full CV (PDF)</a></li>'
+               f'<li><a href="mailto:{esc(m.get("email", ""))}">{esc(m.get("email", ""))}</a></li>'
+               f'<li><a href="{esc(m.get("linkedin", ""))}">LinkedIn</a></li>'
+               f'<li><a href="{ORCID}">ORCID</a></li><li><a href="{SCHOLAR}">Google Scholar</a></li>')
+    meta = f'Last updated {esc(m.get("asOf", ""))} &middot; <a href="admin.html">Admin</a>'
+    return sci, his, nav, contact, meta
+
+
+def project_li(p):
+    return '<li><a href="{}"><span class="t">{}</span><span class="st">{} &middot; {}</span></a></li>'.format(
+        html.escape(p.get("href", "#")), to_html(p["title"]), to_html(p.get("years", "")), to_html(p.get("status", "")))
+
+
+def first_published(cv):
+    for sec in cv["sections"]:
+        if sec["type"] == "publications":
+            for g in sec.get("groups", []):
+                if g.get("status") == "published":
+                    pub = next((p for p in g.get("items", []) if shown(p, "site")), None)
+                    if pub:
+                        return pub
+    return None
+
+
+# Timescale: everything on one log axis of seconds, 10^-15 at the left edge to 10^11 at the right.
+YEAR_S = 3.156e7
+# (seconds, side of the axis, leader length px, label width px, colour, kicker, line, link)
+TIME_MARKS = [
+    (2e-15, "below", 150, 240, "green", "2 femtoseconds", "One step of the molecular dynamics I run", "science.html"),
+    (1e-8, "below", 150, 250, "green", "Nanoseconds", "CAP8 holds the antibody’s binding pocket", "science.html"),
+    (1e-3, "below", 240, 250, "sky", "A millisecond", "A neuron fires; I reduce the models that describe it", "science.html"),
+    (600, "above", 150, 270, "orange", "The next ten minutes", "On the ambulance: EMT, NJIT First Aid Squad", "about.html"),
+    (10 * YEAR_S, "above", 70, 270, "sky", "The next ten years", "In the lab: peptides from model to patient", "science.html"),
+    (100 * YEAR_S, "above", 230, 290, "gold", "A century", "How American medicine learned to talk about dying", "history-of-medicine.html"),
+    ("khalsa", "above", 310, 300, "gold", "", "How the early Khalsa came to speak for the panth", "sikh-studies.html"),
+    (700 * YEAR_S, "above", 390, 300, "gold", "Centuries", "Mapping religion in the medieval Italian city", "medieval-italy.html"),
+]
+TIME_UNITS = [(1e-12, "ps"), (1e-9, "ns"), (1e-6, "µs"), (1, "second"), (3600, "hour"), (86400, "day"), (YEAR_S, "year")]
+
+
+def time_x(seconds):
+    return (math.log10(seconds) + 15) / 26 * 100
+
+
+def build_timescale(cv):
+    sci, his, nav, contact, meta = design_parts(cv)
+    khalsa = datetime.date.today().year - 1699
+    ticks = "".join(f'<span class="tick" style="left:{i / 26 * 100:.3f}%"></span>' for i in range(27))
+    pows = "".join('<span class="pow{}" style="left:{:.3f}%">10<sup>{}</sup>{}</span>'.format(
+        " pow--first" if e == -15 else "", (e + 15) / 26 * 100, str(e).replace("-", "−"), " s" if e == -15 else "")
+        for e in range(-15, 10, 3))
+    units = "".join(f'<span class="unit" style="left:{time_x(s):.2f}%">{u}</span>' for s, u in TIME_UNITS)
+    marks, dots = [], []
+    for s, side, h, w, c, kicker, line, href in TIME_MARKS:
+        if s == "khalsa":
+            s, kicker = khalsa * YEAR_S, f"1699 → now &middot; {khalsa} years"
+        x = time_x(s)
+        pos = f"left:{x:.2f}%;top:421px" if side == "below" else f"right:{100 - x:.2f}%;top:{420 - h}px"
+        marks.append(f'<a class="mk mk--{side} c-{c}" href="{href}" style="{pos};height:{h}px;width:{w}px">'
+                     f'<span class="k">{kicker}</span><span class="t">{line}</span></a>')
+        big = " dot--big" if kicker.startswith("The next") else ""
+        dots.append(f'<span class="dot{big} c-{c}" style="left:{x:.2f}%"></span>')
+    return design_page("timescale", "v-time", f'''<header class="wrap top">
+  <a class="brand" href="./"><b>Kabir Singh</b><span class="pa" lang="pa">ਕਬੀਰ ਸਿੰਘ</span></a>
+  <nav class="nav" aria-label="Site">{nav}</nav>
+</header>
+<main class="wrap">
+
+<section class="ts-hero" aria-labelledby="ts-h">
+  <p class="kicker">{KICKER}</p>
+  <h1 id="ts-h">Kabir Singh</h1>
+  <p class="ts-line">From a <span class="c-green">two-femtosecond</span> simulation step to a <span class="c-gold">{khalsa}-year-old</span> question: my work spans 25 orders of magnitude of time.</p>
+</section>
+
+<section class="axis-scroll" aria-label="My work on one time axis, in seconds, log scale">
+  <div class="axis">
+    <div class="axis-line" aria-hidden="true"></div>
+    <div aria-hidden="true">{ticks}{pows}{units}</div>
+    {"".join(marks)}
+    <div aria-hidden="true">{"".join(dots)}</div>
+    <p class="axis-cap" aria-hidden="true">time in seconds, log scale &rarr;</p>
+  </div>
+</section>
+
+<section class="hz" aria-label="Three horizons">
+  <article class="c-orange">
+    <h2>The next ten minutes</h2>
+    <p>New Jersey EMT and NJIT First Aid Squad: medicine as one patient, right now.</p>
+  </article>
+  <article class="c-sky">
+    <h2>The next ten years</h2>
+    <ul>{"".join(project_li(p) for p in sci)}</ul>
+    <a class="go" href="science.html">Scientific research &rarr;</a>
+  </article>
+  <article class="c-gold">
+    <h2>The last few centuries</h2>
+    <ul>{"".join(project_li(p) for p in his)}</ul>
+    <a class="go" href="history.html">History research &rarr;</a>
+  </article>
+</section>
+
+<footer class="ts-foot">
+  <ul class="contact">{contact}</ul>
+  <p class="meta">{meta}</p>
+</footer>
+</main>''')
+
+
+def build_folio(cv):
+    sci, his, _, contact, _ = design_parts(cv)
+    esc = html.escape
+
+    def marg(ps, right=False):
+        out = []
+        for i, p in enumerate(ps, 1):
+            num = f'<span class="n pa" lang="pa">{str(i).translate(PA_DIGITS)}</span>'
+            title = f'<em>{to_html(p["title"])}</em>'
+            out.append('<li><a href="{}">{}<span class="y">{}</span></a></li>'.format(
+                esc(p.get("href", "#")), f"{title} {num}" if right else f"{num} {title}", to_html(p.get("years", ""))))
+        return "".join(out)
+
+    leaves = [("./", "Home")] + NAV
+    pa = lambda n: f'<span class="pa" lang="pa">{str(n).translate(PA_DIGITS)}</span>'
+    leaf_nav = "".join('<a href="{}"{}>{} {}</a>'.format(h, ' aria-current="page"' if i == 0 else "", pa(i + 1), n)
+                       for i, (h, n) in enumerate(leaves))
+    (prev_h, prev_n), (next_h, next_n) = leaves[-1], leaves[1]
+    return design_page("folio", "v-folio", f'''<div class="fo">
+<header class="fo-head">
+  <p class="mono">kabirsinghji.github.io &middot; leaf {pa(1)} of {pa(len(leaves))}</p>
+  <nav aria-label="Leaves">{leaf_nav}</nav>
+</header>
+
+<main class="leaf">
+  <div class="leaf-b1"><div class="leaf-b2">
+    <div class="leaf-run">
+      <span class="mono">Molecules &amp; manuscripts</span>
+      <p class="pa inv" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
+      <span class="pa folio-n" lang="pa" aria-label="Leaf one">੧</span>
+    </div>
+    <div class="leaf-cols">
+      <aside class="marg" aria-label="Science">
+        <h2><span class="pa" lang="pa">ਵਿਗਿਆਨ</span><span class="sc">science</span></h2>
+        <ol>{marg(sci)}</ol>
+        <a class="more" href="science.html">all science &rarr;</a>
+      </aside>
+      <div class="fo-center">
+        <h1><span class="pa" lang="pa">ਕਬੀਰਸਿੰਘ</span><span class="sc">kabir singh</span></h1>
+        <p class="fo-thesis">I study molecules and manuscripts: two sides of one coin.</p>
+        <div class="ruled"><p><span class="cap">{INTRO[0]}</span>{INTRO[1:]}</p></div>
+        <figure class="illum">
+          <img src="sangat-woodcut.webp" alt="Early printed illustration of a Sikh sangat seated before a granthi, with the Mool Mantar in Gurmukhi" width="624" height="264" loading="lazy">
+          <figcaption>The sangat hearing katha, early print</figcaption>
+        </figure>
+      </div>
+      <aside class="marg marg--r" aria-label="History">
+        <h2><span class="pa" lang="pa">ਇਤਿਹਾਸ</span><span class="sc">history</span></h2>
+        <ol>{marg(his, right=True)}</ol>
+        <a class="more" href="history.html">all history &rarr;</a>
+        <img class="fo-photo" src="photo-arch.webp" alt="Portrait of Kabir Singh in a khaki turban and dark suit" width="716" height="895">
+      </aside>
+    </div>
+    <footer class="leaf-foot">
+      <p class="colophon">Colophon: revised {esc(cv["meta"].get("asOf", ""))} &middot; plain HTML, CV typeset in LaTeX &middot; <a href="admin.html">Admin</a></p>
+      <ul class="contact">{contact}</ul>
+    </footer>
+  </div></div>
+  <span class="corner" aria-hidden="true"></span>
+</main>
+
+<nav class="turn" aria-label="Turn the leaf">
+  <a href="{prev_h}">&larr; {pa(len(leaves))} {prev_n}</a>
+  <a class="next" href="{next_h}">Turn the leaf {pa(2)} {next_n} &rarr;</a>
+</nav>
+</div>''')
+
+
+def build_pdb(cv):
+    sci, his, _, _, meta = design_parts(cv)
+    m = cv["meta"]
+    esc = html.escape
+    rows = []                                        # (line html, link or None)
+
+    def rec(kw, rest="", cls="kh", href=None):      # rest is already HTML
+        rows.append((f'<span class="{cls}">{kw}</span>{rest}', href))
+
+    def remark(text, href=None):
+        rows.append((f'<span class="kr">{esc(text)}</span>', href))
+
+    def wrap(tokens, sep, width=51):
+        lines, cur = [], ""
+        for t in tokens:
+            nxt = cur + sep + t if cur else t
+            if cur and len(nxt) > width:
+                lines.append(cur + sep.strip())
+                cur = t
+            else:
+                cur = nxt
+        return lines + [cur]
+
+    today = datetime.date.today().strftime("%d-%b-%y").upper()
+    rec("HEADER", esc(f"    {'PHYSICIAN-SCIENTIST (IN TRAINING)':<40}{today}   KSNG"))
+    rec("TITLE", '     <span class="t">KABIR SINGH: MOLECULES AND MANUSCRIPTS</span>')
+    rec("COMPND", "    MOL_ID: 1;")
+    rec("COMPND", "   2 MOLECULE: MATHEMATICAL BIOLOGY UNDERGRADUATE;")
+    rec("COMPND", "   3 AFFILIATION: NJIT, ALBERT DORMAN HONORS COLLEGE;")
+    rec("COMPND", "   4 CLASS: 2027;")
+    rec("SOURCE", '    GURMUKHI_NAME: <span class="pa" lang="pa">ਕਬੀਰ ਸਿੰਘ</span>;')
+    rec("KEYWDS", "    CYCLIC PEPTIDE, PROTEIN DESIGN, MATHEMATICAL NEUROSCIENCE,")
+    rec("KEYWDS", "   2 HISTORY OF MEDICINE, EARLY MODERN SIKH HISTORY")
+    rec("EXPDTA", "    THEORETICAL MODEL; ARCHIVAL RESEARCH")
+    rec("AUTHOR", '    <span class="t">K.SINGH</span>')
+    pub = first_published(cv)
+    if pub:
+        doi = "https://doi.org/" + pub["doi"] if pub.get("doi") else "science.html"
+        authors = [a.strip().replace(". ", ".").replace(" ", "").upper() for a in plain(pub["authors"]).split(",")]
+        for i, line in enumerate(wrap(authors, ",")):
+            rec("JRNL", esc(f"        AUTH {'' if i == 0 else i + 1:<2}{line}").replace("K.SINGH", '<span class="t">K.SINGH</span>'), "kj", doi)
+        for i, line in enumerate(wrap(plain(pub["title"]).upper().split(), " ")):
+            rec("JRNL", esc(f"        TITL {'' if i == 0 else i + 1:<2}") + f'<span class="t">{esc(line)}</span>', "kj", doi)
+        rec("JRNL", esc(f"        REF    {plain(pub.get('venue', '')).upper()}"), "kj", doi)
+        if pub.get("doi"):
+            rec("JRNL", esc(f"        DOI    {pub['doi'].upper()}"), "kj", doi)
+    remark("REMARK   2 RESOLUTION. 10 MINUTES (AMBULANCE) TO 10 YEARS (LAB).")
+    remark("REMARK   3 TRANSLATIONAL MEDICINE SITS BETWEEN THE TWO.")
+    remark("REMARK 200 LABS: KUMARLAB, NJIT; IMPERIAL COLLEGE LONDON.")
+    remark("REMARK 200 FELLOW: HARVARD SIKH CENTER, EMERGING SCHOLARS.")
+    remark("REMARK 350 22ND EDITOR-IN-CHIEF, JOURNAL OF YOUNG INVESTIGATORS.")
+    remark("REMARK 350 EMT, NJIT FIRST AID SQUAD.")
+    remark("REMARK 465 MISSING RESIDUES: SLEEP.")
+    rows.append(('<span class="kr">REMARK 800 SITE_IDENTIFIER: </span><span class="t">TRANSLATIONAL MEDICINE</span>', None))
+    rec("SEQRES", '   1 P    8  <span class="p">LYS PRO TYR PRO PHE TRP ASP ASP</span>             <span class="kr">CAP8</span>', "kj")
+    rec("HETNAM", "     MOL MOLECULES   (SCIENCE)", "ka")
+    rec("HETNAM", "     MSS MANUSCRIPTS (HISTORY)", "ka")
+    atoms = [("S", "MOL", "A", "t", p) for p in sci] + [("H", "MSS", "B", "t th", p) for p in his]
+    count = {"S": 0, "H": 0}
+    for serial, (f, resn, chain, cls, p) in enumerate(atoms, 1):
+        count[f] += 1
+        year = re.search(r"\d{4}", plain(p.get("years", "")))
+        cols = esc(f"{serial:>5}  {f + format(count[f], '02d'):<4}{resn} {chain}{year.group(0) if year else '':>4}    ")
+        rec("HETATM", cols + f'<span class="{cls}">{esc(plain(p["title"]).upper())}</span>', "ka", p.get("href", "#"))
+    rec("CONECT", "".join(f"{i:>5}" for i in range(1, len(atoms) + 1)))
+    rows.append(('<span class="kr">REMARK 999 CONTACT: </span><span class="t">{}</span><span class="kr">  ORCID {}</span>'.format(
+        esc(m.get("email", "")).upper(), ORCID.rsplit("/", 1)[-1]), "mailto:" + m.get("email", "")))
+    rec("END", '<span class="caret" aria-hidden="true"></span>')
+
+    lines = []
+    for i, (body, href) in enumerate(rows, 1):
+        cls = "ln ln--on" if i == 1 else "ln"
+        inner = f'<span class="g">{i}</span><span class="c">{body}</span>'
+        lines.append(f'<a class="{cls}" href="{esc(href)}">{inner}</a>' if href else f'<div class="{cls}">{inner}</div>')
+    fake = {"cv.html": "cv.tex", "science.html": "science.pdb", "history.html": "history.txt", "about.html": "about.md"}
+    tabs = '<a href="./" aria-current="page">kabir_singh.pdb</a>' + "".join(f'<a href="{h}">{fake.get(h, h)}</a>' for h, n in NAV)
+    return design_page("pdb", "v-pdb", f'''<main class="ide">
+<h1 class="sr-only">Kabir Singh</h1>
+<div class="win">
+  <nav class="tabs" aria-label="Site">{tabs}</nav>
+  <div class="panes">
+    <div class="code" aria-label="kabir_singh.pdb">
+{chr(10).join(lines)}
+    </div>
+    <aside class="viewer" aria-label="Structure viewer">
+      <div class="viewer-bar">
+        <span>viewer &middot; anti-GlialCAM Fab + CAP8</span>
+        <span class="legend"><span><i style="background:#8EA3D6"></i>light</span><span><i style="background:#CC8784"></i>heavy</span><span><i style="background:#7FCB9E"></i>CAP8</span></span>
+      </div>
+      <div class="viewer-stage"><img src="structures/cap8-glialcam-alpha.webp" alt="CAP8 (green) bound in the antigen-binding site of an anti-GlialCAM autoantibody" width="733" height="894"></div>
+      <div class="author">
+        <img src="photo-arch.webp" alt="Kabir Singh" width="716" height="895">
+        <div><b>AUTHOR K.SINGH</b>Mathematical Biology, NJIT &middot; &rsquo;27</div>
+        <a class="dl" href="cv/cv.pdf">cv.pdf &darr;</a>
+      </div>
+      <div class="prompt" aria-hidden="true"><p>&gt; select kabir, resn MOL+MSS</p><p>&gt; show everything<span class="caret"></span></p></div>
+    </aside>
+  </div>
+  <div class="status">
+    <span>PDB &middot; {len(rows)} records &middot; UTF-8</span>
+    <span><a href="{esc(m.get("linkedin", ""))}">LinkedIn</a><a href="{ORCID}">ORCID</a><a href="{SCHOLAR}">Scholar</a><span class="meta">{meta}</span></span>
+  </div>
+</div>
+</main>''')
+
+
+# Landscape: the map is drawn in a 1200 × 720 box. Each project sits in the next free basin of its
+# field: (x, y, rotation, contour shape, x scale, y scale, rings, label side). The last slot of each
+# field is spare; projects beyond the slots are listed under the map.
+LAND_SLOTS = {
+    "science": [(300, 420, -12, "a", 1.2, 1.2, 6, "r"), (520, 300, 30, "b", .9, .7, 4, "r"), (210, 230, -35, "b", .85, .85, 4, "r"),
+                (470, 570, 15, "a", .8, .6, 3, "r"), (140, 530, 50, "b", .7, .7, 3, "r"), (560, 140, 10, "a", .7, .55, 3, "r")],
+    "history": [(930, 300, -20, "a", 1.05, .85, 5, "r"), (850, 560, 25, "b", .8, .8, 3, "r"), (1090, 640, -40, "a", .75, .55, 3, "l"),
+                (1040, 190, 20, "b", .7, .6, 3, "l")],
+}
+BLOB = {"a": "M -100 -8 C -96 -62 -38 -98 18 -94 C 74 -90 108 -52 104 0 C 100 54 58 96 4 98 C -52 100 -104 48 -100 -8 Z",
+        "b": "M -96 -20 C -84 -72 -20 -102 36 -88 C 92 -74 110 -18 100 30 C 90 80 34 104 -20 94 C -74 84 -108 30 -96 -20 Z"}
+LAND_COLOUR = {"science": "#8BBEEA", "history": "#D9B96F"}
+
+
+def contours(x, y, rot, shape, sx, sy, rings, colour, opacity=".7"):
+    paths = []
+    for i in range(rings):
+        k = 1 - i * .78 / max(rings - 1, 1)          # outermost ring at full size, innermost at 0.22
+        fill = f' fill="{colour}" fill-opacity=".18"' if i == rings - 1 else ""
+        paths.append(f'<path transform="scale({sx * k:.3f} {sy * k:.3f})" vector-effect="non-scaling-stroke" d="{BLOB[shape]}"{fill}></path>')
+    return f'<g transform="translate({x} {y}) rotate({rot})" stroke="{colour}" stroke-opacity="{opacity}">{"".join(paths)}</g>'
+
+
+def build_landscape(cv):
+    sci, his, nav, contact, meta = design_parts(cv)
+    esc = html.escape
+    rings, dots, labels, extra = [], [], [], []
+    for field, ps in (("science", sci), ("history", his)):
+        slots, colour = LAND_SLOTS[field], LAND_COLOUR[field]
+        for p, (x, y, rot, shape, sx, sy, n, side) in zip(ps, slots):
+            rings.append(contours(x, y, rot, shape, sx, sy, n, colour))
+            dots.append(f'<circle cx="{x}" cy="{y}" r="5" fill="{colour}"></circle>')
+            px, py = x / 12, y / 7.2
+            pos = f"left:calc({px:.2f}% + 14px)" if side == "r" else f"right:calc({100 - px:.2f}% + 14px)"
+            labels.append('<a class="lbl lbl--{} c-{}" href="{}" style="{};top:calc({:.2f}% - 20px)"><b>{}</b><span>{}</span></a>'.format(
+                side, field, esc(p.get("href", "#")), pos, py, to_html(p["title"]), esc(plain(p.get("years", "")).upper())))
+        extra += ps[len(slots):]
+    also = ""
+    if extra:
+        also = '<p class="also">Also: ' + ", ".join(f'<a href="{esc(p.get("href", "#"))}">{to_html(p["title"])}</a>' for p in extra) + ".</p>"
+    return design_page("landscape", "v-land", f'''<header class="wrap top">
+  <a class="brand" href="./"><b>Kabir Singh</b><span class="pa" lang="pa">ਕਬੀਰ ਸਿੰਘ</span></a>
+  <nav class="nav" aria-label="Site">{nav}</nav>
+</header>
+<main class="wrap">
+
+<section class="ls-hero" aria-labelledby="ls-h">
+  <div>
+    <p class="kicker">A map of my work &middot; lower is further along</p>
+    <h1 id="ls-h">Two slopes, <em>one</em> basin.</h1>
+  </div>
+  <p>I stumbled into research and into history. Every project here is a minimum I found along the way. Both sides drain toward the same place.</p>
+</section>
+
+<p class="map-hint" aria-hidden="true">Swipe the map &rarr;</p>
+<section class="map-scroll" aria-label="My projects as minima on an energy landscape">
+  <div class="map">
+    <svg viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <g fill="none" stroke-width="1">
+        <g transform="translate(620 400)" stroke="#5E7088" stroke-opacity=".45">
+          <path transform="scale(6.4 4.1)" vector-effect="non-scaling-stroke" d="{BLOB["a"]}"></path>
+          <path transform="scale(5.7 3.6)" vector-effect="non-scaling-stroke" d="{BLOB["b"]}"></path>
+        </g>
+        <g transform="translate(330 400)" stroke="#8BBEEA" stroke-opacity=".32">
+          <path transform="scale(3.3 2.75)" vector-effect="non-scaling-stroke" d="{BLOB["b"]}"></path>
+          <path transform="scale(2.85 2.35)" vector-effect="non-scaling-stroke" d="{BLOB["a"]}"></path>
+        </g>
+        <g transform="translate(950 440)" stroke="#D9B96F" stroke-opacity=".32">
+          <path transform="scale(2.6 2.5)" vector-effect="non-scaling-stroke" d="{BLOB["a"]}"></path>
+          <path transform="scale(2.2 2.1)" vector-effect="non-scaling-stroke" d="{BLOB["b"]}"></path>
+        </g>
+        {"".join(rings)}
+        {contours(680, 430, 8, "b", 1.35, 1.1, 8, "#ECEDEF", ".8")}
+      </g>
+      <path d="M 70 70 C 200 90 420 160 520 300 C 600 410 430 470 300 420 C 230 392 400 520 560 470 C 612 452 650 440 680 430" fill="none" stroke="#8BBEEA" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round"></path>
+      <path d="M 1150 70 C 1080 150 980 200 930 300 C 880 400 920 500 850 560 C 780 610 720 480 680 430" fill="none" stroke="#D9B96F" stroke-width="2" stroke-dasharray="2 7" stroke-linecap="round"></path>
+      <circle cx="70" cy="70" r="5" fill="none" stroke="#8BBEEA" stroke-width="2"></circle>
+      <circle cx="1150" cy="70" r="5" fill="none" stroke="#D9B96F" stroke-width="2"></circle>
+      {"".join(dots)}
+      <circle cx="680" cy="430" r="9" fill="#ECEDEF"></circle>
+      <circle cx="680" cy="430" r="16" fill="none" stroke="#ECEDEF" stroke-opacity=".5"></circle>
+    </svg>
+    <p class="start c-science" style="left:calc(5.83% + 14px);top:calc(9.72% - 12px)">START &middot; 2023<br><span>a math major in a peptide lab</span></p>
+    <p class="start c-history" style="right:calc(4.17% + 14px);top:calc(9.72% - 12px);text-align:right">START &middot; SWEDEN<br><span>studying abroad, met a historian</span></p>
+    {"".join(labels)}
+    <a class="global" href="about.html" style="left:56.67%;top:calc(59.72% + 26px)"><b>Translational medicine</b><span>GLOBAL MINIMUM &middot; WHERE I&rsquo;M HEADED</span></a>
+    <p class="side c-science" style="left:24px" aria-hidden="true">MOLECULES</p>
+    <p class="side c-history" style="right:24px" aria-hidden="true">MANUSCRIPTS</p>
+  </div>
+</section>
+{also}
+<footer class="ls-foot">
+  <p class="note">Contours are illustrative, not to scale &middot; dotted lines: the path I took</p>
+  <ul class="contact">{contact}</ul>
+  <p class="meta">{meta}</p>
+</footer>
+</main>''')
+
+
 # ──────────────────────────────────────────────────────────────── main ──
 def main():
     with open(os.path.join(ROOT, "data", "cv.json"), encoding="utf-8") as f:
         cv = json.load(f)
-    outputs = {"cv/cv.tex": build_tex(cv), "index.html": build_index(cv), "cv.html": build_cv(cv)}
+    outputs = {"cv/cv.tex": build_tex(cv), "index.html": build_index(cv), "cv.html": build_cv(cv),
+               "home-timescale.html": build_timescale(cv), "home-folio.html": build_folio(cv),
+               "home-pdb.html": build_pdb(cv), "home-landscape.html": build_landscape(cv)}
     for rel, text in outputs.items():
         with open(os.path.join(ROOT, rel), "w", encoding="utf-8") as f:
             f.write(text)
