@@ -549,7 +549,7 @@ def site_footer(m):
 
 
 # every page in the text-first design opens the same way
-BEAT_JS_V = 1
+BEAT_JS_V = 2
 FONT_PRELOAD = ('<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>\n'
                 '<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>')
 
@@ -832,7 +832,7 @@ def build_index(cv):
     esc = html.escape
     email = esc(m.get("email", ""))
     about = f'''<div class="lede">
-  <p>I&rsquo;m a physician-scientist in training, studying Mathematical Biology at <a href="https://honors.njit.edu/">NJIT&rsquo;s Albert Dorman Honors College</a>, Class of 2027, and working as an EMT.</p>
+  <p>I&rsquo;m an aspiring physician-scientist, studying Mathematical Biology at <a href="https://honors.njit.edu/">NJIT&rsquo;s Albert Dorman Honors College</a>, Class of 2027, and working as an EMT.</p>
   <p>{INTRO}</p>
   <p>I&rsquo;m based in New Jersey, where it&rsquo;s currently <span class="now-time">daytime somewhere</span>.</p>
 </div>'''
@@ -851,7 +851,7 @@ def build_index(cv):
 <!-- GENERATED from data/cv.json by tools/build.py. Edit through admin.html; changes made here are overwritten on the next build. -->
 <html lang="en">
 <head>
-{page_head("Kabir Singh", "", "Kabir Singh — physician-scientist in training, Mathematical Biology at NJIT. Computational peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.", top=f'''
+{page_head("Kabir Singh", "", "Kabir Singh — aspiring physician-scientist, Mathematical Biology at NJIT. Computational peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.", top=f'''
 <script src="arrival.js?v={ARRIVAL_JS_V}"></script>''')}
 <script type="application/ld+json">
 {{
@@ -1049,7 +1049,7 @@ def build_curious(cv):
 <div class="shelf-bar"><span><button class="shelf-prev" type="button" aria-label="Previous design">&larr;</button><button class="shelf-next" type="button" aria-label="Next design">&rarr;</button><span class="shelf-count">01 / 05</span></span><span>each still works, one click in</span></div>'''
     play = rows([
         d_row("Characters", "<b>Waris, the Cat, the Maharaja and friends</b> <span class=\"grey\">peek in from the edges of every page for a second and a half. Catch them.</span>"),
-        d_row("The beat", "<b>A small monitor follows your cursor</b> <span class=\"grey\">and keeps a heart rate that climbs the faster you move. Rest the cursor and click the monitor to send it away; the switch below brings it back.</span>",
+        d_row("The beat", "<b>Your cursor draws a heartbeat.</b> <span class=\"grey\">An ECG trace follows its path and fades, and a small monitor travels with it, keeping a rate that climbs the faster you move. Rest the cursor and click the monitor to send it all away; the switch below brings it back.</span>",
               extra='<p style="margin:.6rem 0 0"><button class="d-btn beat-toggle" type="button" aria-pressed="true"><span class="dot"></span>Heartbeat cursor</button></p>'),
         d_row("The protein", "<b>The whole CV, folded</b> <span class=\"grey\">by what each entry has in common with the others.</span> <a href=\"cv.html#protein\">On the CV &rarr;</a>")])
     body = (d_sec("Arrivals", intros, sub='<span class="pa" lang="pa">ਆਮਦ</span><small>āmad</small>')
