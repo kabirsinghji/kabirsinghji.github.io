@@ -401,10 +401,10 @@ def protein_section(data):
     blob = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     n = len(data["entries"])
     return f'''<section class="wrap sec" id="protein" aria-labelledby="pr-h">
-  <div class="sec-h"><h2 id="pr-h">The CV as a protein</h2><p>Every dot is one of the {n} entries in the timeline below. The surface bulges toward the kinds of work I do, and its colours show what the work is about. Drag to turn it; tap a dot to see the entry.</p></div>
+  <div class="sec-h"><h2 id="pr-h">The CV as a protein</h2><p>Every dot is one of the {n} entries on this page. The surface bulges toward the kinds of work I do, and its colours show what the work is about. Drag to turn it; tap a dot to see the entry.</p></div>
   <div class="protein" id="protein-stage">
     <canvas class="pr-gl" aria-hidden="true"></canvas>
-    <canvas class="pr-ov" tabindex="0" role="img" aria-label="A turning 3D surface built from the entries in Kabir's CV. Use the arrow keys to turn it. The same entries are listed in the timeline below."></canvas>
+    <canvas class="pr-ov" tabindex="0" role="img" aria-label="A turning 3D surface built from the entries in Kabir's CV. Use the arrow keys to turn it. The same entries are listed on this page."></canvas>
     <div class="pr-axes"></div>
     <div class="pr-switches" role="group" aria-label="Show on the protein">
       <button type="button" class="pr-sw" data-k="axis" aria-pressed="true">Axis</button>
@@ -423,54 +423,33 @@ def protein_section(data):
       <button type="button" class="pr-x" aria-label="Close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button>
       <p class="pr-meta"></p><h3></h3><p class="pr-verbs"></p><ul class="pr-tags"></ul><p class="pr-rel"></p>
     </aside>
-    <p class="pr-nogl" hidden>This view needs WebGL, which this browser has turned off. Every entry is in the timeline below.</p>
+    <p class="pr-nogl" hidden>This view needs WebGL, which this browser has turned off. Every entry is listed above.</p>
   </div>
   <script type="application/json" id="protein-data">{blob}</script>
 </section>
 '''
 
 
-# ──────────────────────────────────────────────────────────────── coin ──
+# ──────────────────────────────────────────────────────────────── why ──
 # site.why in cv.json (edited in admin): {"shared", "molecules", "manuscripts"}, the two stories split
-# into paragraphs by blank lines. A coin turns over between them (coin.js); one side carries CAP8's
-# sequence round its rim, the other the first eight letters of the Gurmukhi alphabet.
-COIN = {"s": ("KPYPFWDD", "CAP8", "MOLECULES"), "h": ("ੳਅੲਸਹਕਖਗ", "ਅੱਖਰ", "MANUSCRIPTS")}
-
-
-def coin_face(side):
-    rim, mid, sub = COIN[side]
-    lang = ' lang="pa"' if side == "h" else ""
-    letters = "".join(f'<text x="170" y="42" transform="rotate({45 * i} 170 170)">{c}</text>' for i, c in enumerate(rim))
-    return (f'<span class="coin-face coin-face--{side}"><svg viewBox="0 0 340 340" aria-hidden="true" focusable="false">'
-            f'<circle class="c-disc" cx="170" cy="170" r="168"/><circle class="c-line" cx="170" cy="170" r="160"/>'
-            f'<circle class="c-dash" cx="170" cy="170" r="100"/><g class="c-rim"{lang}>{letters}</g>'
-            f'<text class="c-mid" x="170" y="158"{lang}>{mid}</text><text class="c-sub" x="170" y="202">{sub}</text></svg></span>')
-
-
+# into paragraphs by blank lines. The archived Diptych homepage shows them side by side.
 def why_paras(text):
     return "".join(f"<p>{to_html(p.strip())}</p>" for p in re.split(r"\n\s*\n", text or "") if p.strip())
 
 
 def why_section(cv):
+    """The archived Diptych homepage: the two stories, molecules and manuscripts, side by side."""
     w = cv.get("site", {}).get("why") or {}
     sci, his = why_paras(w.get("molecules")), why_paras(w.get("manuscripts"))
     if not (sci and his):
         return ""
-    shared = f'\n    <figcaption class="why-shared">{to_html(w["shared"])}</figcaption>' if w.get("shared") else ""
-    shared += f'\n    <p class="why-intro">{INTRO}</p>'
-    return f'''<section class="wrap why" aria-labelledby="why-h">
+    shared = f'<p class="why-shared">{to_html(w["shared"])}</p>' if w.get("shared") else ""
+    return f'''<section class="wrap" aria-labelledby="why-h">
   <h2 class="sr-only" id="why-h">Why molecules and manuscripts</h2>
-  <figure class="why-fig">
-    <div class="why-card">
-      <button class="coin" type="button" aria-pressed="false" aria-label="Turn the coin over for the other story. One side shows the peptide CAP8, the other the first eight letters of the Gurmukhi alphabet.">
-        <span class="coin-tip"><span class="coin-turn">{coin_face("s")}{coin_face("h")}</span></span>
-      </button>
-      <p class="coin-hint" aria-live="polite"></p>
-    </div>{shared}
-  </figure>
-  <div class="why-stories">
-    <div class="why-story why-story--s" data-side="molecules">{sci}</div>
-    <div class="why-story why-story--h" data-side="manuscripts">{his}</div>
+  {shared}
+  <div class="why">
+    <div class="why-story why-story--s"><h2>Molecules</h2>{sci}</div>
+    <div class="why-story why-story--h"><h2>Manuscripts</h2>{his}</div>
   </div>
 </section>
 
@@ -538,7 +517,7 @@ def linkedin_section(cv):
 
 
 # ─────────────────────────────────────────────────────────── page parts ──
-CSS_V = 13
+CSS_V = 14
 # the menu, in order; { } (pager.js) steps through the same pages with Home in front
 NAV = [("cv.html", "CV"), ("science.html", "Science"), ("history.html", "History"), ("about.html", "About")]
 INTRO = ("I design therapeutic peptides with KumarLab, work on computational protein design at Imperial College London, "
@@ -549,7 +528,7 @@ INTRO = ("I design therapeutic peptides with KumarLab, work on computational pro
 def site_header(current=None):
     links = "".join('\n    <a href="{}"{}>{}</a>'.format(h, ' aria-current="page"' if h == current else "", n) for h, n in NAV)
     return f'''<header class="wrap top">
-  <a class="brand" href="./">Kabir Singh</a>
+  <a class="brand" href="./">Kabir Singh<span class="pa" lang="pa">ਕਬੀਰ ਸਿੰਘ</span></a>
   <nav class="nav" aria-label="Site">{links}
   </nav>
 </header>'''
@@ -557,81 +536,56 @@ def site_header(current=None):
 
 def site_footer(m):
     esc = html.escape
+    email = esc(m.get("email", ""))
     return f'''<footer class="foot">
   <div class="wrap">
-    <p class="meta">Last updated {esc(m.get("asOf", ""))}. Plain HTML; CV typeset in LaTeX.<br><a href="mailto:{esc(m.get("email", ""))}">{esc(m.get("email", ""))}</a> &middot; <a href="admin.html">Admin</a></p>
+    <p class="meta"><span class="open">Open to correspondence</span> &middot; <a href="mailto:{email}">{email}</a><br>Last updated {esc(m.get("asOf", ""))} &middot; <a href="curious.html">The long way round</a> &middot; <a href="admin.html">Admin</a></p>
     <div class="sign-off">
-      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
+      <p class="couplet" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
       <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     </div>
   </div>
 </footer>'''
 
 
-def timeline_section(cv):
-    """Every CV entry by year, with the kind filters and the certifications (the CV page)."""
-    items, certs = timeline(cv)
-    counts = {k: sum(1 for i in items if i["cat"] == k) for k, _, _ in CATS}
-    btns = '<button type="button" aria-pressed="true" data-c="all">All<span>{}</span></button>'.format(len(items)) + "".join(
-        '<button type="button" aria-pressed="false" data-c="{}">{}<span>{}</span></button>'.format(k, n, counts[k]) for k, n, _ in CATS if counts[k])
-    singular = {k: s for k, _, s in CATS}
-    groups = {}
-    for i in items:
-        groups.setdefault(i["key"][0] if i["key"] else None, []).append(i)
-    years = []
-    order = sorted([y for y in groups if y], reverse=True) + ([None] if None in groups else [])
-    for y in order:
-        rows = []
-        for i in sorted(groups[y], key=lambda i: i["key"] or (0, 0), reverse=True):
-            sub = f'<span class="sub">{i["sub"]}</span>' if i["sub"] else ""
-            if i["bl"]:
-                sub += '<ul class="bl">' + "".join(f"<li>{b}</li>" for b in i["bl"]) + "</ul>"
-            title = f'<span class="plain">{i["title"]}</span>' if i["plain"] else f'<b>{i["title"]}</b>'
-            rows.append(f'<li data-c="{i["cat"]}" class="{i["cls"]}"><span class="cat">{singular.get(i["cat"], i["cat"].title())}</span>'
-                        f'<div>{title}{sub}</div><span class="d">{i["dates"]}</span></li>')
-        label = str(y) if y else "Undated"
-        years.append(f'<section class="year" aria-label="{label}"><h3><span>{label}</span></h3><ul class="items">{"".join(rows)}</ul></section>')
-    first_year = min(y for y in groups if y) if any(groups) else ""
-    cert_html = "".join(f"<li>{c}</li>" for c in certs)
-    return f'''<section class="wrap sec" id="timeline" aria-labelledby="tl-h">
-  <div class="sec-h"><h2 id="tl-h">Since {first_year}</h2><p>Every entry on the CV, newest first, under the year it began. Filter by kind; certifications are listed at the end.</p></div>
-  <div class="filters" role="group" aria-label="Filter the timeline">{btns}</div>
-  <div id="years">{"".join(years)}</div>
-  <div class="sec-h sec-h--small"><h2>Certifications &amp; licenses</h2></div>
-  <ul class="certs">{cert_html}</ul>
-</section>'''
+# every page in the text-first design opens the same way
+BEAT_JS_V = 1
+FONT_PRELOAD = ('<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>\n'
+                '<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>')
 
 
-TIMELINE_JS = """<script>
-/* Timeline filter: hides rows of other kinds and any year left empty. */
-(function () {
-  var btns = [].slice.call(document.querySelectorAll('.filters button'));
-  var years = [].slice.call(document.querySelectorAll('#years .year'));
-  btns.forEach(function (b) {
-    b.addEventListener('click', function () {
-      var c = b.getAttribute('data-c');
-      btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-      years.forEach(function (y) {
-        var any = false;
-        [].forEach.call(y.querySelectorAll('.items > li'), function (li) {
-          var on = c === 'all' || li.getAttribute('data-c') === c;
-          li.hidden = !on; if (on) any = true;
-        });
-        y.hidden = !any;
-      });
-    });
-  });
-})();
-</script>"""
+def page_head(title, canonical, desc, extra="", top=""):
+    esc = html.escape
+    return f'''<meta charset="utf-8">{top}
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{esc(title)}</title>
+<link rel="canonical" href="https://kabirsinghji.github.io/{canonical}">
+<meta name="description" content="{esc(desc)}">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:url" content="https://kabirsinghji.github.io/{canonical}">
+<meta property="og:image" content="https://kabirsinghji.github.io/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+{FONT_PRELOAD}
+<link rel="stylesheet" href="style.css?v={CSS_V}">
+<script src="theme.js?v=1"></script>
+<script src="peek.js?v=9" defer></script>
+<script src="pager.js?v=1" defer></script>
+<script src="beat.js?v={BEAT_JS_V}" defer></script>{extra}'''
 
 
-def build_index(cv):
+def build_diptych(cv):
+    """home-diptych.html: the homepage as it was until October 2026, kept as one of the archived designs."""
     m = cv["meta"]
     esc = html.escape
     linkedin_html = linkedin_section(cv)
     why_html = why_section(cv)
-    intro_html = "" if why_html else f'\n    <p class="intro">{INTRO}</p>'   # with the coin, the paragraph sits under it
-    coin_js = '\n<script src="coin.js?v=1" defer></script>' if why_html else ""
+    intro_html = f'\n    <p class="intro">{INTRO}</p>'
     projects = cv.get("site", {}).get("projects", [])
 
     def leaf(kind, field, kicker, question, img, alt, cap, href, go):
@@ -679,10 +633,9 @@ def build_index(cv):
 <head>
 <meta charset="utf-8">
 <script src="home.js?v={HOME_JS_V}"></script>
-<script src="arrival.js?v={ARRIVAL_JS_V}"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kabir Singh</title>
-<link rel="canonical" href="https://kabirsinghji.github.io/">
+<title>Kabir Singh — the Diptych homepage</title>
+<link rel="canonical" href="https://kabirsinghji.github.io/home-diptych.html">
 <meta name="description" content="Kabir Singh — Mathematical Biology, NJIT. Computational protein and peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.">
 <meta property="og:title" content="Kabir Singh">
 <meta property="og:description" content="Mathematical Biology at NJIT. Computational protein and peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.">
@@ -700,7 +653,8 @@ def build_index(cv):
 <link rel="stylesheet" href="style.css?v={CSS_V}">
 <script src="theme.js?v=1"></script>
 <script src="peek.js?v=9" defer></script>
-<script src="pager.js?v=1" defer></script>{coin_js}
+<script src="pager.js?v=1" defer></script>
+<script src="beat.js?v={BEAT_JS_V}" defer></script>
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
@@ -766,51 +720,355 @@ def build_index(cv):
 '''
 
 
-def build_cv(cv):
-    """cv.html: the whole record, with the protein drawn from it and the PDF."""
+# ─────────────────────────────────────────────────────── text-first pages ──
+# The homepage, the CV and "the long way round" share one layout: a label on the left and rows on the
+# right (style.css .d-sec / .d-row). Everything below reads cv.json, so a save in admin.html updates it.
+DOORS = [("cv.html", "Committee", "The two-minute version.", "Who I am, what I&rsquo;ve done, the CV."),
+         ("science.html", "Scientist or PI", "The work.", "Five projects, the paper, its numbers, and what they don&rsquo;t show yet."),
+         ("curious.html", "Just curious", "The long way round.", "The intros, the old homepages, and the characters.")]
+NOW_MONTH = None   # (year, month) of meta.asOf, set in main()
+
+
+def entries(cv, sec_id):
+    for sec in cv["sections"]:
+        if sec["id"] == sec_id:
+            for g in sec.get("groups", []) or [{"entries": sec.get("entries", [])}]:
+                for e in g.get("entries", []):
+                    if shown(e, "site"):
+                        yield g, e
+
+
+def short_title(e):
+    """A short name for an entry: its own "short", else the heading without the role and the PI."""
+    if e.get("short"):
+        return to_html_inline(e["short"])
+    h = re.split(r"\.\s+(?:PI|Mentor|Supervisor|Dr\.)", e["heading"])[0]
+    h = re.sub(r"^Undergraduate Researcher,\s*", "", h)
+    return to_html_inline(h, strip_bold=True)
+
+
+def d_row(when, what, href=None, extra=""):
+    if href:
+        return f'<li><a class="d-row" href="{href}"><span class="when">{when}</span><span class="what">{what}</span></a></li>'
+    return f'<li class="d-row"><span class="when">{when}</span><span class="what">{what}{extra}</span></li>'
+
+
+def d_sec(label, body, sec_id="", sub=""):
+    idattr = f' id="{sec_id}"' if sec_id else ""
+    return f'<section class="wrap d-sec"{idattr}><h2>{label}{sub}</h2><div class="d-body">{body}</div></section>\n'
+
+
+def rows(items):
+    return '<ul class="d-rows">' + "".join(items) + "</ul>"
+
+
+def published(cv):
+    for sec in cv["sections"]:
+        if sec["type"] == "publications":
+            for g in sec.get("groups", []):
+                for p in g.get("items", []):
+                    if shown(p, "site"):
+                        yield g, p
+
+
+def pub_row(g, p):
+    esc = html.escape
+    done = g.get("status") == "published"
+    when = esc(str(p.get("year", ""))) if done else "In preparation"
+    venue = to_html(p.get("venue", ""))
+    href = "https://doi.org/" + esc(p["doi"]) if p.get("doi") else None
+    title = f'<b>{to_html(p["title"])}</b>'
+    if href:
+        title = f'<a href="{href}">{title}</a>'
+    return d_row(when, f'{title} <span class="grey">{to_html(p["authors"])}. {venue}</span>')
+
+
+def now_rows(cv):
+    out = []
+    for g, e in entries(cv, "research"):
+        if "Present" in (e.get("dates") or ""):
+            when = site_dates(e["dates"]).replace("Present", "now")
+            mm = re.search(r"\.\s+((?:PI|Mentor|Supervisor)s?:.+|Dr\. .+)$", e["heading"])
+            who = f' <span class="grey">{to_html(mm.group(1), strip_bold=True)}</span>' if mm else ""
+            out.append(d_row(when, f"<b>{short_title(e)}.</b>{who}"))
+    return out
+
+
+def li_rows(cv, n=3):
+    li = cv.get("site", {}).get("linkedin") or {}
+    posts = [p for p in li.get("posts", []) if str(p.get("id", "")).isdigit()]
+    if not posts:
+        return []
+    cache = {}
+    path = os.path.join(ROOT, "data", "linkedin.json")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            cache = json.load(f).get("posts", {})
+    posts.sort(key=lambda p: int(p["id"]), reverse=True)
+    out = []
+    for p in posts[:n]:
+        text = " ".join((p.get("text") or cache.get(p["id"], {}).get("text") or "").split())
+        first = re.split(r"(?<=[.!?])\s+", text, maxsplit=1)[0] if text else "A post on LinkedIn"
+        if len(first) > 150:
+            first = first[:147].rsplit(" ", 1)[0] + "…"
+        out.append(d_row(li_date(p["id"]), f'{html.escape(first)} <span class="go">LinkedIn &nearr;</span>', html.escape(li_href(p))))
+    return out
+
+
+NOW_JS = """<script>
+/* "where it's currently …": New Jersey time, kept current */
+(function () {
+  var el = document.querySelector('.now-time');
+  if (!el) return;
+  function tick() { try { el.textContent = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); } catch (e) {} }
+  tick(); setInterval(tick, 30000);
+})();
+</script>"""
+
+
+def build_index(cv):
+    """index.html: the homepage. Text first; three ways in; what's happening now; elsewhere; contact."""
     m = cv["meta"]
     esc = html.escape
-    pdata = protein_data(cv)
-    protein_html = protein_section(pdata) if pdata else ""
-    protein_js = '\n<script src="protein.js?v=1" defer></script>' if pdata else ""
+    email = esc(m.get("email", ""))
+    about = f'''<div class="lede">
+  <p>I&rsquo;m a physician-scientist in training, studying Mathematical Biology at <a href="https://honors.njit.edu/">NJIT&rsquo;s Albert Dorman Honors College</a>, Class of 2027, and working as an EMT.</p>
+  <p>{INTRO}</p>
+  <p>I&rsquo;m based in New Jersey, where it&rsquo;s currently <span class="now-time">daytime somewhere</span>.</p>
+</div>'''
+    doors = rows([d_row(f"[{who}]", f"<b>{lead}</b> <span class=\"grey\">{rest}</span>", href) for href, who, lead, rest in DOORS])
+    pubs = rows([pub_row(g, p) for g, p in published(cv) if g.get("status") == "published"])
+    now = rows(now_rows(cv))
+    li = li_rows(cv)
+    contact = rows([d_row("Email", f"<b>{email}</b>", f"mailto:{email}"),
+                    d_row("LinkedIn", "<b>kabir-singh-ji</b>", esc(m.get("linkedin", ""))),
+                    d_row("ORCID", "<b>0009-0002-5159-5879</b>", ORCID),
+                    d_row("Scholar", "<b>Google Scholar</b>", SCHOLAR),
+                    d_row("CV", "<b>Download, PDF</b>", "cv/cv.pdf")])
+    body = (d_sec("About", about) + d_sec("Who&rsquo;s visiting?", doors) + d_sec("Published", pubs)
+            + d_sec("Now", now) + (d_sec("Elsewhere", rows(li)) if li else "") + d_sec("Contact", contact))
     return f'''<!DOCTYPE html>
 <!-- GENERATED from data/cv.json by tools/build.py. Edit through admin.html; changes made here are overwritten on the next build. -->
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CV — Kabir Singh</title>
-<link rel="canonical" href="https://kabirsinghji.github.io/cv.html">
-<meta name="description" content="Kabir Singh's CV: every entry, newest first, the whole record drawn as a protein, certifications, and the PDF.">
-<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v={CSS_V}">
-<script src="theme.js?v=1"></script>
-<script src="peek.js?v=9" defer></script>
-<script src="pager.js?v=1" defer></script>{protein_js}
+{page_head("Kabir Singh", "", "Kabir Singh — physician-scientist in training, Mathematical Biology at NJIT. Computational peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.", top=f'''
+<script src="arrival.js?v={ARRIVAL_JS_V}"></script>''')}
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Kabir Singh",
+  "url": "https://kabirsinghji.github.io/",
+  "image": "https://kabirsinghji.github.io/photo.webp",
+  "description": "Mathematical Biology at NJIT. Computational protein and peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.",
+  "affiliation": {{ "@type": "CollegeOrUniversity", "name": "New Jersey Institute of Technology", "url": "https://www.njit.edu/" }},
+  "sameAs": ["https://www.linkedin.com/in/kabir-singh-ji", "{ORCID}", "{SCHOLAR}"]
+}}
+</script>
+</head>
+<body class="home-d">
+{site_header()}
+<main>
+{body}</main>
+
+{site_footer(m)}
+{NOW_JS}
+</body>
+</html>
+'''
+
+
+# the threads since starting at NJIT, as bars: research by field, emergency medicine, editing and study abroad
+GANTT_EXTRA = [("leadership", r"First Aid Squad", "g-med"), ("service", r"Journal of Young Investigators", "g-oth"),
+               ("education", r"Lund", "g-oth")]
+
+
+def ranges(dates, now):
+    """[(start, end)] in months since year 0 for each range in a dates string; Present = now."""
+    out = []
+    for part in re.split(r",\s*\n?|\n", dates or ""):
+        bits = re.split(r"\s*[–-]\s*", part.strip())
+        a = start_of(bits[0])
+        if not a:
+            continue
+        if len(bits) > 1 and "Present" in bits[1]:
+            b = now
+        elif len(bits) > 1 and start_of(bits[1]):
+            b = start_of(bits[1])
+        else:
+            b = a
+        to_m = lambda ym: ym[0] * 12 + max(ym[1], 1) - 1
+        out.append((to_m(a), to_m(b) + 1))
+    return out
+
+
+def gantt(cv):
+    now = NOW_MONTH
+    t0 = 2023 * 12 + 8                     # September 2023, the first term at NJIT
+    t1 = 2027 * 12 + 5                     # end of May 2027, the expected degree
+    rows_ = []
+    for g, e in entries(cv, "research"):
+        cls = {"science": "g-sci", "history": "g-his"}.get(g.get("field", ""), "g-med")
+        rows_.append((short_title(e), cls, ranges(e.get("dates"), now)))
+    for sec_id, pat, cls in GANTT_EXTRA:
+        for g, e in entries(cv, sec_id):
+            if re.search(pat, e["heading"]):
+                name = short_title(e)
+                rows_.append((name, cls, ranges(e.get("dates"), now)))
+    pct = lambda v: "%.2f%%" % ((min(max(v, t0), t1) - t0) / (t1 - t0) * 100)
+    out = []
+    for name, cls, rs in rows_:
+        if not rs:
+            continue
+        early = min(a for a, b in rs) < t0
+        bars = "".join(f'<span class="g-bar" style="left:{pct(a)};width:calc({pct(b)} - {pct(a)})"></span>' for a, b in rs if b > t0)
+        lbl = name + (f' <span style="color:var(--soft)">since {min(a for a, b in rs) // 12}</span>' if early else "")
+        out.append(f'<div class="g-row {cls}"><span class="g-name">{lbl}</span><span class="g-track">{bars}</span></div>')
+    years = "".join(f'<span class="g-tick" style="left:{pct(y * 12)}">{y}</span>' for y in range(2024, 2028))
+    grid = "".join(f'<span class="g-grid" style="left:{pct(y * 12)}"></span>' for y in range(2024, 2028))
+    nowline = f'<span class="g-now" style="left:{pct(now[0] * 12 + now[1])}"></span>'
+    legend = ('<ul class="gantt-legend"><li class="g-sci">science</li><li class="g-his">history</li>'
+              '<li class="g-med">emergency medicine</li><li class="g-oth">editing &amp; study abroad</li><li class="g-axis">to the degree, May 2027</li></ul>')
+    return f'''<div class="gantt">{legend}
+  <div class="gantt-axis"><span></span><span class="g-track">{years}</span></div>
+  <div class="gantt-body"><div class="gantt-axis" style="position:absolute;inset:0;pointer-events:none"><span></span><span class="g-track" style="height:100%">{grid}{nowline}</span></div>{"".join(out)}</div>
+  <div class="gantt-foot"><span></span><div><span class="t" style="left:{pct(now[0] * 12 + now[1])}">today</span></div></div>
+</div>'''
+
+
+def cv_sections(cv):
+    """Every section of the CV as label-and-rows."""
+    out = []
+    for sec in cv["sections"]:
+        t, title = sec["type"], to_html_inline(sec["title"])
+        items = []
+        if t == "entries":
+            for g in sec.get("groups", []):
+                if g.get("title") and len(sec.get("groups", [])) > 1:
+                    items.append(f'<li class="d-row" style="border-top-color:var(--ink)"><span class="when"></span><span class="what" style="font-family:var(--mono);font-size:.78rem;color:var(--soft)">{to_html_inline(g["title"])}</span></li>')
+                for e in g.get("entries", []):
+                    if not shown(e, "site"):
+                        continue
+                    bl = [to_html(b) for b in bullets(e, "site")]
+                    extra = "<ul>" + "".join(f"<li>{b}</li>" for b in bl) + "</ul>" if bl else ""
+                    items.append(d_row(site_dates(e.get("dates")), f"<b>{to_html(e['heading'], strip_bold=True)}</b>", extra=extra))
+        elif t == "publications":
+            items = [pub_row(g, p) for g, p in published(cv)]
+        elif t == "presentations":
+            for p in sec.get("items", []):
+                if not shown(p, "site"):
+                    continue
+                vs = "; ".join("%s (%s, %s)" % (to_html(v["name"]), html.escape(v.get("format", "")).lower(), html.escape(v.get("year", ""))) for v in p.get("venues", []))
+                years = sorted({re.search(r"\d{4}", v.get("year", "")).group() for v in p.get("venues", []) if re.search(r"\d{4}", v.get("year", ""))})
+                items.append(d_row(", ".join(years), f'<b>{to_html(p["title"])}</b> <span class="grey">{to_html(p["authors"])}. {vs}.</span>'))
+        elif t in ("list", "flatlist"):
+            for it in sec.get("items", []):
+                if shown(it, "site"):
+                    y = it.get("year") or ""
+                    items.append(d_row(html.escape(str(y)), to_html(it["text"])))
+        if items:
+            out.append(d_sec(title, rows(items), sec_id=sec["id"]))
+    return "".join(out)
+
+
+def build_cv(cv):
+    """cv.html: for committees. Who, the threads since 2023, then every section of the CV, and the PDF."""
+    m = cv["meta"]
+    esc = html.escape
+    email = esc(m.get("email", ""))
+    pdata = protein_data(cv)
+    protein_html = protein_section(pdata) if pdata else ""
+    protein_js = '\n<script src="protein.js?v=1" defer></script>' if pdata else ""
+    head = f'''<section class="wrap d-head" aria-labelledby="cv-h">
+  <img class="photo" src="photo-arch.webp" alt="Portrait of Kabir Singh in a khaki turban and dark suit" width="716" height="895">
+  <div>
+    <h1 id="cv-h">Kabir Singh</h1>
+    <p class="sub">Curriculum vitae &middot; as of {esc(m.get("asOf", ""))}</p>
+    <div class="lede" style="margin-top:1.4rem"><p>{INTRO}</p></div>
+    <div class="d-buttons"><a class="d-btn d-btn--solid" href="cv/cv.pdf">Download the CV, PDF</a><a class="d-btn" href="mailto:{email}">Email</a><a class="d-btn" href="{esc(m.get("linkedin", ""))}">LinkedIn</a></div>
+  </div>
+</section>
+'''
+    protein = (f'<section class="wrap sec" aria-label="The whole record, drawn as a protein">{protein_html}</section>\n' if protein_html else "")
+    return f'''<!DOCTYPE html>
+<!-- GENERATED from data/cv.json by tools/build.py. Edit through admin.html; changes made here are overwritten on the next build. -->
+<html lang="en">
+<head>
+{page_head("CV — Kabir Singh", "cv.html", "Kabir Singh's CV: the threads since 2023, every entry, and the PDF.", extra=protein_js)}
 </head>
 <body class="cv-page">
 {site_header("cv.html")}
 <main>
-
-<section class="wrap cv-head" aria-labelledby="cv-h">
-  <div>
-    <p class="kicker">Curriculum vitae &middot; as of {esc(m.get("asOf", ""))}</p>
-    <h1 id="cv-h">CV</h1>
-  </div>
-  <p class="cv-pdf"><a class="pill" href="cv/cv.pdf">Download the PDF</a></p>
-</section>
-
-{protein_html}
-{timeline_section(cv)}
-</main>
+{head}{d_sec("Since 2023", gantt(cv))}{cv_sections(cv)}{protein}</main>
 
 {site_footer(m)}
+</body>
+</html>
+'''
 
-{TIMELINE_JS}
+
+INTROS = [("procession", "Procession", "Figures cut from Mughal, Persian and Sikh paintings parade before the walls of Surat."),
+          ("unfold", "Protein", "The page threaded along the anti-GlialCAM antibody; a simulation unfolds it into the homepage."),
+          ("darbar", "Darbar", "A painted court welcome, drawn from scratch, with a greeting in three scripts.")]
+SHELF = [("home-diptych.html", "Diptych", "#1D5A93", "#F3F7FB", "The homepage until October 2026: the portrait, the name in two scripts, molecules and manuscripts side by side."),
+         ("home-timescale.html", "Timescale", "#0F1115", "#ECEDEF", "From a two-femtosecond simulation step to a 327-year-old question, on one axis of time."),
+         ("home-folio.html", "Folio", "#D6C08A", "#241E10", "The homepage as a manuscript folio: a Gurmukhi title, ruled margins, glosses down the sides."),
+         ("home-pdb.html", "PDB file", "#1C2420", "#C9E7D2", "The homepage written as a Protein Data Bank file, with the structure turning beside it."),
+         ("home-landscape.html", "Landscape", "#A83A22", "#FBEDE8", "Two slopes, one basin: each project a hollow on one energy landscape.")]
+SHELF_JS = """<script>
+/* The shelf: run the cursor along it and each design opens; arrows and keys step through. */
+(function () {
+  var books = [].slice.call(document.querySelectorAll('.book')), count = document.querySelector('.shelf-count'), at = 0;
+  function open(i) {
+    at = (i + books.length) % books.length;
+    books.forEach(function (b, j) { b.classList.toggle('is-open', j === at); b.querySelector('.book-spine').setAttribute('aria-expanded', j === at ? 'true' : 'false'); });
+    if (count) count.textContent = String(at + 1).padStart(2, '0') + ' / ' + String(books.length).padStart(2, '0');
+  }
+  books.forEach(function (b, i) {
+    var s = b.querySelector('.book-spine');
+    s.addEventListener('click', function () { open(i); });
+    s.addEventListener('focus', function () { open(i); });
+    b.addEventListener('mouseenter', function () { if (matchMedia('(hover: hover)').matches) open(i); });
+  });
+  document.querySelector('.shelf-prev').addEventListener('click', function () { open(at - 1); });
+  document.querySelector('.shelf-next').addEventListener('click', function () { open(at + 1); });
+  open(0);
+})();
+</script>"""
+
+
+def build_curious(cv):
+    """curious.html: the long way round. The intros, the archived homepages, and the things that move."""
+    m = cv["meta"]
+    intros = '<div class="cards3">' + "".join(f'''<a class="cardx" href="./?arrival={k}"><img src="curious/intro-{k}.webp" alt="A frame from the {n.lower()} intro" width="640" height="400" loading="lazy"><span class="b"><span class="n"><span>{i + 1:02d} / 03</span><span>[play &rarr;]</span></span><span class="t">{n}</span><span class="p">{d}</span></span></a>''' for i, (k, n, d) in enumerate(INTROS)) + "</div>"
+    intros = '<p class="lede" style="margin:0 0 1.4rem"><span>One of the three plays, at random, when you arrive from outside the site. Any key, click or scroll skips it. These links play one on demand.</span></p>' + intros
+    books = "".join(f'''<div class="book" style="--bk:{bg};--bf:{fg}"><button class="book-spine" type="button" aria-expanded="false" aria-label="{n}"><span class="n">{i + 1:02d}</span><span class="t">{n}</span></button>
+      <div class="book-cover"><div><p class="n">DESIGN {i + 1:02d} / 05</p><h3>{n}</h3><p>{d}</p><p><a href="{href}">[open it &rarr;]</a></p></div><img src="curious/{href.replace(".html", ".webp")}" alt="The {n} homepage design" width="560" height="350" loading="lazy"></div></div>''' for i, (href, n, bg, fg, d) in enumerate(SHELF))
+    shelf = f'''<p class="lede" style="margin:0 0 1.4rem"><span>The site has had five homepages. Run your cursor along the shelf.</span></p>
+<div class="shelf">{books}</div>
+<div class="shelf-bar"><span><button class="shelf-prev" type="button" aria-label="Previous design">&larr;</button><button class="shelf-next" type="button" aria-label="Next design">&rarr;</button><span class="shelf-count">01 / 05</span></span><span>each still works, one click in</span></div>'''
+    play = rows([
+        d_row("Characters", "<b>Waris, the Cat, the Maharaja and friends</b> <span class=\"grey\">peek in from the edges of every page for a second and a half. Catch them.</span>"),
+        d_row("The beat", "<b>A small monitor follows your cursor</b> <span class=\"grey\">and keeps a heart rate that climbs the faster you move. Rest the cursor and click the monitor to send it away; the switch below brings it back.</span>",
+              extra='<p style="margin:.6rem 0 0"><button class="d-btn beat-toggle" type="button" aria-pressed="true"><span class="dot"></span>Heartbeat cursor</button></p>'),
+        d_row("The protein", "<b>The whole CV, folded</b> <span class=\"grey\">by what each entry has in common with the others.</span> <a href=\"cv.html#protein\">On the CV &rarr;</a>")])
+    body = (d_sec("Arrivals", intros, sub='<span class="pa" lang="pa">ਆਮਦ</span><small>āmad</small>')
+            + d_sec("Homepages", shelf, sub='<span class="pa" lang="pa">ਰੂਪ</span><small>rūp</small>')
+            + d_sec("Play", play, sub='<span class="pa" lang="pa">ਖੇਡ</span><small>kheḍ</small>'))
+    return f'''<!DOCTYPE html>
+<!-- GENERATED from data/cv.json by tools/build.py. Edit through admin.html; changes made here are overwritten on the next build. -->
+<html lang="en">
+<head>
+{page_head("The long way round — Kabir Singh", "curious.html", "The intros, the five homepages this site has had, and the things that move on it.")}
+</head>
+<body>
+{site_header()}
+<main>
+<section class="wrap d-head"><div></div><div><h1>The long way round</h1><p class="sub">for the curious</p></div></section>
+{body}</main>
+
+{site_footer(m)}
+{SHELF_JS}
 </body>
 </html>
 '''
@@ -820,7 +1078,7 @@ def build_cv(cv):
 # The homepage comes in five designs: index.html (build_index, above) and the four built here.
 # home.js picks one per visit, or the one the visitor kept. All five read the same cv.json, so a
 # save in admin.html updates every design. home.css styles these four; style.css everything else.
-HOME_JS_V = 2
+HOME_JS_V = 3
 HOME_CSS_V = 1
 # arrival.js plays a short welcome on a visitor's first arrival (arrival/: the procession and the fold)
 ARRIVAL_JS_V = 1
@@ -1248,7 +1506,12 @@ def build_landscape(cv):
 def main():
     with open(os.path.join(ROOT, "data", "cv.json"), encoding="utf-8") as f:
         cv = json.load(f)
+    global NOW_MONTH
+    asof = cv["meta"].get("asOf", "")
+    ym = re.match(r"([A-Za-z]+)\s+(\d{4})", asof)
+    NOW_MONTH = (int(ym.group(2)), MONTHS.get(ym.group(1)[:3].title(), 1)) if ym else (datetime.date.today().year, datetime.date.today().month)
     outputs = {"cv/cv.tex": build_tex(cv), "index.html": build_index(cv), "cv.html": build_cv(cv),
+               "curious.html": build_curious(cv), "home-diptych.html": build_diptych(cv),
                "home-timescale.html": build_timescale(cv), "home-folio.html": build_folio(cv),
                "home-pdb.html": build_pdb(cv), "home-landscape.html": build_landscape(cv)}
     for rel, text in outputs.items():

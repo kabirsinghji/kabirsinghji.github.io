@@ -16,16 +16,18 @@
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=13">
+<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=14">
 <script src="theme.js?v=1"></script>
 <script src="peek.js?v=9" defer></script>
+<script src="beat.js?v=1" defer></script>
+<script src="antibody.js?v=1" defer></script>
 <script src="pager.js?v=1" defer></script>
 </head>
 <body>
 <header class="wrap top">
-  <a class="brand" href="./">Kabir Singh</a>
+  <a class="brand" href="./">Kabir Singh<span class="pa" lang="pa">ਕਬੀਰ ਸਿੰਘ</span></a>
   <nav class="nav" aria-label="Site">
     <a href="cv.html">CV</a>
     <a href="science.html" aria-current="page">Science</a>
@@ -35,13 +37,6 @@
 </header>
 <main class="wrap page">
 
-  <figure class="illustration illustration--wide">
-    <img src="science-header.webp"
-         alt="Close-up of a protein surface rendered in blue, grey and pink, with a peptide drawn as green and violet sticks entering a pocket at the right"
-         width="1398" height="350" fetchpriority="high">
-  </figure>
-
-
   <header class="masthead masthead--sub">
     <h1>Scientific Research</h1>
     <p class="tagline">
@@ -50,6 +45,14 @@
       directly.
     </p>
   </header>
+
+  <figure class="mol">
+    <div class="mol-stage">
+      <canvas tabindex="0" role="img" aria-label="The anti-GlialCAM antibody fragment from the paper, drawn from its coordinates; it turns with the cursor, and clicking, or pressing Enter, docks copies of the peptide CAP8 into its binding site."></canvas>
+      <p class="mol-chip" aria-live="polite">[bound] CAP8 &middot; K<sub>d</sub> 0.294 mM</p>
+    </div>
+    <figcaption><span><span class="k k-l">light chain</span> <span class="k k-h">heavy chain</span> <span class="k k-p">CAP8, cyclo-KPYPFWDD</span></span><span>[move to turn it &middot; click to dock]</span></figcaption>
+  </figure>
 
   <figure class="lab-photo">
     <img src="research-lab.webp"
@@ -191,9 +194,9 @@
 
 <footer class="foot">
   <div class="wrap">
-    <p class="meta"><a href="./">&larr; Back to the CV</a><br><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a> &middot; <a href="admin.html">Admin</a></p>
+    <p class="meta"><span class="open">Open to correspondence</span> &middot; <a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a><br>Last updated October 2026 &middot; <a href="curious.html">The long way round</a> &middot; <a href="admin.html">Admin</a></p>
     <div class="sign-off">
-      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
+      <p class="couplet" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
       <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     </div>
   </div>

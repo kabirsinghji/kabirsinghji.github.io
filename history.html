@@ -16,16 +16,18 @@
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=13">
+<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=14">
 <script src="theme.js?v=1"></script>
 <script src="peek.js?v=9" defer></script>
+<script src="beat.js?v=1" defer></script>
+<script src="lens.js?v=1" defer></script>
 <script src="pager.js?v=1" defer></script>
 </head>
 <body>
 <header class="wrap top">
-  <a class="brand" href="./">Kabir Singh</a>
+  <a class="brand" href="./">Kabir Singh<span class="pa" lang="pa">ਕਬੀਰ ਸਿੰਘ</span></a>
   <nav class="nav" aria-label="Site">
     <a href="cv.html">CV</a>
     <a href="science.html">Science</a>
@@ -36,22 +38,32 @@
 <main class="wrap page">
 
 
-  <header class="masthead masthead--sub">
-    <h1>History Research</h1>
-    <p class="byline" lang="pa">ਕਬੀਰ ਸਿੰਘ</p>
-    <p class="tagline">
+  <header class="masthead masthead--sub masthead--lens">
+    <div>
+      <h1>History Research</h1>
+      <p class="tagline">
       How institutions decide what counts as authoritative teaching, and what that
       does to the communities and cities around them &mdash; in the early modern
       Sikh panth, in medieval Italy, and in American medicine.
     </p>
+      <nav class="subnav" aria-label="History research topics">
+        <a href="history.html" aria-current="page">Overview</a>
+        <a href="sikh-studies.html">Sikh Studies</a>
+        <a href="medieval-italy.html">Medieval Italy</a>
+        <a href="history-of-medicine.html">History of Medicine</a>
+      </nav>
+    </div>
+    <figure class="lens">
+      <div class="lens-stage">
+        <img src="udaipur.webp" alt="A night entertainment in the City Palace, Udaipur: a white palace under a dark sky, a courtyard garden, musicians and guests. Mewar, about 1755" width="1120" height="1233" fetchpriority="high">
+        <img class="under" src="udaipur-xray.webp" alt="" width="1120" height="1233">
+        <span class="lens-ring" aria-hidden="true"></span>
+        <p class="lens-found" aria-live="polite">[found] the antibody, hiding in the sky</p>
+      </div>
+      <figcaption>[move over the painting &middot; something is hidden in the sky]<br>A night entertainment in the City Palace, Udaipur &middot; Mewar, c. 1755 &middot; &copy; Victoria and Albert Museum, London &middot; IS.77-1990</figcaption>
+    </figure>
   </header>
 
-  <nav class="subnav" aria-label="History research topics">
-    <a href="history.html" aria-current="page">Overview</a>
-    <a href="sikh-studies.html">Sikh Studies</a>
-    <a href="medieval-italy.html">Medieval Italy</a>
-    <a href="history-of-medicine.html">History of Medicine</a>
-  </nav>
   <section class="topics">
     <a class="topic" href="sikh-studies.html">
       <h2>Sikh Studies</h2>
@@ -77,9 +89,9 @@
 
 <footer class="foot">
   <div class="wrap">
-    <p class="meta"><a href="./">&larr; Back to the CV</a><br><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a> &middot; <a href="admin.html">Admin</a></p>
+    <p class="meta"><span class="open">Open to correspondence</span> &middot; <a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a><br>Last updated October 2026 &middot; <a href="curious.html">The long way round</a> &middot; <a href="admin.html">Admin</a></p>
     <div class="sign-off">
-      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
+      <p class="couplet" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
       <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     </div>
   </div>
