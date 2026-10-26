@@ -1056,6 +1056,37 @@
       "site": "talk",
       "items": [
         {
+          "text": "Invited Speaker (forthcoming). Science National Honor Society. Piscataway High School, 2026",
+          "kind": "talk",
+          "show": "both",
+          "tags": [
+            "research",
+            "writing-editing",
+            "speaking",
+            "teaching-mentoring",
+            "leading-organizing",
+            "peptide-protein-design",
+            "medicine-emergency-care",
+            "research-culture-publishing",
+            "ambition-commitment",
+            "analysis-research",
+            "client-facing",
+            "commercial-awareness",
+            "oral-communication",
+            "written-communication",
+            "independence-confidence",
+            "interpersonal",
+            "leadership",
+            "persuasion-negotiation",
+            "planning-organisation",
+            "problem-solving-creativity",
+            "teamwork",
+            "peer-review",
+            "emergency-care-emt-bls"
+          ],
+          "year": 2026
+        },
+        {
           "text": "Invited Speaker. Student roundtable with Margo Chaly, New Jersey’s Secretary of Education. NJIT, 2026",
           "kind": "talk",
           "show": "both",
@@ -1071,7 +1102,8 @@
             "leadership",
             "persuasion-negotiation",
             "planning-organisation"
-          ]
+          ],
+          "year": 2026
         },
         {
           "text": "Invited Speaker. Presentation on interdisciplinary research in medicine and healthcare to NJIT leadership, including the Interim President and Interim Provost. University Advancement Dinner, NJIT, 2026",
