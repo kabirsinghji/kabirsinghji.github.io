@@ -38,3 +38,12 @@
     host.appendChild(btn);
   });
 })();
+
+/* Email links: the address is never written whole in the page (tools/build.py hide_mail); a link
+   carries its parts and is joined into a mailto: only when someone clicks it. */
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a[data-u]');
+  if (!a) return;
+  e.preventDefault();
+  location.href = 'mailto:' + a.getAttribute('data-u') + '@' + a.getAttribute('data-d') + '.' + a.getAttribute('data-t');
+});

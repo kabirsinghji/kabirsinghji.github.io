@@ -573,7 +573,7 @@ def page_head(title, canonical, desc, extra="", top=""):
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 {FONT_PRELOAD}
 <link rel="stylesheet" href="style.css?v={CSS_V}">
-<script src="theme.js?v=1"></script>
+<script src="theme.js?v=2"></script>
 <script src="peek.js?v=9" defer></script>
 <script src="pager.js?v=1" defer></script>
 <script src="beat.js?v={BEAT_JS_V}" defer></script>{extra}'''
@@ -651,7 +651,7 @@ def build_diptych(cv):
 <link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css?v={CSS_V}">
-<script src="theme.js?v=1"></script>
+<script src="theme.js?v=2"></script>
 <script src="peek.js?v=9" defer></script>
 <script src="pager.js?v=1" defer></script>
 <script src="beat.js?v={BEAT_JS_V}" defer></script>
@@ -1503,6 +1503,17 @@ def build_landscape(cv):
 
 
 # ──────────────────────────────────────────────────────────────── main ──
+# The address is never written out whole on a page: it reads "name [at] gmail [dot] com", and each
+# mailto link carries its parts in data-u/-d/-t, which theme.js joins when the link is clicked.
+MAIL_RE = re.compile(r"([A-Za-z0-9][A-Za-z0-9._+-]*)@([A-Za-z0-9-]+)\.([A-Za-z.]+)")
+
+
+def hide_mail(text):
+    text = re.sub(r'href="mailto:([^@"]+)@([^".]+)\.([^"]+)"', r'href="#" data-u="\1" data-d="\2" data-t="\3"', text)
+    return MAIL_RE.sub(lambda m: "%s [%s] %s [%s] %s" % ((m.group(1), "AT", m.group(2), "DOT", m.group(3)) if m.group(0).isupper()
+                                                          else (m.group(1), "at", m.group(2), "dot", m.group(3))), text)
+
+
 def main():
     with open(os.path.join(ROOT, "data", "cv.json"), encoding="utf-8") as f:
         cv = json.load(f)
@@ -1515,6 +1526,8 @@ def main():
                "home-timescale.html": build_timescale(cv), "home-folio.html": build_folio(cv),
                "home-pdb.html": build_pdb(cv), "home-landscape.html": build_landscape(cv)}
     for rel, text in outputs.items():
+        if rel.endswith(".html"):
+            text = hide_mail(text)
         with open(os.path.join(ROOT, rel), "w", encoding="utf-8") as f:
             f.write(text)
         print("wrote", rel)
