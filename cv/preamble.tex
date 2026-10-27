@@ -32,8 +32,11 @@
 \def\@fsc#1 #2\@@{\@fscw#1\@@\if\relax\detokenize{#2}\relax\else\ \@fsc#2\@@\fi}
 \def\@fscw#1#2\@@{#1{\footnotesize\MakeUppercase{#2}}}
 \makeatother
-\newcommand{\cvsection}[1]{\needspace{3\baselineskip}\vspace{9pt}{\fauxsc{#1}}\par\vspace{2pt}\hrule height .45pt\vspace{5pt}}
-\newcommand{\subhead}[1]{\needspace{2\baselineskip}\vspace{4pt}{\itshape #1}\par\vspace{2pt}}
+% each heading also adds a PDF bookmark (the outline in a viewer's sidebar); subheadings nest under it
+\hypersetup{bookmarksopen=true}
+\newcounter{cvmark}
+\newcommand{\cvsection}[1]{\needspace{3\baselineskip}\vspace{9pt}\stepcounter{cvmark}\pdfbookmark[0]{#1}{cvmark.\thecvmark}{\fauxsc{#1}}\par\vspace{2pt}\hrule height .45pt\vspace{5pt}}
+\newcommand{\subhead}[1]{\needspace{2\baselineskip}\vspace{4pt}\stepcounter{cvmark}\pdfbookmark[1]{#1}{cvmark.\thecvmark}{\itshape #1}\par\vspace{2pt}}
 
 %---- Entries ----------------------------------------------------
 % One gap before every entry; tune it to change the density.
