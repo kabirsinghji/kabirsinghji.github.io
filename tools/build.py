@@ -268,10 +268,12 @@ def build_tex(cv, prof):
     w(r"\begin{center}")
     w(r"{\Large\bfseries %s}\par\vspace{3pt}" % to_tex(m.get("name", "")))
     w(r"{\small " + " $\\cdot$\n ".join(r"\href{%s}{%s}" % (_tex_url(u), to_tex(t)) if u else to_tex(t) for t, u in contacts(m)) + "}")
+    w(r"\end{center}\vspace{-5pt}")
     obj = objective(cv, prof)
     if obj:
-        w(r"\par\vspace{4pt}{\small\itshape %s}" % to_tex(obj))
-    w(r"\end{center}\vspace{-5pt}")
+        w("")
+        w(r"\cvsection{Objective}")
+        w(r"\noindent %s\par" % to_tex(obj))
     first_pub = 1
     for title, body in cv_blocks(cv, prof):
         w("")
@@ -340,7 +342,7 @@ def build_txt(cv, prof):
     L = [m.get("name", "").upper(), " · ".join(t for t, u in contacts(m))]
     obj = objective(cv, prof)
     if obj:
-        L += ["", _txt(obj)]
+        L += ["", "", "OBJECTIVE", "=========", _txt(obj)]
     n = 1
     for title, body in cv_blocks(cv, prof):
         L += ["", "", _txt(title).upper(), "=" * len(_txt(title))]
@@ -465,7 +467,8 @@ def build_docx(cv, prof, path):
          _p(_runs(" · ".join(t for t, u in contacts(m)), size=19), align="center")]
     obj = objective(cv, prof)
     if obj:
-        P.append(_p(_runs(obj, italic=True, size=19), align="center", before=80))
+        P.append(_p(_runs("Objective", caps=True, size=23), before=200, after=100, border=True, keep=True))
+        P.append(_p(_runs(obj), before=40))
     n = 1
     for title, body in cv_blocks(cv, prof):
         P.append(_p(_runs(title, caps=True, size=23), before=200, after=100, border=True, keep=True))
