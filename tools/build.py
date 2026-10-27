@@ -430,8 +430,8 @@ def _tab():
     return "<w:r><w:tab/></w:r>"
 
 
-def _p(runs, before=0, after=0, align=None, tabs=(), ind=None, hang=None, bullet=False, keep=False, border=False):
-    pr = ""
+def _p(runs, before=0, after=0, align=None, tabs=(), ind=None, hang=None, bullet=False, keep=False, border=False, style=None):
+    pr = '<w:pStyle w:val="%s"/>' % style if style else ""
     if keep:
         pr += "<w:keepNext/>"
     if bullet:
@@ -440,7 +440,8 @@ def _p(runs, before=0, after=0, align=None, tabs=(), ind=None, hang=None, bullet
         pr += '<w:pBdr><w:bottom w:val="single" w:sz="4" w:space="1" w:color="000000"/></w:pBdr>'
     if tabs:
         pr += "<w:tabs>" + "".join('<w:tab w:val="%s" w:pos="%d"/>' % (k, pos) for k, pos in tabs) + "</w:tabs>"
-    pr += '<w:spacing w:before="%d" w:after="%d"/>' % (before, after)
+    if not style:
+        pr += '<w:spacing w:before="%d" w:after="%d"/>' % (before, after)
     if ind is not None or hang is not None:
         pr += '<w:ind w:left="%d"%s/>' % (ind or 0, ' w:hanging="%d"' % hang if hang else "")
     if align:
@@ -467,15 +468,15 @@ def build_docx(cv, prof, path):
          _p(_runs(" · ".join(t for t, u in contacts(m)), size=19), align="center")]
     obj = objective(cv, prof)
     if obj:
-        P.append(_p(_runs("Objective", caps=True, size=23), before=200, after=100, border=True, keep=True))
+        P.append(_p(_runs("Objective"), style="Heading1"))
         P.append(_p(_runs(obj), before=40))
     n = 1
     for title, body in cv_blocks(cv, prof):
-        P.append(_p(_runs(title, caps=True, size=23), before=200, after=100, border=True, keep=True))
+        P.append(_p(_runs(title), style="Heading1"))
         for b in body:
             k = b[0]
             if k == "subhead":
-                P.append(_p(_runs(b[1], italic=True), before=80, after=40, keep=True))
+                P.append(_p(_runs(b[1]), style="Heading2"))
             elif k == "head":
                 e = b[1]
                 d = date_lines(e)
@@ -523,7 +524,13 @@ def build_docx(cv, prof, path):
     styles = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles %s><w:docDefaults><w:rPrDefault><w:rPr>'
               '<w:rFonts w:ascii="{f}" w:hAnsi="{f}" w:cs="{f}" w:eastAsia="{f}"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-GB"/>'
               '</w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>'
-              '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>' % W).replace("{f}", DOCX_FONT)
+              '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>'
+              '<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/>'
+              '<w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:pBdr><w:bottom w:val="single" w:sz="4" w:space="1" w:color="000000"/></w:pBdr>'
+              '<w:spacing w:before="200" w:after="100"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:smallCaps/><w:sz w:val="23"/><w:szCs w:val="23"/></w:rPr></w:style>'
+              '<w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/>'
+              '<w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="80" w:after="40"/><w:outlineLvl w:val="1"/></w:pPr>'
+              '<w:rPr><w:i/><w:iCs/></w:rPr></w:style></w:styles>' % W).replace("{f}", DOCX_FONT)
     numbering = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering %s><w:abstractNum w:abstractNumId="0"><w:lvl w:ilvl="0">'
                  '<w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="300" w:hanging="220"/></w:pPr>'
                  '</w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>' % W)
