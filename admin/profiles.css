@@ -1,0 +1,18 @@
+/* Custom CVs (admin/profiles.js); the tag buttons reuse .topt and .tpick from admin/tags.css */
+.pf-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: 0 0 .9rem; }
+.pf-h { font-family: var(--display); font-weight: 400; font-size: 1.2rem; margin: 0 0 .4rem; }
+.pf-sub { font-size: .84rem; color: var(--soft); margin: 0 0 .6rem; }
+.pf-checks { display: flex; flex-wrap: wrap; gap: .3rem 1.4rem; margin: .3rem 0 .2rem; }
+.pf-check small { color: var(--soft); }
+.pf-files { font-size: .84rem; color: var(--soft); margin: .5rem 0 0; }
+.card .opts { display: flex; flex-wrap: wrap; gap: .3rem; }
+.pf-sec { border-top: 1px solid var(--rule); padding: .35rem 0; }
+.pf-sec > summary { cursor: pointer; font-weight: 600; font-size: .9rem; padding: .2rem 0; }
+.pf-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: .2rem .6rem; align-items: center; padding: .22rem 0 .22rem .2rem; font-size: .88rem; cursor: pointer; }
+.pf-row.is-out .pf-t { color: var(--faint); text-decoration: line-through; text-decoration-color: var(--rule); }
+.pf-d { font-size: .78rem; color: var(--soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pf-why { font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--gold); }
+@media (max-width: 620px) {
+  .pf-row { grid-template-columns: auto minmax(0, 1fr); }
+  .pf-d, .pf-why { grid-column: 2; }
+}

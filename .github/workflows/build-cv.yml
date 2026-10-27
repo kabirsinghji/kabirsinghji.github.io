@@ -1,8 +1,9 @@
 name: Build CV and homepage
 
 # data/cv.json is the single source for the CV. Any change to it (usually a
-# save from admin.html) regenerates cv/cv.tex and index.html, compiles the
-# PDF, and commits all three back.
+# save from admin.html) regenerates every CV profile (cv/cv.* and cv/cv-ID.*:
+# .tex, .docx, .txt) and the site pages, compiles each .tex to a PDF, and
+# commits them back.
 on:
   push:
     paths:
@@ -33,20 +34,22 @@ jobs:
       - name: Read the LinkedIn posts listed in data/cv.json (never fails the build)
         run: python3 tools/linkedin.py
 
-      - name: Generate cv.tex, index.html, cv.html, curious.html and the home-*.html designs from data/cv.json
+      - name: Generate the CVs (.tex, .docx, .txt per profile) and the site pages from data/cv.json
         run: python3 tools/build.py
 
-      - name: Compile cv.tex
+      - name: Compile every CV profile to PDF
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: cv
-          root_file: cv.tex
+          root_file: cv*.tex
 
       - name: Commit the rebuilt files
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add cv/cv.tex cv/cv.pdf index.html cv.html curious.html home-*.html
+          # -A also records CVs removed when a profile is deleted; LaTeX's .aux/.log files stay out
+          git add -A -- 'cv/cv*.tex' 'cv/cv*.pdf' 'cv/cv*.docx' 'cv/cv*.txt'
+          git add index.html cv.html curious.html home-*.html
           if [ -f data/linkedin.json ]; then git add data/linkedin.json; fi
           if [ -d linkedin ]; then git add -A linkedin; fi
           git diff --staged --quiet && exit 0

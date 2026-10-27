@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Build the CV PDF source and the homepage from one data file.
 
-    data/cv.json  ──►  cv/cv.tex    (compiled to cv/cv.pdf by the GitHub Action)
-                  └─►  index.html   (the homepage)
+    data/cv.json  ──►  cv/cv.tex, cv/cv.docx, cv/cv.txt   (cv.tex compiled to cv/cv.pdf by the GitHub Action)
+                  ├─►  cv/cv-ID.*   (one set per extra profile in "profiles")
+                  └─►  index.html and the other pages
 
 Run from the repository root:  python3 tools/build.py
 Standard library only, so it runs as-is on GitHub's runners.
 
 Markup allowed in any text field:
-    **bold**   *italic*   [text](https://link)   ^{nd} (superscript)
+    **bold**   *italic*   [text](https://link)   ^{nd} (superscript)   _{d} (subscript)
 In "dates", a new line is a line break on the PDF (a space on the site).
 "show" on an entry, bullet or item: "both" (default), "cv" or "site".
 "tags" on an entry or item lists ids from the top-level "tagset"; they shape the homepage protein
@@ -65,6 +66,7 @@ def to_html(s, strip_bold=False):
 
 def to_html_inline(s, strip_bold=False):
     s = re.sub(r"\^\{([^}]*)\}", r"<sup>\1</sup>", s)
+    s = re.sub(r"_\{([^}]*)\}", r"<sub>\1</sub>", s)
     s = re.sub(r"\*\*(.+?)\*\*", r"\1" if strip_bold else r"<strong>\1</strong>", s)
     s = re.sub(r"(?<![*\w])\*(?!\s)(.+?)(?<!\s)\*(?![*\w])", r"<em>\1</em>", s)
     return s
@@ -98,12 +100,14 @@ def to_tex(s):
 def _tex_inline(s):
     store = []
     s = _protect(s, r"\^\{([^}]*)\}", lambda m: r"\textsuperscript{%s}" % _tex_escape(m.group(1)), store, "\x03")
+    s = _protect(s, r"_\{([^}]*)\}", lambda m: r"\textsubscript{%s}" % _tex_escape(m.group(1)), store, "\x03")
     s = _tex_escape(s)
     s = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", s)
     s = re.sub(r"(?<![*\w])\*(?!\s)(.+?)(?<!\s)\*(?![*\w])", r"\\textit{\1}", s)
     s = (s.replace("“", "``").replace("”", "''").replace("‘", "`").replace("’", "'")
           .replace("—", "---").replace("–", "--").replace("\u2009", r"\,").replace("\u00a0", "~"))
     s = s.replace(r"\textgreater{}\,", r"\textgreater\,").replace(r"\textless{}\,", r"\textless\,")
+    s = re.sub(r"\bLaTeX\b", r"\\LaTeX{}", s)
     s = re.sub(r"\b(Dr|Prof|Mr|Ms|Mrs)\. ", r"\1.~", s)
     s = re.sub(r"\b(Prev|vs|etc|e\.g|i\.e)\. ", r"\1.\\ ", s)
     s = re.sub(r"(?<![A-Za-z.])([A-Z])\. (?=[A-Z])", r"\1.~", s)      # initials: K. Singh
@@ -124,108 +128,427 @@ def bullets(entry, where):
     return out
 
 
-# ────────────────────────────────────────────────────────────── cv.tex ──
-def build_tex(cv):
+# ──────────────────────────────────────────────────────────── profiles ──
+# "profiles" in cv.json are the CVs built from it. Each takes the entries of its sections (all of them,
+# or, if it lists tags, those carrying one of its tags), plus its "include" ids, minus its "exclude" ids.
+# The profile with id "cv" is cv/cv.pdf, .docx and .txt; any other is cv/cv-ID.*.
+# admin/profiles.js applies the same rules to preview a profile; keep the two in step.
+def profile_base(p):
+    return "cv" if p.get("id") == "cv" else "cv-" + p["id"]
+
+
+def section_on(sec, prof):
+    return not prof.get("sections") or sec["id"] in prof["sections"]
+
+
+def picks(obj, sec, prof):
+    if not section_on(sec, prof) or (obj.get("show") or "both") == "site":
+        return False
+    if obj.get("id") in (prof.get("exclude") or []):
+        return False
+    if obj.get("id") in (prof.get("include") or []):
+        return True
+    tags = prof.get("tags") or []
+    return not tags or bool(set(tags) & set(obj.get("tags") or []))
+
+
+def date_lines(e):
+    return [x.strip() for x in (e.get("dates") or "").split("\n") if x.strip()]
+
+
+def cv_blocks(cv, prof):
+    """The CV for one profile as [(section title, [block, ...])], shared by the .tex, .txt and .docx writers.
+    Blocks: ("subhead", text) ("head", entry) ("line", entry) ("bullets", [text]) ("table", [{label, text}])
+    ("prompt", text) ("pubs", [(group, item)]) ("pres", item) ("text", text)."""
+    desc = prof.get("descriptions", True) is not False
+    out = []
+    for sec in cv["sections"]:
+        if not section_on(sec, prof):
+            continue
+        t, body = sec["type"], []
+        if t == "entries":
+            for g in sec.get("groups", []):
+                ents = [e for e in g.get("entries", []) if picks(e, sec, prof)]
+                if ents and g.get("title"):
+                    body.append(("subhead", g["title"]))
+                for e in ents:
+                    bl = bullets(e, "cv") if desc else []
+                    table = (e.get("table") or []) if desc else []
+                    # two lines (title, then organisation) for education, research and anything with detail under it
+                    two = e.get("org") and (sec["id"] in ("education", "research") or bl or table)
+                    body.append(("head" if two else "line", e))
+                    if bl:
+                        body.append(("bullets", bl))
+                    if table:
+                        body.append(("table", table))
+                    if prof.get("prompts") and e.get("prompt"):
+                        body.append(("prompt", e["prompt"]))
+        elif t == "publications":
+            items = [(g, p) for g in sec.get("groups", []) for p in g.get("items", []) if picks(p, sec, prof)]
+            if items:
+                body.append(("pubs", items))
+        elif t == "presentations":
+            body += [("pres", p) for p in sec.get("items", []) if picks(p, sec, prof)]
+        elif t in ("list", "flatlist"):
+            items = [it["text"] for it in sec.get("items", []) if picks(it, sec, prof) and it.get("text", "").strip()]
+            if items:
+                body.append(("bullets", items))
+        elif t == "table" and sec.get("rows"):
+            body.append(("table", sec["rows"]))
+        elif t == "text" and (sec.get("text") or "").strip():
+            body.append(("text", sec["text"]))
+        if body:
+            out.append((sec["title"], body))
+    return out
+
+
+def objective(cv, prof):
+    if prof.get("hideObjective"):
+        return ""
+    return (prof.get("objective") or "").strip() or (cv["meta"].get("objective") or "").strip()
+
+
+def contacts(m):
+    """[(text, url)] for the line under the name."""
+    out = []
+    if m.get("email"):
+        out.append((m["email"], "mailto:" + m["email"]))
+    if m.get("phone"):
+        out.append((m["phone"], ""))
+    if m.get("website"):
+        out.append((re.sub(r"^https?://", "", m["website"]).rstrip("/"), m["website"]))
+    if m.get("orcid"):
+        out.append(("ORCID " + m["orcid"], "https://orcid.org/" + m["orcid"]))
+    return out
+
+
+def line_text(e):
+    """One-line entries: **title**, organisation – note (markup)."""
+    s = "**%s**" % e["heading"]
+    if e.get("org"):
+        s += ", " + e["org"]
+    if e.get("note"):
+        s += " – " + e["note"]
+    return s
+
+
+def citation(p):
+    s = "%s. “%s.”" % (p["authors"], p["title"].rstrip("."))
+    return s + (" " + p["venue"] if p.get("venue") else "")
+
+
+# ─────────────────────────────────────────────────────────────── cv.tex ──
+def _tex_right(parts):
+    parts = [to_tex(x) for x in parts if x]
+    if len(parts) <= 1:
+        return parts[0] if parts else ""
+    return r"\begin{tabular}[t]{@{}r@{}}" + r"\\".join(parts) + r"\end{tabular}"
+
+
+def _tex_item(b):
+    # an item that opens with [ would be read as \item's optional argument
+    return r"  \item " + ("{}" if b.startswith("[") and not re.match(r"\[[^\]]+\]\(", b) else "") + to_tex(b)
+
+
+def build_tex(cv, prof):
     m = cv["meta"]
     L = []
     w = L.append
     w("%==============================================================")
-    w("%  Kabir Singh — Curriculum Vitae")
+    w("%%  %s — Curriculum Vitae (%s)" % (m.get("name", ""), prof.get("name") or prof["id"]))
     w("%  GENERATED from data/cv.json by tools/build.py. Edit the CV")
     w("%  through admin.html (or data/cv.json), not this file: it is")
     w("%  rewritten on every build. Layout and styles: preamble.tex.")
     w("%==============================================================")
     w(r"\input{preamble}")
-    w(r"\fancyfoot[L]{\footnotesize\itshape As of %s}" % to_tex(m.get("asOf", "")))
+    w(r"\hypersetup{pdftitle={%s -- Curriculum Vitae},pdfauthor={%s}}" % (to_tex(m.get("name", "")), to_tex(m.get("name", ""))))
+    w(r"\fancyfoot[L]{\footnotesize %s $\cdot$ Curriculum Vitae $\cdot$ %s}" % (to_tex(m.get("name", "")), to_tex(m.get("asOf", ""))))
     w("")
     w(r"\begin{document}")
-    w("")
-    # header
-    parts = [to_tex(m[k]) for k in ("location", "phone") if m.get(k)]
-    if m.get("email"):
-        parts.append(r"\href{mailto:%s}{%s}" % (m["email"], to_tex(m["email"])))
-    if m.get("linkedin"):
-        disp = re.sub(r"^https?://(www\.)?", "", m["linkedin"]).rstrip("/")
-        parts.append(r"\href{%s}{%s}" % (_tex_url(m["linkedin"]), to_tex(disp)))
     w(r"\begin{center}")
-    w(r"  {\LARGE\bfseries %s}\\[4pt]" % to_tex(m.get("name", "")))
-    w(r"  {\small " + " $\\cdot$\n   ".join(parts) + "}")
-    w(r"\end{center}")
-    w(r"\vspace{2pt}")
-
-    for sec in cv["sections"]:
+    w(r"{\Large\bfseries %s}\par\vspace{3pt}" % to_tex(m.get("name", "")))
+    w(r"{\small " + " $\\cdot$\n ".join(r"\href{%s}{%s}" % (_tex_url(u), to_tex(t)) if u else to_tex(t) for t, u in contacts(m)) + "}")
+    obj = objective(cv, prof)
+    if obj:
+        w(r"\par\vspace{4pt}{\small\itshape %s}" % to_tex(obj))
+    w(r"\end{center}\vspace{-5pt}")
+    first_pub = 1
+    for title, body in cv_blocks(cv, prof):
         w("")
-        w("%==============================================================")
-        if sec.get("keep"):
-            w(r"\needspace{%d\baselineskip}" % int(sec["keep"]))
-        w(r"\section{%s}" % to_tex(sec["title"]))
-        w("")
-        t = sec["type"]
-        if t == "entries":
-            for g in sec.get("groups", []):
-                ents = [e for e in g.get("entries", []) if shown(e, "cv")]
-                if not ents:
-                    continue
-                if g.get("title"):
-                    w(r"\subhead{%s}" % to_tex(g["title"]))
-                for e in ents:
-                    if e.get("keep"):
-                        w(r"\needspace{%d\baselineskip}" % int(e["keep"]))
-                    dates = "\\\\".join(to_tex(x.strip()) for x in (e.get("dates") or "").split("\n"))
-                    w(r"\entry{%s}{%s}" % (to_tex(e["heading"]), dates))
-                    bl = bullets(e, "cv")
-                    if bl:
-                        w(r"\begin{cvitems}")
-                        for b in bl:
-                            w(r"  \item " + ("{}" if b.startswith("[") and not re.match(r"\[[^\]]+\]\(", b) else "") + to_tex(b))
-                        w(r"\end{cvitems}")
-                    w("")
-        elif t == "publications":
-            first = True
-            for g in sec.get("groups", []):
-                items = [p for p in g.get("items", []) if shown(p, "cv")]
-                if not items:
-                    continue
-                w(r"\vspace{%s}" % ("4pt" if first else "6pt"))
-                first = False
-                w(r"\textbf{%s}" % to_tex(g["title"]))
-                w(r"\begin{cvitems}")
-                for p in items:
-                    s = "%s. %s. %s" % (to_tex(p["authors"]), to_tex(p["title"].rstrip(".")), to_tex(p.get("venue", "")))
+        w(r"\cvsection{%s}" % to_tex(title))
+        for b in body:
+            k = b[0]
+            if k == "subhead":
+                w(r"\subhead{%s}" % to_tex(b[1]))
+            elif k == "head":
+                e = b[1]
+                d = date_lines(e)
+                w(r"\headentry{%s}{%s}{%s}{%s}" % (to_tex(e["heading"]), to_tex(d[0]) if d else "", to_tex(e.get("org", "")),
+                                                    _tex_right(d[1:] + [e.get("location", "")])))
+            elif k == "line":
+                w(r"\lineentry{%s}{%s}" % (to_tex(line_text(b[1])), _tex_right(date_lines(b[1]))))
+            elif k == "bullets":
+                w(r"\begin{itemize}")
+                L.extend(_tex_item(x) for x in b[1])
+                w(r"\end{itemize}")
+            elif k == "table":
+                if L[-1].startswith(r"\end{itemize}") or L[-1].startswith(r"\headentry") or L[-1].startswith(r"\lineentry"):
+                    w(r"\vspace{3pt}")
+                for r in b[1]:
+                    w(r"\course{%s}{%s}" % (to_tex(r["label"]), to_tex(r["text"])))
+            elif k == "prompt":
+                w(r"\prompt{%s}" % to_tex(b[1]))
+            elif k == "pubs":
+                w(r"\begin{enumerate}[label={[\arabic*]},leftmargin=2.2em,itemsep=3pt,topsep=1pt,start=%d]" % first_pub)
+                for g, p in b[1]:
+                    s = "  \\item " + to_tex(citation(p))
                     if p.get("doi"):
                         s += r". \href{https://doi.org/%s}{doi:%s}" % (_tex_url(p["doi"]), _tex_escape(p["doi"]))
-                    w("  \\item " + s)
-                w(r"\end{cvitems}")
-                w("")
-        elif t == "presentations":
-            for p in sec.get("items", []):
-                if not shown(p, "cv"):
-                    continue
-                opt = "[%d]" % int(p["keep"]) if p.get("keep") else ""
-                w(r"\pres%s{%s. %s.}" % (opt, to_tex(p["authors"]), to_tex(p["title"].rstrip("."))))
-                w(r"\venues{")
+                    if p.get("contribution") and prof.get("descriptions", True) is not False:
+                        s += "\\\\\n  \\textit{Contribution:} " + to_tex(p["contribution"])
+                    w(s)
+                w(r"\end{enumerate}")
+                first_pub += len(b[1])
+            elif k == "pres":
+                p = b[1]
+                w(r"\pres{%s}" % to_tex("%s. “%s.”" % (p["authors"], p["title"].rstrip("."))))
                 for v in p.get("venues", []):
-                    w(r"  %s & %s & %s \\" % (to_tex(v["name"]), to_tex(v.get("format", "")), to_tex(v.get("year", ""))))
-                w("}")
-                w("")
-        elif t in ("list", "flatlist"):
-            env = "cvitems" if t == "list" else "flatlist"
-            w(r"\begin{%s}" % env)
-            for it in sec.get("items", []):
-                if shown(it, "cv") and it.get("text", "").strip():
-                    w(r"  \item " + to_tex(it["text"]))
-            w(r"\end{%s}" % env)
-            w("")
-
+                    w(r"\venue{%s}{%s}{%s}" % (to_tex(v["name"]), to_tex(v.get("format", "")), to_tex(v.get("year", ""))))
+            elif k == "text":
+                w(r"\noindent %s\par" % to_tex(b[1]))
     if m.get("closing"):
-        w("%==============================================================")
-        w(r"\vspace{16pt}")
-        w(r"\noindent\rule{\textwidth}{0.4pt}")
-        w(r"\vspace{4pt}")
-        w(r"\noindent\textit{%s}" % to_tex(m["closing"]))
         w("")
+        w(r"\vspace{16pt}\noindent\textit{%s}" % to_tex(m["closing"]))
+    w("")
     w(r"\end{document}")
     return "\n".join(L) + "\n"
+
+
+# ─────────────────────────────────────────────────────────────── cv.txt ──
+def _txt(s):
+    s = re.sub(r"\[([^\]]+)\]\((mailto:)?([^)\s]+)\)", lambda m: m.group(1) if m.group(3) in m.group(1) else "%s (%s)" % (m.group(1), m.group(3)), s or "")
+    return re.sub(r"\s+", " ", plain(s))
+
+
+def _txt_dates(e):
+    return " ".join(date_lines(e))
+
+
+def build_txt(cv, prof):
+    """Plain text: for application forms and systems that read CVs as text."""
+    m = cv["meta"]
+    L = [m.get("name", "").upper(), " · ".join(t for t, u in contacts(m))]
+    obj = objective(cv, prof)
+    if obj:
+        L += ["", _txt(obj)]
+    n = 1
+    for title, body in cv_blocks(cv, prof):
+        L += ["", "", _txt(title).upper(), "=" * len(_txt(title))]
+        for b in body:
+            k = b[0]
+            if k == "subhead":
+                L += ["", _txt(b[1]), "-" * len(_txt(b[1]))]
+            elif k == "head":
+                e = b[1]
+                L += ["", _txt(e["heading"]) + (" | " + _txt_dates(e) if e.get("dates") else ""),
+                      _txt(e.get("org", "")) + (" | " + _txt(e["location"]) if e.get("location") else "")]
+            elif k == "line":
+                L += ["", _txt(line_text(b[1])) + (" | " + _txt_dates(b[1]) if b[1].get("dates") else "")]
+            elif k == "bullets":
+                L += ["  - " + _txt(x) for x in b[1]]
+            elif k == "table":
+                L += ["  %s: %s" % (_txt(r["label"]), _txt(r["text"])) for r in b[1]]
+            elif k == "prompt":
+                L.append("  -> " + _txt(b[1]))
+            elif k == "pubs":
+                for g, p in b[1]:
+                    s = "[%d] %s" % (n, _txt(citation(p)))
+                    if p.get("doi"):
+                        s += ". https://doi.org/" + p["doi"]
+                    L += ["", s]
+                    if p.get("contribution") and prof.get("descriptions", True) is not False:
+                        L.append("    Contribution: " + _txt(p["contribution"]))
+                    n += 1
+            elif k == "pres":
+                p = b[1]
+                L += ["", _txt("%s. “%s.”" % (p["authors"], p["title"].rstrip(".")))]
+                L += ["  - %s (%s), %s" % (_txt(v["name"]), _txt(v.get("format", "")), _txt(v.get("year", ""))) for v in p.get("venues", [])]
+            elif k == "text":
+                L += [_txt(b[1])]
+    if m.get("closing"):
+        L += ["", "", _txt(m["closing"])]
+    return "\n".join(L).strip() + "\n"
+
+
+# ────────────────────────────────────────────────────────────── cv.docx ──
+# A Word copy of the PDF, written as plain OOXML (no libraries, so the GitHub runner needs nothing extra).
+# A4 with 1.8 cm margins, Charter 11 pt (Word substitutes a serif where Charter isn't installed).
+DOCX_FONT = "Charter"
+TW = 9866                       # text width in twentieths of a point: A4 (11906) less two 1.8 cm margins
+_RUN_TAGS = re.compile(r"(<strong>|</strong>|<em>|</em>|<sup>|</sup>|<sub>|</sub>|<a href=\"[^\"]*\">|</a>)")
+
+
+def _x(s):
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+def _runs(text, bold=False, italic=False, size=None, caps=False, color=None):
+    """Markup -> <w:r> runs. bold/italic set the base style; **x** and *x* inside toggle on top of it."""
+    out, b, i, va = [], 0, 0, None
+    for part in _RUN_TAGS.split(to_html(text or "")):
+        if part in ("<strong>", "</strong>"):
+            b = part == "<strong>"
+        elif part in ("<em>", "</em>"):
+            i = part == "<em>"
+        elif part in ("<sup>", "<sub>"):
+            va = "superscript" if part == "<sup>" else "subscript"
+        elif part in ("</sup>", "</sub>"):
+            va = None
+        elif part.startswith("<a ") or part == "</a>":
+            pass
+        elif part:
+            pr = ""
+            if bold or b:
+                pr += "<w:b/>"
+            if italic or i:
+                pr += "<w:i/>"
+            if caps:
+                pr += "<w:smallCaps/>"
+            if color:
+                pr += '<w:color w:val="%s"/>' % color
+            if size:
+                pr += '<w:sz w:val="%d"/><w:szCs w:val="%d"/>' % (size, size)
+            if va:
+                pr += '<w:vertAlign w:val="%s"/>' % va
+            out.append('<w:r>%s<w:t xml:space="preserve">%s</w:t></w:r>' % ("<w:rPr>%s</w:rPr>" % pr if pr else "", _x(html.unescape(part))))
+    return "".join(out)
+
+
+def _tab():
+    return "<w:r><w:tab/></w:r>"
+
+
+def _p(runs, before=0, after=0, align=None, tabs=(), ind=None, hang=None, bullet=False, keep=False, border=False):
+    pr = ""
+    if keep:
+        pr += "<w:keepNext/>"
+    if bullet:
+        pr += '<w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr>'
+    if border:
+        pr += '<w:pBdr><w:bottom w:val="single" w:sz="4" w:space="1" w:color="000000"/></w:pBdr>'
+    if tabs:
+        pr += "<w:tabs>" + "".join('<w:tab w:val="%s" w:pos="%d"/>' % (k, pos) for k, pos in tabs) + "</w:tabs>"
+    pr += '<w:spacing w:before="%d" w:after="%d"/>' % (before, after)
+    if ind is not None or hang is not None:
+        pr += '<w:ind w:left="%d"%s/>' % (ind or 0, ' w:hanging="%d"' % hang if hang else "")
+    if align:
+        pr += '<w:jc w:val="%s"/>' % align
+    return "<w:p><w:pPr>%s</w:pPr>%s</w:p>" % (pr, runs)
+
+
+def _rows(lefts, rights, before):
+    """Left text with right-aligned dates: one paragraph per line, as many lines as either side needs."""
+    n = max(len(lefts), len(rights))
+    out = []
+    for k in range(n):
+        left = lefts[k] if k < len(lefts) else ""
+        right = rights[k] if k < len(rights) else ""
+        out.append(_p(left + (_tab() + _runs(right) if right else ""), before=before if k == 0 else 0,
+                      tabs=[("right", TW)], keep=k < n - 1))
+    return out
+
+
+def build_docx(cv, prof, path):
+    import zipfile
+    m = cv["meta"]
+    P = [_p(_runs(m.get("name", ""), bold=True, size=34), align="center", after=60),
+         _p(_runs(" · ".join(t for t, u in contacts(m)), size=19), align="center")]
+    obj = objective(cv, prof)
+    if obj:
+        P.append(_p(_runs(obj, italic=True, size=19), align="center", before=80))
+    n = 1
+    for title, body in cv_blocks(cv, prof):
+        P.append(_p(_runs(title, caps=True, size=23), before=200, after=100, border=True, keep=True))
+        for b in body:
+            k = b[0]
+            if k == "subhead":
+                P.append(_p(_runs(b[1], italic=True), before=80, after=40, keep=True))
+            elif k == "head":
+                e = b[1]
+                d = date_lines(e)
+                P += _rows([_runs(e["heading"], bold=True), _runs(e.get("org", ""))], d + ([e["location"]] if e.get("location") else []), 80)
+            elif k == "line":
+                P += _rows([_runs(line_text(b[1]))], date_lines(b[1]), 80)
+            elif k == "bullets":
+                P += [_p(_runs(x), ind=300, hang=220, bullet=True) for x in b[1]]
+            elif k == "table":
+                P += [_p(_runs(r["label"], italic=True) + _tab() + _runs(r["text"]), before=20, tabs=[("left", 2150)], ind=2150, hang=2150)
+                      for r in b[1]]
+            elif k == "prompt":
+                P.append(_p(_runs("→ " + b[1], italic=True, color="767676"), ind=300))
+            elif k == "pubs":
+                for g, p in b[1]:
+                    s = "[%d]" % n
+                    runs = _runs(s) + _tab() + _runs(citation(p) + (". doi:" + p["doi"] if p.get("doi") else ""))
+                    P.append(_p(runs, before=60, tabs=[("left", 500)], ind=500, hang=500))
+                    if p.get("contribution") and prof.get("descriptions", True) is not False:
+                        P.append(_p(_runs("Contribution: ", italic=True) + _runs(p["contribution"]), ind=500))
+                    n += 1
+            elif k == "pres":
+                p = b[1]
+                P.append(_p(_runs("%s. “%s.”" % (p["authors"], p["title"].rstrip("."))), before=80, keep=True))
+                vs = p.get("venues", [])
+                for vi, v in enumerate(vs):
+                    P.append(_p(_runs(v["name"]) + _runs(" (%s)" % v.get("format", ""), italic=True) + _tab() + _runs(v.get("year", "")),
+                                ind=280, tabs=[("right", TW)], keep=vi < len(vs) - 1))
+            elif k == "text":
+                P.append(_p(_runs(b[1]), before=40))
+    if m.get("closing"):
+        P.append(_p(_runs(m["closing"], italic=True), before=320))
+
+    W = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"'
+    sect = ('<w:sectPr><w:footerReference w:type="default" r:id="rIdFooter"/><w:pgSz w:w="11906" w:h="16838"/>'
+            '<w:pgMar w:top="1020" w:right="1020" w:bottom="1020" w:left="1020" w:header="0" w:footer="454" w:gutter="0"/></w:sectPr>')
+    document = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document %s><w:body>%s%s</w:body></w:document>' % (W, "".join(P), sect)
+
+    def field(code):
+        return ('<w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:instrText xml:space="preserve"> %s </w:instrText></w:r>'
+                '<w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:t>1</w:t></w:r><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r>' % code)
+    footer = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr %s>' % W +
+              _p(_runs("%s · Curriculum Vitae · %s" % (m.get("name", ""), m.get("asOf", "")), size=18) + _tab() + _runs("Page ", size=18) +
+                 field("PAGE") + _runs(" of ", size=18) + field("NUMPAGES"), tabs=[("right", TW)]) + "</w:ftr>")
+    styles = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles %s><w:docDefaults><w:rPrDefault><w:rPr>'
+              '<w:rFonts w:ascii="{f}" w:hAnsi="{f}" w:cs="{f}" w:eastAsia="{f}"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-GB"/>'
+              '</w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>'
+              '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>' % W).replace("{f}", DOCX_FONT)
+    numbering = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering %s><w:abstractNum w:abstractNumId="0"><w:lvl w:ilvl="0">'
+                 '<w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="300" w:hanging="220"/></w:pPr>'
+                 '</w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>' % W)
+    rels = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+            '<Relationship Id="rIdNumbering" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>'
+            '<Relationship Id="rIdFooter" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>'
+            '</Relationships>')
+    types = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+             '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>'
+             '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
+             '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>'
+             '<Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/>'
+             '<Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>'
+             '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>')
+    root_rels = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+                 '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>'
+                 '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>'
+                 '</Relationships>')
+    core = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" '
+            'xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>%s — Curriculum Vitae</dc:title><dc:creator>%s</dc:creator></cp:coreProperties>'
+            % (_x(m.get("name", "")), _x(m.get("name", ""))))
+    # fixed timestamps, so an unchanged CV gives a byte-identical file and no new commit
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
+        for name, data in [("[Content_Types].xml", types), ("_rels/.rels", root_rels), ("docProps/core.xml", core),
+                           ("word/document.xml", document), ("word/styles.xml", styles), ("word/numbering.xml", numbering),
+                           ("word/footer1.xml", footer), ("word/_rels/document.xml.rels", rels)]:
+            z.writestr(zipfile.ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0)), data, compress_type=zipfile.ZIP_DEFLATED)
 
 
 # ─────────────────────────────────────────────────────────── homepage ──
@@ -238,6 +561,9 @@ def start_of(dates):
     m = re.search(r"([A-Za-z]+)?\.?\s*['’](\d\d)\b", dates or "")
     if m:
         return 2000 + int(m.group(2)), MONTHS.get((m.group(1) or "").title(), 0)
+    m = re.search(r"([A-Za-z]+)\.?\s+((?:19|20)\d\d)\b", dates or "")
+    if m and m.group(1).title() in MONTHS:
+        return int(m.group(2)), MONTHS[m.group(1).title()]
     m = re.search(r"\b(19|20)(\d\d)\b", dates or "")
     return (int(m.group()), 0) if m else None
 
@@ -267,8 +593,8 @@ def timeline(cv):
                     if not shown(e, "site"):
                         continue
                     head = e["heading"]
-                    sub = ""
-                    if kind == "research":
+                    sub = " – ".join(x for x in (e.get("org"), e.get("note")) if x)
+                    if kind == "research" and not sub:
                         mm = re.match(r"(.+?)\.\s+((?:PI|Mentor|Supervisor)s?:.+)$", head)
                         if mm:
                             head, sub = mm.group(1), mm.group(2)
@@ -789,7 +1115,8 @@ def now_rows(cv):
         if "Present" in (e.get("dates") or ""):
             when = site_dates(e["dates"]).replace("Present", "now")
             mm = re.search(r"\.\s+((?:PI|Mentor|Supervisor)s?:.+|Dr\. .+)$", e["heading"])
-            who = f' <span class="grey">{to_html(mm.group(1), strip_bold=True)}</span>' if mm else ""
+            org = e.get("org") or (mm.group(1) if mm else "")
+            who = f' <span class="grey">{to_html(org, strip_bold=True)}</span>' if org else ""
             out.append(d_row(when, f"<b>{short_title(e)}.</b>{who}"))
     return out
 
@@ -879,7 +1206,7 @@ def build_index(cv):
 
 
 # the threads since starting at NJIT, as bars: research by field, emergency medicine, editing and study abroad
-GANTT_EXTRA = [("leadership", r"First Aid Squad", "g-med"), ("service", r"Journal of Young Investigators", "g-oth"),
+GANTT_EXTRA = [("clinical", r"First Aid Squad", "g-med"), ("service", r"Journal of Young Investigators", "g-oth"),
                ("education", r"Lund", "g-oth")]
 
 
@@ -912,7 +1239,7 @@ def gantt(cv):
         rows_.append((short_title(e), cls, ranges(e.get("dates"), now)))
     for sec_id, pat, cls in GANTT_EXTRA:
         for g, e in entries(cv, sec_id):
-            if re.search(pat, e["heading"]):
+            if re.search(pat, e["heading"] + " " + e.get("org", "")):
                 name = short_title(e)
                 rows_.append((name, cls, ranges(e.get("dates"), now)))
     pct = lambda v: "%.2f%%" % ((min(max(v, t0), t1) - t0) / (t1 - t0) * 100)
@@ -951,7 +1278,9 @@ def cv_sections(cv):
                         continue
                     bl = [to_html(b) for b in bullets(e, "site")]
                     extra = "<ul>" + "".join(f"<li>{b}</li>" for b in bl) + "</ul>" if bl else ""
-                    items.append(d_row(site_dates(e.get("dates")), f"<b>{to_html(e['heading'], strip_bold=True)}</b>", extra=extra))
+                    sub = " – ".join(to_html(x) for x in (e.get("org"), e.get("note")) if x)
+                    sub = f' <span class="grey">{sub}</span>' if sub else ""
+                    items.append(d_row(site_dates(e.get("dates")), f"<b>{to_html(e['heading'], strip_bold=True)}</b>{sub}", extra=extra))
         elif t == "publications":
             items = [pub_row(g, p) for g, p in published(cv)]
         elif t == "presentations":
@@ -966,6 +1295,10 @@ def cv_sections(cv):
                 if shown(it, "site"):
                     y = it.get("year") or ""
                     items.append(d_row(html.escape(str(y)), to_html(it["text"])))
+        elif t == "table":
+            items = [d_row(to_html(r["label"]), to_html(r["text"])) for r in sec.get("rows", [])]
+        elif t == "text" and sec.get("text"):
+            items = [d_row("", to_html(sec["text"]))]
         if items:
             out.append(d_sec(title, rows(items), sec_id=sec["id"]))
     return "".join(out)
@@ -985,7 +1318,7 @@ def build_cv(cv):
     <h1 id="cv-h">Kabir Singh</h1>
     <p class="sub">Curriculum vitae &middot; as of {esc(m.get("asOf", ""))}</p>
     <div class="lede" style="margin-top:1.4rem"><p>{INTRO}</p></div>
-    <div class="d-buttons"><a class="d-btn d-btn--solid" href="cv/cv.pdf">Download the CV, PDF</a><a class="d-btn" href="mailto:{email}">Email</a><a class="d-btn" href="{esc(m.get("linkedin", ""))}">LinkedIn</a></div>
+    <div class="d-buttons"><a class="d-btn d-btn--solid" href="cv/cv.pdf">Download the CV, PDF</a><a class="d-btn" href="cv/cv.docx">Word</a><a class="d-btn" href="cv/cv.txt">Text</a><a class="d-btn" href="mailto:{email}">Email</a><a class="d-btn" href="{esc(m.get("linkedin", ""))}">LinkedIn</a></div>
   </div>
 </section>
 '''
@@ -1521,10 +1854,30 @@ def main():
     asof = cv["meta"].get("asOf", "")
     ym = re.match(r"([A-Za-z]+)\s+(\d{4})", asof)
     NOW_MONTH = (int(ym.group(2)), MONTHS.get(ym.group(1)[:3].title(), 1)) if ym else (datetime.date.today().year, datetime.date.today().month)
-    outputs = {"cv/cv.tex": build_tex(cv), "index.html": build_index(cv), "cv.html": build_cv(cv),
+    profiles = cv.get("profiles") or [{"id": "cv"}]
+    if not any(p.get("id") == "cv" for p in profiles):
+        profiles = [{"id": "cv"}] + profiles
+    outputs = {}
+    keep = set()
+    for prof in profiles:
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", str(prof.get("id", ""))):
+            print("skipped a profile with an unusable id:", prof.get("id"))
+            continue
+        base = profile_base(prof)
+        keep.add(base)
+        outputs["cv/%s.tex" % base] = build_tex(cv, prof)
+        outputs["cv/%s.txt" % base] = build_txt(cv, prof)
+        build_docx(cv, prof, os.path.join(ROOT, "cv", base + ".docx"))
+        print("wrote", "cv/%s.docx" % base)
+    for f in os.listdir(os.path.join(ROOT, "cv")):
+        mm = re.match(r"(cv-[a-z0-9-]+)\.(tex|txt|docx|pdf)$", f)
+        if mm and mm.group(1) not in keep:
+            os.remove(os.path.join(ROOT, "cv", f))
+            print("removed", "cv/" + f)
+    outputs.update({"index.html": build_index(cv), "cv.html": build_cv(cv),
                "curious.html": build_curious(cv), "home-diptych.html": build_diptych(cv),
                "home-timescale.html": build_timescale(cv), "home-folio.html": build_folio(cv),
-               "home-pdb.html": build_pdb(cv), "home-landscape.html": build_landscape(cv)}
+               "home-pdb.html": build_pdb(cv), "home-landscape.html": build_landscape(cv)})
     for rel, text in outputs.items():
         if rel.endswith(".html"):
             text = hide_mail(text)

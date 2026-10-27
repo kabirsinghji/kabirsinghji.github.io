@@ -1,18 +1,32 @@
 {
-  "_readme": "Single source for the CV PDF (cv/cv.tex) and the homepage (index.html). Edit it through admin.html; a GitHub Action rebuilds both on every save. Markup: **bold**, *italic*, [text](https://link), ^{nd} for superscript. In dates, a new line becomes a line break on the PDF. show: both | cv | site.",
+  "_readme": "Single source for the CV PDF (cv/cv.tex) and the homepage (index.html). Edit it through admin.html; a GitHub Action rebuilds both on every save. Markup: **bold**, *italic*, [text](https://link), ^{nd} for superscript. In dates, a new line becomes a line break on the PDF. show: both | cv | site. Entries: heading (bold title), org (second line, or after a comma on one-line entries), location (right-hand side, under the dates), note (after an en dash on one-line entries), dates, bullets, table (label/text rows), prompt (a note to yourself, printed only by a profile with prompts on), id (used by profiles). _{d} is a subscript. profiles: the CVs built from this file. The one with id \"cv\" is cv/cv.pdf, .docx and .txt; each other one is cv/cv-ID.*. A profile takes every entry (or, if it lists tags, every entry with one of those tags) from its sections, plus \"include\" ids, minus \"exclude\" ids; descriptions: false drops bullets and tables.",
   "meta": {
     "name": "Kabir Singh",
     "location": "New Jersey",
-    "phone": "917.636.8664",
+    "phone": "+1 917 636 8664",
     "email": "kabirsinghji@gmail.com",
     "linkedin": "https://www.linkedin.com/in/kabir-singh-ji",
     "asOf": "October 2026",
-    "closing": "References and letters of recommendation available upon request."
+    "closing": "",
+    "website": "https://kabirsinghji.github.io",
+    "orcid": "0009-0002-5159-5879",
+    "objective": "Aspiring physician-scientist in translational medicine: designing peptide therapeutics computationally and modelling biological systems, alongside research in the history of medicine and early modern Sikh history."
   },
+  "profiles": [
+    {
+      "id": "cv",
+      "name": "General (every entry)",
+      "tags": [],
+      "include": [],
+      "exclude": [],
+      "descriptions": true,
+      "prompts": false
+    }
+  ],
   "sections": [
     {
       "id": "education",
-      "title": "Academic Education",
+      "title": "Education",
       "type": "entries",
       "site": "education",
       "groups": [
@@ -20,40 +34,75 @@
           "title": "",
           "entries": [
             {
-              "heading": "**Albert Dorman Honors College (ADHC)** & Jordan Hu College of Sciences & Liberal Arts (JHCSLA), New Jersey Institute of Technology, Newark, New Jersey, USA",
-              "dates": "Sep ’23 – May ’27\n(Expected)",
+              "id": "njit-honors-college",
+              "heading": "B.S. Mathematical Sciences (Mathematical Biology)",
+              "org": "Albert Dorman Honors College and Jordan Hu College of Sciences and Liberal Arts, NJIT",
+              "location": "Newark, NJ, USA",
+              "dates": "Sep 2023 – May 2027\n(Expected)",
               "bullets": [
                 {
-                  "text": "Bachelor of Science; Major – **Mathematical Biology**",
+                  "text": "UK Good 2:1 Honours equivalent.",
+                  "show": "cv"
+                },
+                {
+                  "text": "Dean’s List in all semesters.",
                   "show": "both"
                 },
                 {
-                  "text": "Minors – **Biomedical Engineering in Technology, Philosophy, History**",
+                  "text": "Minors: Biomedical Engineering Technology, History, Philosophy and Applied Ethics; Honors tracks: Medical Humanities and Global Studies (first Honors College student to pursue two).",
                   "show": "both"
                 },
                 {
-                  "text": "ADHC Honors Tracks – **Medical Humanities, Global Studies**",
-                  "show": "both"
-                },
-                {
-                  "text": "*Academic Excellence, Honors Merit, Honors Residential Scholarship Recipient (Tuition + Board)*",
+                  "text": "Academic scholarships exceeding $100,000, including Academic Excellence, Honors Merit, Honors Residential, and Highlander Achievement scholarships; tuition and board scholarship support.",
                   "show": "both"
                 }
               ],
+              "table": [
+                {
+                  "label": "Biomedical",
+                  "text": "**Applications in Healthcare**; Biochemistry; Cell & Molecular Biology"
+                },
+                {
+                  "label": "Medicine & society",
+                  "text": "**Biomedical Ethics**; Health, Justice, & Capitalism; Medical Sociology; **Medicine & Law in Modern History**"
+                },
+                {
+                  "label": "Quantitative",
+                  "text": "Applied Numerical Methods; Differential Equations (ordinary & partial); **Linear Algebra**; **Mathematical Modeling**; Stochastic & Discrete Models in Biology"
+                },
+                {
+                  "label": "Independent study",
+                  "text": "Hawkes process model of amyloid nucleation (Dr James Maclaurin); **simplifying & modeling biophysical neuron systems** (Dr Horacio Rotstein, in progress); American medicine & end-of-life care (Dr Stephen Pemberton, in progress); intellectual history in the early modern Khalsa (Harvard Sikh Center & Satnam Singh, in progress)"
+                }
+              ],
+              "short": "NJIT Honors College",
               "tags": [
                 "mathematical-modelling"
-              ],
-              "short": "NJIT Honors College"
+              ]
             },
             {
-              "heading": "Faculty of Engineering, Lunds Tekniska Högskola, **Lunds Universitet**, Lund, Sweden",
-              "dates": "Jan ’25 – Jun ’25",
+              "id": "lund-university-exchange",
+              "heading": "Exchange semester (Global E3), Lund University, Sweden",
+              "org": "Faculty of Engineering (LTH); 44 ECTS",
+              "location": "Lund, Sweden",
+              "dates": "Jan 2025 – Jun 2025",
               "bullets": [
                 {
-                  "text": "Fellow, Institute of International Education’s Global Engineering Education Exchange (Global E3)",
+                  "text": "Fellow, Institute of International Education’s Global Engineering Education Exchange (Global E3).",
                   "show": "both"
                 }
               ],
+              "table": [
+                {
+                  "label": "Master’s level",
+                  "text": "Biomathematics; Immunotechnology; Microscopy, Bio-Imaging; **Ultrasound Physics & Technology**"
+                },
+                {
+                  "label": "Undergraduate",
+                  "text": "Patent & Intellectual Property Rights"
+                }
+              ],
+              "short": "Lund University, exchange",
               "tags": [
                 "research-culture-publishing",
                 "adaptability",
@@ -62,8 +111,7 @@
                 "planning-organisation",
                 "problem-solving-creativity",
                 "teamwork"
-              ],
-              "short": "Lund University, exchange"
+              ]
             }
           ]
         }
@@ -71,35 +119,42 @@
     },
     {
       "id": "research",
-      "title": "Research",
+      "title": "Research Experience",
       "type": "entries",
       "site": "research",
       "groups": [
         {
           "title": "Computational and Mathematical Biology",
-          "field": "science",
           "entries": [
             {
-              "heading": "Undergraduate Researcher, **Computational Biology Team Lead** at KumarLab. PI: Dr. Vivek Kumar, University of Houston (Prev. NJIT)",
-              "dates": "Oct ’23 – Present",
+              "id": "kumarlab-computational-biology",
+              "heading": "Undergraduate Researcher and Computational Biology Team Lead",
+              "org": "KumarLab; PI: Dr Vivek Kumar, University of Houston (previously NJIT)",
+              "location": "Houston, TX / Newark, NJ, USA",
+              "dates": "Oct 2023 – Present",
               "bullets": [
                 {
-                  "text": "Lead undergraduate and graduate students on designing and developing peptide-based therapeutics",
+                  "text": "Lead undergraduate and graduate trainees in computational development of peptide therapeutics; trained 15+ lab associates and secured over $15,000 in direct project funding.",
                   "show": "both"
                 },
                 {
-                  "text": "Started at NJIT and continued computational work with lab relocation to Houston",
+                  "text": "Designed cyclic peptides against multiple sclerosis autoantibodies; ran molecular-dynamics simulations for the published lead peptide CAP8 (KPYPFWDD), from an eight-residue design scaffold and Rosetta/FlexPepDock workflow.",
                   "show": "both"
                 },
                 {
-                  "text": "Taught 15+ associates in lab",
+                  "text": "Validated designs with 100 ns GROMACS simulations and alanine scanning; in the published study, CAP8 bound anti-GlialCAM autoantibody with *K*_{d} = 0.294 mM, versus 4.82 mM linear and 2.61 mM unrelated cyclic controls, and cut epitope detection on Western blot by 69% versus 27% and 5% for controls.",
                   "show": "both"
                 },
                 {
-                  "text": "Received > $15,000 in direct funding for projects",
+                  "text": "Led a funded non-hormonal male-contraception project: machine-learning-guided cyclic peptide design against *redacted target*, docking and refinement; grant writing, manuscript and patent application in preparation.",
+                  "show": "both"
+                },
+                {
+                  "text": "Conducted dissections and assisted animal work on angiogenic hydrogels subsequently published; maintained computational research after the lab relocated to Houston.",
                   "show": "both"
                 }
               ],
+              "short": "KumarLab, computational biology",
               "tags": [
                 "leading-organizing",
                 "research",
@@ -112,26 +167,26 @@
                 "interpersonal",
                 "leadership",
                 "problem-solving-creativity"
-              ],
-              "short": "KumarLab, computational biology"
+              ]
             },
             {
-              "heading": "Undergraduate Researcher, Computational Bionanotechnology. PI: Dr. Stefano Angioletti-Uberti, Imperial College London",
-              "dates": "Jun ’26 – Present",
+              "id": "imperial-bionanotechnology",
+              "heading": "Undergraduate Researcher, Computational Bionanotechnology",
+              "org": "PI: Prof Stefano Angioletti-Uberti, Department of Materials, Imperial College London",
+              "location": "London, UK",
+              "dates": "Jun 2026 – Present",
               "bullets": [
                 {
-                  "text": "**BAGEL: Biomolecular Algorithm for Guidance in Energy Landscape**",
+                  "text": "Apply statistical mechanics, molecular dynamics, protein language models and machine-learning methods to enzyme and binder design and soft-matter/biomaterial systems.",
                   "show": "both"
                 },
                 {
-                  "text": "Computational modelling of soft-matter and biomaterial systems",
-                  "show": "both"
-                },
-                {
-                  "text": "Applying statistical mechanics, molecular dynamics, and machine-learning methods to problems in enzyme design and broader protein design",
+                  "text": "Contributed code to BAGEL (Biomolecular Algorithm for Guidance in Energy Landscape), a tool for searching biomolecular energy landscapes; investigate peptide designs that mimic natural ligands.",
                   "show": "both"
                 }
               ],
+              "prompt": "Specify the code modules you built or changed in BAGEL, test dataset and result at close.",
+              "short": "Imperial, bionanotechnology",
               "tags": [
                 "research",
                 "peptide-protein-design",
@@ -143,65 +198,85 @@
                 "machine-learning",
                 "mathematical-modelling",
                 "statistical-mechanics"
-              ],
-              "short": "Imperial, bionanotechnology"
+              ]
             },
             {
-              "heading": "Undergraduate Researcher, Mathematical Neuroscience. PI: Dr. Horacio Rotstein, NJIT",
-              "dates": "Sep ’26 – Present",
+              "id": "mathematical-neuroscience",
+              "heading": "Undergraduate Researcher, Mathematical Neuroscience",
+              "org": "PI: Dr Horacio Rotstein, NJIT",
+              "location": "Newark, NJ, USA",
+              "dates": "Sep 2026 – Present",
               "bullets": [
                 {
-                  "text": "Deriving reduced mathematical descriptions of biophysical neuronal models to characterize their dynamic properties",
+                  "text": "Derive reduced mathematical descriptions of biophysical neuronal models and characterize the dynamical properties retained by the reduced systems.",
                   "show": "both"
                 }
               ],
+              "prompt": "Which neuron models, reduction method and validation comparison?",
+              "short": "Mathematical neuroscience",
               "tags": [
                 "research",
                 "neuroscience-modelling",
                 "analysis-research",
                 "problem-solving-creativity",
                 "mathematical-modelling"
-              ],
-              "short": "Mathematical neuroscience"
+              ]
             },
             {
-              "heading": "Undergraduate Researcher, **Mathematical Modeling**. PI: Dr. James Maclaurin, NJIT",
-              "dates": "Oct ’25 – May ’26",
+              "id": "mathematical-modeling",
+              "heading": "Undergraduate Researcher, Mathematical Modeling",
+              "org": "PI: Dr James Maclaurin, NJIT",
+              "location": "Newark, NJ, USA",
+              "dates": "Oct 2025 – May 2026",
               "bullets": [
                 {
-                  "text": "Applying Hawkes self-exciting point process to model secondary nucleation dynamics in amyloid formation",
+                  "text": "Applied Hawkes self-exciting point processes to secondary nucleation and feedback in amyloid formation.",
                   "show": "both"
                 }
               ],
+              "prompt": "Record mathematical assumptions, fitted/simulated quantities and final deliverable.",
+              "short": "Mathematical modeling",
               "tags": [
                 "research",
                 "neuroscience-modelling",
                 "analysis-research",
                 "problem-solving-creativity",
                 "mathematical-modelling"
-              ],
-              "short": "Mathematical modeling"
+              ]
             }
-          ]
+          ],
+          "field": "science"
         },
         {
           "title": "Intellectual and Cultural History",
-          "field": "history",
           "entries": [
             {
-              "heading": "**Emerging Scholars Research Fellow**, Early Modern Sikh History. Mentor: Satnam Singh, Harvard Sikh Center",
-              "dates": "Sep ’26 – Present",
+              "id": "harvard-sikh-center-fellowship",
+              "heading": "Emerging Scholars Research Fellow, Early Modern Sikh History",
+              "org": "Harvard Sikh Center; mentor: Satnam Singh",
+              "location": "Remote",
+              "dates": "Sep 2026 – Dec 2026",
               "bullets": [
                 {
-                  "text": "*Dissemination and the making of Khalsa authority in a contested panth*: examining how the Khalsa asserted dominance over the wider Sikh world within decades of its founding, against rival claimants including the Bandai Khalsa, Minas, and Ram Raiyas",
+                  "text": "Research ‘Dissemination and the making of Khalsa authority in a contested panth’: how the early Khalsa came to dominate the wider Sikh world against rival claimants, including the Bandai Khalsa, Minas, Ram Raiyas and Hindaliyas.",
                   "show": "both"
                 },
                 {
-                  "text": "Arguing that the consolidation of “authentic Sikh teachings” through katha was instrumental to that dominance; working from Gurmukhi and Persian primary sources, including works attributed to Bhai Mani Singh, hukamname, and rahit-nama literature",
+                  "text": "Argue that the answer lies less in politics than in transmission: the Khalsa’s consolidation of ‘authentic Sikh teachings’ through *katha* preceded and enabled its control of the panth.",
+                  "show": "both"
+                },
+                {
+                  "text": "Sources: Gurmukhi and Persian primary materials, including works attributed to Bhai Mani Singh, *hukamname*, *rahit-nama* and sampardaic literature, alongside Persian and European accounts of the period.",
+                  "show": "both"
+                },
+                {
+                  "text": "Twelve-week fellowship term producing a paper and a presentation: first, a characterization of the intellectual landscape and its conflicts; second, a prosopography linking intellectual influences to the period’s political figures.",
                   "show": "both"
                 }
               ],
+              "prompt": "Which manuscripts and editions you actually worked from, and where the argument stands at term end.",
               "keep": 6,
+              "short": "Harvard Sikh Center fellowship",
               "tags": [
                 "research",
                 "teaching-mentoring",
@@ -212,22 +287,22 @@
                 "independence-confidence",
                 "interpersonal",
                 "gurmukhi-persian-sources"
-              ],
-              "short": "Harvard Sikh Center fellowship"
+              ]
             },
             {
-              "heading": "Undergraduate Researcher, **History of Medicine & Bioethics**. PI: Dr. Stephen Pemberton, NJIT",
-              "dates": "Sep ’26 – Present",
+              "id": "history-of-medicine-bioethics",
+              "heading": "Undergraduate Researcher, History of Medicine and Bioethics",
+              "org": "PI: Dr Stephen Pemberton, NJIT",
+              "location": "Newark, NJ, USA",
+              "dates": "Sep 2026 – Present",
               "bullets": [
                 {
-                  "text": "Synthesizing legal, clinical, and cultural developments in American end-of-life care from the late twentieth century to the present",
-                  "show": "both"
-                },
-                {
-                  "text": "Developing original scholarship for submission to a peer-reviewed humanities journal",
+                  "text": "Synthesize legal, clinical and cultural developments in American end-of-life care from the late twentieth century to today; develop scholarship intended for submission to a peer-reviewed humanities journal.",
                   "show": "both"
                 }
               ],
+              "prompt": "Identify primary sources, case studies and provisional thesis.",
+              "short": "History of medicine & bioethics",
               "tags": [
                 "research",
                 "history-of-medicine-ethics",
@@ -235,27 +310,30 @@
                 "written-communication",
                 "problem-solving-creativity",
                 "peer-review"
-              ],
-              "short": "History of medicine & bioethics"
+              ]
             },
             {
-              "heading": "Undergraduate Researcher, **Digital History & Urban Studies**. PI: Dr. Louis Hamilton, NJIT",
-              "dates": "Jan ’24 – May ’24,\nJan ’26 – May ’26",
+              "id": "digital-history-urban-studies",
+              "heading": "Undergraduate Researcher, Digital History and Urban Studies",
+              "org": "PI: Dr Louis Hamilton, NJIT; field research in Rome and Florence",
+              "location": "Newark, NJ, USA / Italy",
+              "dates": "Jan 2024 – May 2024,\nJan 2026 – May 2026",
               "bullets": [
                 {
-                  "text": "Digital mapping of how religious institutions shaped urban form in medieval and early modern Italy; field research conducted in Rome and Florence",
+                  "text": "Two solo-authored geospatial narratives (StoryMapJS) mapping sites visited on foot against historical and archival sources.",
                   "show": "both"
                 },
                 {
-                  "text": "[*Power vs. the People*](https://uploads.knightlab.com/storymapjs/cbb86fd8d8b9cdc53b4e6e879d9db5f6/rome-2026/index.html) (HIST 328; 18 sites): layered Counter-Reformation Marian shrines against Julius II’s 1508 papal axis on the Via Giulia",
+                  "text": "*Power vs. the People* (HIST 328): mapped 18 sites, layering Counter-Reformation Marian shrines against Julius II’s 1508 papal axis along the Via Giulia, Rome, drawing on the Early Modern Rome Reconstructed database and Rufini’s 1853 shrine census; argued the street shows superimposition and negotiation rather than a papal-versus-popular divide.",
                   "show": "both"
                 },
                 {
-                  "text": "[*Processions and Power*](https://uploads.knightlab.com/storymapjs/cbb86fd8d8b9cdc53b4e6e879d9db5f6/final-essay-draft/index.html) (HIST 329; 22 sites): traced how Florence’s expansion turned liturgical processions into contested displays of ecclesiastical and household prestige",
+                  "text": "*Processions and Power* (HIST 329): mapped 22 Florentine sites to examine how urban expansion transformed liturgical processions into contests of ecclesiastical and household prestige, read against Dante’s critique of the *gente nuova*.",
                   "show": "both"
                 }
               ],
               "keep": 5,
+              "short": "Digital history & urban studies",
               "tags": [
                 "research",
                 "digital-medieval-history",
@@ -264,23 +342,31 @@
                 "independence-confidence",
                 "digital-mapping",
                 "field-research"
-              ],
-              "short": "Digital history & urban studies"
+              ]
             }
-          ]
+          ],
+          "field": "history"
         },
         {
           "title": "Emergency Care and Health Services",
           "entries": [
             {
-              "heading": "Undergraduate Researcher, Collegiate Emergency Medical Services. Dr. Chang Yaramothu, NJIT",
-              "dates": "Sep ’25 – Present",
+              "id": "undergraduate-researcher-collegiate-emergency-me",
+              "heading": "Undergraduate Researcher, Collegiate Emergency Medical Services",
+              "org": "PI: Dr Chang Yaramothu, School of Applied Engineering and Technology, NJIT",
+              "location": "Newark, NJ, USA",
+              "dates": "Sep 2025 – Present",
               "bullets": [
                 {
-                  "text": "Studied the resources of ~50 US collegiate EMS squads, examining their organizational setups and capabilities in relation to their effectiveness",
+                  "text": "Co-developed IRB protocol, questionnaire and recruitment materials with two other students for a national study of collegiate EMS organizations; recruited via National Collegiate EMS Foundation regional coordinators.",
+                  "show": "both"
+                },
+                {
+                  "text": "Examined resources, organizational structures, operating models and capabilities across approximately 50 US collegiate EMS squads; data analysis in progress.",
                   "show": "both"
                 }
               ],
+              "prompt": "Confirm data freeze, response denominator, analysis approach and whether study has ended.",
               "tags": [
                 "research",
                 "writing-editing",
@@ -305,23 +391,20 @@
     },
     {
       "id": "funding",
-      "title": "Funding",
+      "title": "Research Funding & Honours",
       "type": "entries",
       "site": "award",
       "groups": [
         {
-          "title": "",
+          "title": "Grants & awards",
           "entries": [
             {
-              "heading": "Undergraduate Research Opportunities Programme (UROP), Imperial College London",
-              "dates": "Jun ’26 – Jul ’26",
+              "id": "urop-imperial",
+              "heading": "Undergraduate Research Opportunities Programme (UROP) bursary",
+              "dates": "Jun – Jul 2026",
               "bullets": [
                 {
-                  "text": "Competitive research bursary awarded through the Department of Materials, Faculty of Engineering",
-                  "show": "both"
-                },
-                {
-                  "text": "Project: Using protein language models to mimic natural ligands. Supervisor: Prof. Stefano Angioletti-Uberti",
+                  "text": "Imperial College London, Department of Materials; project: using protein language models to mimic natural ligands",
                   "show": "both"
                 },
                 {
@@ -329,6 +412,7 @@
                   "show": "cv"
                 }
               ],
+              "short": "UROP, Imperial",
               "tags": [
                 "funding-ventures",
                 "peptide-protein-design",
@@ -338,26 +422,19 @@
                 "persuasion-negotiation",
                 "problem-solving-creativity",
                 "machine-learning"
-              ],
-              "short": "UROP, Imperial"
+              ]
             },
             {
+              "id": "nsf-i-corps",
               "heading": "NSF I-Corps Regional Program, Northeast Hub",
-              "dates": "May ’26 – Jun ’26",
+              "dates": "May – Jun 2026",
               "bullets": [
                 {
-                  "text": "Co-Founder & Technical Lead, Axioma Therapeutics",
-                  "show": "both"
-                },
-                {
-                  "text": "Selected into competitive NSF cohort; led customer discovery and lean-startup validation for cyclic peptide therapeutics targeting degenerative eye diseases",
-                  "show": "both"
-                },
-                {
-                  "text": "Project funding awarded to support customer-discovery activities",
+                  "text": "Competitive cohort and customer-discovery project funding for Axioma Therapeutics",
                   "show": "both"
                 }
               ],
+              "short": "NSF I-Corps",
               "tags": [
                 "funding-ventures",
                 "leading-organizing",
@@ -370,23 +447,20 @@
                 "persuasion-negotiation",
                 "problem-solving-creativity",
                 "customer-discovery"
-              ],
-              "short": "NSF I-Corps"
+              ]
             },
             {
-              "heading": "Grace Hopper AI Research Institute, Computational Protein Design",
-              "dates": "May ’25 – Aug ’25",
+              "id": "grace-hopper-ai-institute",
+              "heading": "Grace Hopper AI Research Institute grant",
+              "dates": "May – Aug 2025",
               "bullets": [
                 {
-                  "text": "NJIT grant to develop a course on computational protein design",
-                  "show": "both"
-                },
-                {
-                  "text": "Teaching Assistant",
+                  "text": "NJIT, computational protein design course development; $3,330",
                   "show": "both"
                 }
               ],
               "keep": 5,
+              "short": "Grace Hopper AI Institute",
               "tags": [
                 "funding-ventures",
                 "teaching-mentoring",
@@ -397,50 +471,15 @@
                 "problem-solving-creativity",
                 "machine-learning",
                 "curriculum-design"
-              ],
-              "short": "Grace Hopper AI Institute"
+              ]
             },
             {
-              "heading": "The Honors College Moonshot Grants for Engaged Scholarship",
-              "dates": "Jun ’25 – Jul ’25",
+              "id": "moonshot-grant",
+              "heading": "Honors College Moonshot Grant for Engaged Scholarship",
+              "dates": "Jun – Jul 2025",
               "bullets": [
                 {
-                  "text": "Endowed award to develop interdisciplinary projects that address important social and cultural questions",
-                  "show": "both"
-                },
-                {
-                  "text": "Designing Male Contraceptive",
-                  "show": "both"
-                },
-                {
-                  "text": "Award providing labs with funds to support undergraduate-led projects",
-                  "show": "both"
-                },
-                {
-                  "text": "Personal compensation included. One recipient per annum",
-                  "show": "cv"
-                }
-              ],
-              "tags": [
-                "funding-ventures",
-                "peptide-protein-design",
-                "adaptability",
-                "ambition-commitment",
-                "persuasion-negotiation",
-                "problem-solving-creativity"
-              ],
-              "short": "Moonshot Grant"
-            },
-            {
-              "heading": "Male Contraceptive Initiative (MCI)",
-              "dates": "Jan ’25 – Jun ’25",
-              "bullets": [
-                {
-                  "text": "Award by the Youth Advisory Board providing funding to support grantee-led project",
-                  "show": "both"
-                },
-                {
-                  "text": "Designing Male Contraceptive",
+                  "text": "Male-contraceptive project; one recipient per annum",
                   "show": "both"
                 },
                 {
@@ -448,6 +487,31 @@
                   "show": "cv"
                 }
               ],
+              "short": "Moonshot Grant",
+              "tags": [
+                "funding-ventures",
+                "peptide-protein-design",
+                "adaptability",
+                "ambition-commitment",
+                "persuasion-negotiation",
+                "problem-solving-creativity"
+              ]
+            },
+            {
+              "id": "male-contraceptive-initiative",
+              "heading": "Male Contraceptive Initiative Youth Advisory Board project grant",
+              "dates": "Jan – Jun 2025",
+              "bullets": [
+                {
+                  "text": "Grantee-led male-contraceptive project",
+                  "show": "both"
+                },
+                {
+                  "text": "Personal compensation included",
+                  "show": "cv"
+                }
+              ],
+              "short": "Male Contraceptive Initiative",
               "tags": [
                 "funding-ventures",
                 "leading-organizing",
@@ -458,58 +522,52 @@
                 "persuasion-negotiation",
                 "problem-solving-creativity",
                 "teamwork"
-              ],
-              "short": "Male Contraceptive Initiative"
+              ]
             },
             {
-              "heading": "NJIT Undergraduate Research & Innovation (URI)",
-              "dates": "Oct ’24 – May ’25",
+              "id": "contraception-meeting-travel-award",
+              "heading": "Male Contraceptive Initiative travel award",
+              "dates": "May 2025",
               "bullets": [
                 {
-                  "text": "Student Seed Grant award for a Phase-2 longitudinal project on application-based research funding lab to support undergraduate-led project",
-                  "show": "both"
-                },
-                {
-                  "text": "Developing cyclic peptide therapeutic for Multiple Sclerosis",
+                  "text": "National Contraception Meeting, Durham, North Carolina",
                   "show": "both"
                 }
               ],
+              "short": "Contraception Meeting travel award",
+              "tags": [
+                "funding-ventures",
+                "peptide-protein-design",
+                "ambition-commitment",
+                "persuasion-negotiation"
+              ]
+            },
+            {
+              "id": "njit-uri-funding",
+              "heading": "NJIT Undergraduate Research and Innovation Student Seed Grant",
+              "dates": "Oct 2024 – May 2025",
+              "bullets": [
+                {
+                  "text": "Phase-2 longitudinal research project, cyclic peptide therapeutic for multiple sclerosis",
+                  "show": "both"
+                }
+              ],
+              "short": "NJIT URI funding",
               "tags": [
                 "funding-ventures",
                 "peptide-protein-design",
                 "ambition-commitment",
                 "persuasion-negotiation",
                 "problem-solving-creativity"
-              ],
-              "short": "NJIT URI funding"
+              ]
             },
             {
-              "heading": "Travel Award – National Contraception Meeting",
-              "dates": "May ’25",
+              "id": "honors-summer-research-institute",
+              "heading": "Honors Summer Research Institute (HSRI) grant",
+              "dates": "Jun – Jul 2024",
               "bullets": [
                 {
-                  "text": "Awarded by the Male Contraceptive Initiative for travel to Durham, NC, supporting a conference presentation",
-                  "show": "both"
-                }
-              ],
-              "tags": [
-                "funding-ventures",
-                "peptide-protein-design",
-                "ambition-commitment",
-                "persuasion-negotiation"
-              ],
-              "short": "Contraception Meeting travel award"
-            },
-            {
-              "heading": "NJIT Honors Summer Research Institute (HSRI)",
-              "dates": "Jun ’24 – Jul ’24",
-              "bullets": [
-                {
-                  "text": "Grant award by ADHC and URI providing funds to support undergraduate-led projects",
-                  "show": "both"
-                },
-                {
-                  "text": "A combination of Multiple Sclerosis project and Male Contraceptive project",
+                  "text": "ADHC and NJIT URI; multiple sclerosis and male-contraceptive projects",
                   "show": "both"
                 },
                 {
@@ -517,13 +575,167 @@
                   "show": "cv"
                 }
               ],
+              "short": "Honors Summer Research Institute",
               "tags": [
                 "funding-ventures",
                 "peptide-protein-design",
                 "ambition-commitment",
                 "persuasion-negotiation"
+              ]
+            },
+            {
+              "id": "first-place-honors-interdisciplinary-research-fo",
+              "heading": "First place, Honors Interdisciplinary Research Forum",
+              "dates": "Fall 2025",
+              "bullets": [
+                {
+                  "text": "Male-contraceptive poster, NJIT Albert Dorman Honors College",
+                  "show": "both"
+                }
               ],
-              "short": "Honors Summer Research Institute"
+              "tags": [
+                "research",
+                "speaking",
+                "peptide-protein-design",
+                "analysis-research",
+                "oral-communication",
+                "problem-solving-creativity"
+              ]
+            },
+            {
+              "id": "academic-excellence-honors-merit-honors-resident",
+              "heading": "Academic Excellence, Honors Merit, Honors Residential scholarships",
+              "dates": "2023 – 2027",
+              "bullets": [
+                {
+                  "text": "NJIT merit scholarships, part of award package exceeding $100,000",
+                  "show": "both"
+                }
+              ],
+              "tags": [
+                "mathematical-modelling"
+              ]
+            },
+            {
+              "id": "highlander-achievement-scholarship",
+              "heading": "Highlander Achievement Scholarship",
+              "note": "NJIT",
+              "dates": "2023 – 2027",
+              "bullets": [],
+              "tags": [
+                "mathematical-modelling"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Fellowships & selective programmes",
+          "entries": [
+            {
+              "id": "emerging-scholars-research-fellowship",
+              "heading": "Emerging Scholars Research Fellowship",
+              "dates": "2026",
+              "bullets": [
+                {
+                  "text": "Harvard Sikh Center; early modern Sikh history",
+                  "show": "both"
+                }
+              ],
+              "tags": [
+                "research",
+                "teaching-mentoring",
+                "sikh-studies-community",
+                "ambition-commitment",
+                "analysis-research",
+                "oral-communication",
+                "independence-confidence",
+                "interpersonal",
+                "gurmukhi-persian-sources"
+              ]
+            },
+            {
+              "id": "hsri-fellow",
+              "heading": "Honors Summer Research Institute Fellowship",
+              "note": "Fellow",
+              "dates": "Jun 2024 – Jul 2024,\nJun 2025 – Jul 2025",
+              "bullets": [],
+              "kind": "leadership",
+              "short": "HSRI Fellow",
+              "tags": [
+                "leading-organizing",
+                "peptide-protein-design",
+                "ambition-commitment",
+                "independence-confidence"
+              ]
+            },
+            {
+              "id": "goldwater-ambassador",
+              "heading": "Goldwater Ambassadors Program",
+              "dates": "Aug 2025 – Present",
+              "bullets": [
+                {
+                  "text": "Selected mentee, mentored by Goldwater Scholars; programme for underserved or underrepresented students",
+                  "show": "both"
+                }
+              ],
+              "short": "Goldwater Ambassador",
+              "tags": [
+                "leading-organizing",
+                "research-culture-publishing",
+                "ambition-commitment",
+                "persuasion-negotiation",
+                "problem-solving-creativity",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "artisan-program",
+              "heading": "NSF ART Integrated Student Ambassador Network (ARTISAN)",
+              "dates": "Apr 2025 – Present",
+              "bullets": [
+                {
+                  "text": "Selected/inducted on the basis of translational-research engagement",
+                  "show": "both"
+                }
+              ],
+              "short": "ARTISAN Program",
+              "tags": [
+                "leading-organizing",
+                "research-culture-publishing",
+                "persuasion-negotiation",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "no-patient-left-behind-fellow",
+              "heading": "No Patient Left Behind Fellowship",
+              "note": "Fellow",
+              "dates": "Jun – Aug 2024",
+              "bullets": [],
+              "kind": "leadership",
+              "short": "No Patient Left Behind Fellow",
+              "tags": [
+                "clinical-care",
+                "medicine-emergency-care",
+                "ambition-commitment",
+                "client-facing",
+                "independence-confidence",
+                "interpersonal"
+              ]
+            },
+            {
+              "id": "acc-young-scholar",
+              "heading": "American College of Cardiology",
+              "note": "Young Scholar",
+              "dates": "May 2023 – Apr 2024",
+              "bullets": [],
+              "kind": "leadership",
+              "short": "ACC Young Scholar",
+              "tags": [
+                "leading-organizing",
+                "medicine-emergency-care",
+                "ambition-commitment"
+              ]
             }
           ]
         }
@@ -536,16 +748,15 @@
       "site": "pub",
       "groups": [
         {
-          "title": "Peer-Reviewed",
+          "title": "Peer-reviewed",
           "status": "published",
           "items": [
             {
               "authors": "C. Heffernan, O. West, **K. Singh**, J. Dodd-o, M. James, A. Baradi, K. Rybak, A. Lateef, S. Elkabes, V. Kumar",
               "title": "A novel cyclic peptide that blocks human autoimmune antibodies for the treatment of multiple sclerosis",
-              "venue": "*European Journal of Medicinal Chemistry*, 119173 (2026)",
+              "venue": "*Eur. J. Med. Chem.* (2026)",
               "doi": "10.1016/j.ejmech.2026.119173",
-              "year": 2026,
-              "show": "both",
+              "contribution": "ran the molecular dynamics simulations; designed the published peptide",
               "tags": [
                 "research",
                 "writing-editing",
@@ -554,21 +765,21 @@
                 "written-communication",
                 "teamwork"
               ],
-              "short": "Cyclic peptide for MS, EJMC"
+              "short": "Cyclic peptide for MS, EJMC",
+              "year": 2026,
+              "show": "both",
+              "id": "a-novel-cyclic-peptide-that-blocks-human"
             }
           ]
         },
         {
-          "title": "Manuscripts in Preparation",
+          "title": "In preparation",
           "status": "prep",
           "items": [
             {
               "authors": "**K. Singh**, C. Heffernan, O. West, J. Dodd-o, V. Kumar",
-              "title": "Machine learning for rational design of a ***** targeting cyclic peptide-based male contraceptive",
-              "venue": "Publication [in preparation],  **Patent application** [in preparation], 2026",
-              "doi": "",
-              "year": 2026,
-              "show": "both",
+              "title": "Machine learning for rational design of a cyclic peptide-based male contraceptive",
+              "venue": "In preparation; patent application in preparation",
               "tags": [
                 "research",
                 "writing-editing",
@@ -579,15 +790,16 @@
                 "teamwork",
                 "machine-learning"
               ],
-              "short": "Male contraceptive design, in prep."
+              "short": "Male contraceptive design, in prep.",
+              "year": 2026,
+              "show": "both",
+              "id": "machine-learning-for-rational-design-of",
+              "doi": ""
             },
             {
               "authors": "J. Lau, D. Yun, **K. Singh**, A. Patananan, N. Jadavji",
-              "title": "Academic Publishing as a Launchpad: How Publishing Research in an Undergraduate Journal Shapes Future Careers",
-              "venue": "Publication [in preparation], 2026",
-              "doi": "",
-              "year": 2026,
-              "show": "both",
+              "title": "Academic publishing as a launchpad: how publishing research in an undergraduate journal shapes future careers",
+              "venue": "In preparation",
               "tags": [
                 "research",
                 "writing-editing",
@@ -596,7 +808,11 @@
                 "written-communication",
                 "teamwork"
               ],
-              "short": "Academic publishing as a launchpad"
+              "short": "Academic publishing as a launchpad",
+              "year": 2026,
+              "show": "both",
+              "id": "academic-publishing-as-a-launchpad-how",
+              "doi": ""
             }
           ]
         }
@@ -612,11 +828,10 @@
         {
           "authors": "M. Kotta, G. Victorio, G. Karmacharya, **K. Singh**, N. Giovannetti, B. Shadpoor, J. Dodd-O, V. Kumar",
           "title": "Putative computational design of novel inhibitors to modulate de-novo targets for CB1 receptor",
-          "show": "both",
           "venues": [
             {
-              "name": "UH (Undergraduate Research Day)",
-              "format": "Poster + Podium",
+              "name": "University of Houston, Undergraduate Research Day",
+              "format": "Poster and podium",
               "year": "2026"
             }
           ],
@@ -628,13 +843,13 @@
             "oral-communication",
             "problem-solving-creativity"
           ],
-          "short": "CB1 receptor inhibitors, talk"
+          "short": "CB1 receptor inhibitors, talk",
+          "show": "both",
+          "id": "putative-computational-design-of-novel-i"
         },
         {
           "authors": "**K. Singh**, C. Heffernan, J. Dodd-O, V. Kumar",
           "title": "Development of a novel male contraceptive using cyclic peptides to inhibit fertilization",
-          "show": "both",
-          "keep": 16,
           "venues": [
             {
               "name": "AAP/ASCI/APSA Joint Meeting",
@@ -647,38 +862,38 @@
               "year": "2026"
             },
             {
-              "name": "NJIT ADHC (Honors Interdisciplinary Research Forum) **First Place**",
+              "name": "NJIT Honors Interdisciplinary Research Forum, first place",
               "format": "Poster",
               "year": "Fall 2025"
             },
             {
-              "name": "NCM (National Contraception Meeting)",
+              "name": "National Contraception Meeting",
               "format": "Poster",
               "year": "2025"
             },
             {
-              "name": "NJIT ADHC (Honors Interdisciplinary Research Forum)",
+              "name": "NJIT Honors Interdisciplinary Research Forum",
               "format": "Poster",
               "year": "Spring 2025"
             },
             {
-              "name": "NJIT (Dana Knox Research Showcase)",
+              "name": "NJIT Dana Knox Research Showcase",
               "format": "Poster",
               "year": "2025"
             },
             {
-              "name": "NJIT (Undergraduate Research & Innovation)",
-              "format": "Abstract + Podium",
+              "name": "NJIT Undergraduate Research and Innovation",
+              "format": "Abstract and podium",
               "year": "2025"
             },
             {
-              "name": "BMES (Biomedical Engineering Society) *[Co-Presenter]*",
-              "format": "Abstract + Poster",
+              "name": "Biomedical Engineering Society (BMES), co-presenter",
+              "format": "Abstract and poster",
               "year": "2024"
             },
             {
-              "name": "NJIT (Undergraduate Research & Innovation)",
-              "format": "Abstract + Podium",
+              "name": "NJIT Undergraduate Research and Innovation",
+              "format": "Abstract and podium",
               "year": "2024"
             }
           ],
@@ -690,15 +905,17 @@
             "oral-communication",
             "problem-solving-creativity"
           ],
-          "short": "Male contraceptive peptides, talk"
+          "short": "Male contraceptive peptides, talk",
+          "keep": 16,
+          "show": "both",
+          "id": "development-of-a-novel-male-contraceptiv"
         },
         {
           "authors": "**K. Singh**, J. Lau, H. Gerber, A. Alibilli, L. Goralsky",
-          "title": "Mitigating Knowledge Drain: A Case Study in Optimizing Workflow and Training in a High-Turnover, International Peer-Reviewed Undergraduate Science Academic Journal",
-          "show": "both",
+          "title": "Mitigating knowledge drain: a case study in optimizing workflow and training in a high-turnover, international peer-reviewed undergraduate science academic journal",
           "venues": [
             {
-              "name": "NCUR",
+              "name": "National Conference on Undergraduate Research (NCUR)",
               "format": "Poster",
               "year": "2026"
             }
@@ -710,7 +927,484 @@
             "analysis-research",
             "oral-communication"
           ],
-          "short": "Mitigating knowledge drain, talk"
+          "short": "Mitigating knowledge drain, talk",
+          "show": "both",
+          "id": "mitigating-knowledge-drain-a-case-study"
+        }
+      ]
+    },
+    {
+      "id": "features",
+      "title": "Lectures & Features",
+      "type": "entries",
+      "site": "talk",
+      "groups": [
+        {
+          "title": "",
+          "entries": [
+            {
+              "id": "invited-speaker-forthcoming-science-national-hon",
+              "heading": "Invited speaker (forthcoming), Science National Honor Society",
+              "note": "Piscataway High School",
+              "dates": "2026",
+              "bullets": [],
+              "kind": "talk",
+              "tags": [
+                "research",
+                "writing-editing",
+                "speaking",
+                "teaching-mentoring",
+                "leading-organizing",
+                "peptide-protein-design",
+                "medicine-emergency-care",
+                "research-culture-publishing",
+                "ambition-commitment",
+                "analysis-research",
+                "client-facing",
+                "commercial-awareness",
+                "oral-communication",
+                "written-communication",
+                "independence-confidence",
+                "interpersonal",
+                "leadership",
+                "persuasion-negotiation",
+                "planning-organisation",
+                "problem-solving-creativity",
+                "teamwork",
+                "peer-review",
+                "emergency-care-emt-bls"
+              ]
+            },
+            {
+              "id": "invited-student-roundtable-speaker",
+              "heading": "Invited student roundtable speaker",
+              "dates": "2026",
+              "bullets": [
+                {
+                  "text": "Margo Chaly, New Jersey Secretary of Education; NJIT",
+                  "show": "both"
+                }
+              ],
+              "kind": "talk",
+              "tags": [
+                "speaking",
+                "leading-organizing",
+                "research-culture-publishing",
+                "ambition-commitment",
+                "client-facing",
+                "oral-communication",
+                "independence-confidence",
+                "interpersonal",
+                "leadership",
+                "persuasion-negotiation",
+                "planning-organisation"
+              ]
+            },
+            {
+              "id": "invited-talk-research-in-medicine",
+              "heading": "Invited speaker, NJIT University Advancement Dinner",
+              "dates": "2026",
+              "bullets": [
+                {
+                  "text": "Interdisciplinary medicine and healthcare research for NJIT leadership, including interim president and interim provost",
+                  "show": "both"
+                }
+              ],
+              "kind": "talk",
+              "short": "Invited talk, research in medicine",
+              "tags": [
+                "research",
+                "speaking",
+                "leading-organizing",
+                "peptide-protein-design",
+                "medicine-emergency-care",
+                "adaptability",
+                "oral-communication",
+                "leadership",
+                "persuasion-negotiation",
+                "planning-organisation",
+                "problem-solving-creativity",
+                "customer-discovery"
+              ]
+            },
+            {
+              "id": "speaker-shaping-the-future-of-healthcare-innovat",
+              "heading": "Speaker, ‘Shaping the Future of Healthcare & Innovation’ dinner",
+              "dates": "Oct 2026",
+              "bullets": [
+                {
+                  "text": "Peptide therapeutics, published multiple sclerosis research, and emergency care; alongside Dr Genoa R. Warner and Dr Bryan Pfister, NJIT",
+                  "show": "both"
+                }
+              ],
+              "tags": [
+                "research",
+                "speaking",
+                "leading-organizing",
+                "peptide-protein-design",
+                "medicine-emergency-care",
+                "adaptability",
+                "oral-communication",
+                "leadership",
+                "persuasion-negotiation",
+                "planning-organisation",
+                "problem-solving-creativity",
+                "customer-discovery"
+              ]
+            },
+            {
+              "id": "ethics-in-science-lectures",
+              "heading": "Lecture series, Ethics in Science and Research",
+              "note": "Science Mentorship Institute",
+              "dates": "2026",
+              "bullets": [],
+              "kind": "talk",
+              "short": "Ethics in Science lectures",
+              "tags": [
+                "speaking",
+                "teaching-mentoring",
+                "history-of-medicine-ethics",
+                "oral-communication",
+                "interpersonal"
+              ]
+            },
+            {
+              "id": "ncur-session-moderator",
+              "heading": "Session moderator, Student Oral Presentations (Communications)",
+              "note": "NCUR",
+              "dates": "2026",
+              "bullets": [],
+              "kind": "talk",
+              "short": "NCUR session moderator",
+              "tags": [
+                "speaking",
+                "research-culture-publishing",
+                "oral-communication"
+              ]
+            },
+            {
+              "id": "navigating-peer-review-talk",
+              "heading": "Featured presenter, ‘Navigating peer review and the student journal landscape’",
+              "dates": "2026",
+              "bullets": [
+                {
+                  "text": "‘Shaping Asia’s Future: Development, Innovation, and Society in Transition’, Nazarbayev University / Asian Universities Alliance",
+                  "show": "both"
+                }
+              ],
+              "kind": "talk",
+              "short": "Navigating peer review, talk",
+              "tags": [
+                "speaking",
+                "research-culture-publishing",
+                "oral-communication",
+                "problem-solving-creativity",
+                "peer-review"
+              ]
+            },
+            {
+              "id": "different-for-girls-panelist",
+              "heading": "Featured panelist, ‘It’s Different for Girls’",
+              "dates": "2026",
+              "bullets": [
+                {
+                  "text": "Documentary screening and panel; NJIT ADHC and CSLA co-sponsored colloquium",
+                  "show": "both"
+                }
+              ],
+              "kind": "talk",
+              "short": "'Different for Girls' panelist",
+              "tags": [
+                "speaking",
+                "history-of-medicine-ethics",
+                "oral-communication"
+              ]
+            },
+            {
+              "id": "njit-makes-feature",
+              "heading": "NJIT Makes: Undergraduate Research and Innovation",
+              "note": "NJIT promotional material",
+              "dates": "2026",
+              "bullets": [],
+              "kind": "feature",
+              "short": "NJIT Makes feature",
+              "tags": [
+                "writing-editing",
+                "peptide-protein-design",
+                "written-communication",
+                "problem-solving-creativity"
+              ]
+            },
+            {
+              "id": "talk-to-njit-board-of-trustees",
+              "heading": "Invited speaker, NJIT Board of Trustees and President’s Town Hall",
+              "dates": "2025",
+              "bullets": [
+                {
+                  "text": "Presented with NJIT First Aid Squad leadership at the request of President Teik Lim",
+                  "show": "both"
+                }
+              ],
+              "kind": "talk",
+              "short": "Talk to NJIT Board of Trustees",
+              "tags": [
+                "clinical-care",
+                "leading-organizing",
+                "speaking",
+                "medicine-emergency-care",
+                "client-facing",
+                "oral-communication",
+                "leadership",
+                "teamwork",
+                "emergency-care-emt-bls"
+              ]
+            },
+            {
+              "id": "honors-in-action-2025",
+              "heading": "Honors in Action 2025",
+              "dates": "2025",
+              "bullets": [
+                {
+                  "text": "Albert Dorman Honors College publication: research, awards and study abroad",
+                  "show": "both"
+                }
+              ],
+              "kind": "feature",
+              "short": "Honors in Action 2025",
+              "tags": [
+                "writing-editing",
+                "research-culture-publishing",
+                "ambition-commitment",
+                "written-communication"
+              ]
+            },
+            {
+              "id": "research-forum-feature",
+              "heading": "Article feature: ‘150+ Honors Scholars Showcase Findings at Interdisciplinary Research Forum’",
+              "note": "Nayib Morán, NJIT News",
+              "dates": "2025",
+              "bullets": [],
+              "kind": "feature",
+              "short": "Research Forum feature",
+              "tags": [
+                "writing-editing",
+                "research-culture-publishing",
+                "ambition-commitment",
+                "written-communication"
+              ]
+            },
+            {
+              "id": "adhc-advising-day-speaker",
+              "heading": "Featured speaker, ADHC Advising Day",
+              "note": "NJIT; appearances in both 2024 and 2025",
+              "dates": "2024, 2025",
+              "bullets": [],
+              "kind": "talk",
+              "short": "ADHC Advising Day speaker",
+              "tags": [
+                "speaking",
+                "research-culture-publishing",
+                "oral-communication"
+              ]
+            },
+            {
+              "id": "honors-in-action-2024",
+              "heading": "Honors in Action 2024",
+              "dates": "2024",
+              "bullets": [
+                {
+                  "text": "Albert Dorman Honors College publication: research and study abroad",
+                  "show": "both"
+                }
+              ],
+              "kind": "feature",
+              "short": "Honors in Action 2024",
+              "tags": [
+                "writing-editing",
+                "research-culture-publishing",
+                "written-communication"
+              ]
+            },
+            {
+              "id": "student-researchers-feature",
+              "heading": "Article feature: ‘Undergraduate Student Researchers on Campus’",
+              "dates": "2024",
+              "bullets": [
+                {
+                  "text": "Gurnoor Kaur, *The Vector*, NJIT student newspaper",
+                  "show": "both"
+                }
+              ],
+              "kind": "feature",
+              "short": "Student researchers feature",
+              "tags": [
+                "writing-editing",
+                "research-culture-publishing",
+                "written-communication",
+                "interpersonal"
+              ]
+            },
+            {
+              "id": "pymol-peptide-design-lecture",
+              "heading": "Lecture, ‘Introduction to PyMOL and Linear Peptide Design’",
+              "note": "NJIT, Genetically Engineered Machines",
+              "dates": "2024",
+              "bullets": [],
+              "kind": "talk",
+              "short": "PyMOL & peptide design lecture",
+              "tags": [
+                "speaking",
+                "peptide-protein-design",
+                "oral-communication",
+                "problem-solving-creativity",
+                "pymol"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clinical",
+      "title": "Clinical & Translational",
+      "type": "entries",
+      "site": "community",
+      "groups": [
+        {
+          "title": "Emergency medical services",
+          "entries": [
+            {
+              "id": "njit-first-aid-squad",
+              "heading": "Public Relations Chair; Emergency Medical Technician",
+              "org": "NJIT First Aid Squad",
+              "dates": "Oct 2025 – Present,\nJan 2024 – Present",
+              "bullets": [
+                {
+                  "text": "Licensed New Jersey EMT; over 2,000 hours handling emergency medical situations across EMS roles.",
+                  "show": "both"
+                },
+                {
+                  "text": "Represented the squad in presentations to NJIT senior leadership and Board of Trustees.",
+                  "show": "both"
+                }
+              ],
+              "kind": "community",
+              "short": "NJIT First Aid Squad",
+              "tags": [
+                "clinical-care",
+                "leading-organizing",
+                "medicine-emergency-care",
+                "client-facing",
+                "oral-communication",
+                "interpersonal",
+                "leadership",
+                "persuasion-negotiation",
+                "teamwork",
+                "emergency-care-emt-bls"
+              ]
+            },
+            {
+              "id": "marlboro-first-aid-squad",
+              "heading": "EMT Senior Squad Member; former Cadet Crew Chief",
+              "org": "Marlboro First Aid Squad",
+              "dates": "Apr 2022 – Jan 2025",
+              "bullets": [],
+              "prompt": "Break out patient-care responsibilities or types of calls without disclosing patient information.",
+              "kind": "community",
+              "short": "Marlboro First Aid Squad",
+              "tags": [
+                "clinical-care",
+                "medicine-emergency-care",
+                "client-facing",
+                "interpersonal",
+                "leadership",
+                "teamwork",
+                "emergency-care-emt-bls"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Public health education",
+          "entries": [
+            {
+              "id": "stop-the-bleed-njit",
+              "heading": "Stop the Bleed Instructor",
+              "org": "NJIT; ACS-certified instruction",
+              "dates": "Oct 2025 – Present",
+              "bullets": [],
+              "kind": "service",
+              "short": "Stop the Bleed, NJIT",
+              "tags": [
+                "teaching-mentoring",
+                "medicine-emergency-care",
+                "client-facing",
+                "oral-communication",
+                "interpersonal",
+                "emergency-care-emt-bls"
+              ]
+            },
+            {
+              "id": "stop-the-bleed-in-punjabi",
+              "heading": "Stop the Bleed Instructor (hybrid English–Punjabi)",
+              "org": "New Jersey gurdwaras; NJ Office of Homeland Security and Preparedness; Sikh Youth Alliance",
+              "dates": "Jan – May 2026",
+              "bullets": [
+                {
+                  "text": "Taught hemorrhage-control skills to 100+ people across NJIT and gurdwara outreach.",
+                  "show": "both"
+                },
+                {
+                  "text": "Bilingual delivery because those most likely to be first on scene in a gurdwara are not always the most comfortable in English.",
+                  "show": "both"
+                }
+              ],
+              "kind": "community",
+              "short": "Stop the Bleed in Punjabi",
+              "tags": [
+                "teaching-mentoring",
+                "medicine-emergency-care",
+                "sikh-studies-community",
+                "adaptability",
+                "client-facing",
+                "oral-communication",
+                "interpersonal",
+                "emergency-care-emt-bls",
+                "punjabi"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Commercialisation",
+          "entries": [
+            {
+              "id": "co-founder-and-technical-lead",
+              "heading": "Co-founder and Technical Lead",
+              "org": "Axioma Therapeutics; funded through NSF I-Corps Northeast Hub",
+              "dates": "May 2026 – Present",
+              "bullets": [
+                {
+                  "text": "Led customer discovery and lean-startup validation for peptide and mini-protein therapeutics targeting degenerative eye diseases.",
+                  "show": "both"
+                }
+              ],
+              "prompt": "Clarify whether the company role continued after the I-Corps cohort and what was validated.",
+              "tags": [
+                "funding-ventures",
+                "leading-organizing",
+                "peptide-protein-design",
+                "ambition-commitment",
+                "client-facing",
+                "commercial-awareness",
+                "independence-confidence",
+                "leadership",
+                "persuasion-negotiation",
+                "problem-solving-creativity",
+                "customer-discovery"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -721,25 +1415,32 @@
       "site": "service",
       "groups": [
         {
-          "title": "Editorial and Peer Review",
+          "title": "Editorial & peer review",
           "entries": [
             {
-              "heading": "**22^{nd} Editor-in-Chief**, Associate Editor (Former), Journal of Young Investigators",
-              "dates": "Dec ’24 – Present",
+              "id": "editor-in-chief-jyi",
+              "heading": "22nd Editor-in-Chief; former Associate Editor",
+              "org": "Journal of Young Investigators (JYI)",
+              "dates": "Dec 2024 – Present",
               "bullets": [
                 {
-                  "text": "Manage timely publication of high-quality scientific content",
+                  "text": "Lead the oldest international undergraduate research journal, funded and featured by Nature, Science, NSF and the Burroughs Wellcome Fund; earlier associate-editor work spanned biology, physical sciences and social sciences.",
                   "show": "both"
                 },
                 {
-                  "text": "Develop initiatives to further the journal’s mission",
+                  "text": "Developed structured, multi-stage hiring, asynchronous onboarding, tiered training, and a shared manuscript workflow board to reduce institutional knowledge loss.",
                   "show": "both"
                 },
                 {
-                  "text": "Former specialization in Biology, Physical Sciences, and Social Science Departments",
+                  "text": "2025–26: 27 new staff from 96 applications; two associate editors and a research editor assigned to each manuscript, with a two-week review window; author/reviewer AI policy published.",
+                  "show": "both"
+                },
+                {
+                  "text": "Re-established translations, restored Perspective articles, and developed partnerships for undergraduate research events; convened at the Seattle executive-board summit.",
                   "show": "both"
                 }
               ],
+              "short": "Editor-in-Chief, JYI",
               "tags": [
                 "leading-organizing",
                 "writing-editing",
@@ -750,13 +1451,15 @@
                 "planning-organisation",
                 "problem-solving-creativity",
                 "peer-review"
-              ],
-              "short": "Editor-in-Chief, JYI"
+              ]
             },
             {
-              "heading": "Grant Reviewer, MCI YAB Undergraduate Project Grant",
-              "dates": "Dec ’25 – Jan ’26",
+              "id": "grant-reviewer-mci-yab",
+              "heading": "Grant Reviewer",
+              "org": "MCI Youth Advisory Board Undergraduate Project Grant",
+              "dates": "Dec 2025 – Jan 2026",
               "bullets": [],
+              "short": "Grant reviewer, MCI YAB",
               "tags": [
                 "funding-ventures",
                 "writing-editing",
@@ -766,613 +1469,58 @@
                 "written-communication",
                 "persuasion-negotiation",
                 "peer-review"
-              ],
-              "short": "Grant reviewer, MCI YAB"
+              ]
             }
           ]
         },
         {
-          "title": "Teaching and Mentorship",
-          "kind": "teaching",
+          "title": "Teaching & mentorship",
           "entries": [
             {
-              "heading": "**Research Lead**, Governor’s STEM Scholars, Research & Development Council of New Jersey",
-              "dates": "Sep ’26 – May ’27 (Expected)",
+              "id": "research-lead-governor-s-stem-scholars",
+              "heading": "Research Lead",
+              "org": "Governor’s STEM Scholars; Research and Development Council of New Jersey",
+              "dates": "Sep 2026 – May 2027\n(Expected)",
               "bullets": [
                 {
-                  "text": "Guiding a team of high school Scholars through a year-long research and engineering design project anchored to a UN Sustainable Development Goal and addressing a New Jersey community need",
+                  "text": "Mentor a high-school team on a year-long engineering and research project aligned to a UN Sustainable Development Goal and a New Jersey community need.",
                   "show": "both"
                 },
                 {
-                  "text": "Overseeing team meetings, deliverables, timeline, and budget, and preparing the team’s final presentation across four statewide conferences on STEM in government, academia, and industry",
-                  "show": "both"
-                },
-                {
-                  "text": "Appointment within a public–private partnership of the Office of the Governor, NJ Department of Education, and NJ Office of the Secretary of Higher Education; $1,000 completion stipend",
+                  "text": "Oversee meetings, budget, milestones and deliverables, with final presentation planned across four statewide conferences; $1,000 completion stipend.",
                   "show": "both"
                 }
               ],
-              "tags": [
-                "leading-organizing",
-                "teaching-mentoring",
-                "research-culture-publishing",
-                "ambition-commitment",
-                "commercial-awareness",
-                "oral-communication",
-                "interpersonal",
-                "leadership",
-                "planning-organisation",
-                "problem-solving-creativity",
-                "teamwork"
-              ],
-              "short": "Research Lead, Governor's STEM Scholars"
-            },
-            {
-              "heading": "Teaching Assistant, Honors First Year Seminar",
-              "dates": "Sep ’24 – Dec ’24,\nSep ’25 – Dec ’25",
-              "bullets": [],
-              "tags": [
-                "teaching-mentoring",
-                "oral-communication",
-                "interpersonal"
-              ],
-              "short": "TA, Honors First Year Seminar"
-            },
-            {
-              "heading": "Teaching Assistant, Grace Hopper AI Research Institute",
-              "dates": "May ’25 – Aug ’25",
-              "bullets": [
-                {
-                  "text": "Computational Protein Design",
-                  "show": "both"
-                }
-              ],
-              "tags": [
-                "teaching-mentoring",
-                "peptide-protein-design",
-                "oral-communication",
-                "interpersonal",
-                "problem-solving-creativity",
-                "machine-learning"
-              ],
-              "short": "TA, Grace Hopper Institute"
-            }
-          ]
-        },
-        {
-          "title": "National and Professional Service",
-          "entries": [
-            {
-              "heading": "**Research Chair**, American Association of Physicians of Indian Origin (AAPI) PreMed Board",
-              "dates": "Jun ’25 – Present",
-              "bullets": [
-                {
-                  "text": "Lead committee and organize events to achieve research-related objectives on a national level to support students, researchers, physicians, and more of an Indian origin",
-                  "show": "both"
-                }
-              ],
-              "tags": [
-                "leading-organizing",
-                "medicine-emergency-care",
-                "research-culture-publishing",
-                "leadership",
-                "teamwork"
-              ],
-              "short": "Research Chair, AAPI PreMed"
-            },
-            {
-              "heading": "**Board Member**, MCI Youth Advisory Board (YAB)",
-              "dates": "Aug ’25 – Present",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "peptide-protein-design",
-                "interpersonal",
-                "leadership",
-                "teamwork"
-              ],
-              "short": "MCI Youth Advisory Board"
-            },
-            {
-              "heading": "Member, Pre-Medical Ad Hoc Committee, APSA",
-              "dates": "Mar ’26 – Present",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "medicine-emergency-care",
-                "teamwork"
-              ],
-              "short": "APSA Pre-Medical Committee"
-            },
-            {
-              "heading": "Member, Goldwater Ambassadors Program",
-              "dates": "Aug ’25 – Present",
-              "bullets": [
-                {
-                  "text": "Selected into competitive process as a mentee, mentored by Goldwater Scholars",
-                  "show": "both"
-                },
-                {
-                  "text": "Program specially designed for students from underrepresented or underserved backgrounds",
-                  "show": "both"
-                }
-              ],
-              "tags": [
-                "leading-organizing",
-                "research-culture-publishing",
-                "ambition-commitment",
-                "persuasion-negotiation",
-                "problem-solving-creativity",
-                "teamwork"
-              ],
-              "short": "Goldwater Ambassador"
-            },
-            {
-              "heading": "Member, ARTISAN Program",
-              "dates": "Apr ’25 – Present",
-              "bullets": [
-                {
-                  "text": "Inducted in the NSF ART Integrated Student Ambassador Network (ARTISAN) program, based off commitment to translational research in my work",
-                  "show": "both"
-                }
-              ],
-              "tags": [
-                "leading-organizing",
-                "research-culture-publishing",
-                "persuasion-negotiation",
-                "teamwork"
-              ],
-              "short": "ARTISAN Program"
-            }
-          ]
-        },
-        {
-          "title": "University Service",
-          "entries": [
-            {
-              "heading": "Member, Student Conduct Board",
-              "dates": "Dec ’24 – Present",
-              "bullets": [
-                {
-                  "text": "Serve as adjudicator on academic and behavioral cases in student conduct hearings, along with other members of the board, including faculty and NJIT administration",
-                  "show": "both"
-                }
-              ],
-              "tags": [
-                "leading-organizing",
-                "history-of-medicine-ethics",
-                "analysis-research",
-                "interpersonal",
-                "teamwork"
-              ],
-              "short": "Student Conduct Board"
-            },
-            {
-              "heading": "Chair, Chair-in-Training (Former), Highlander Integrity Council",
-              "dates": "Sep ’24 – Present",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "history-of-medicine-ethics",
-                "leadership",
-                "teamwork"
-              ],
-              "short": "Chair, Integrity Council"
-            },
-            {
-              "heading": "Member, Inclusive Excellence Student Advisory Board",
-              "dates": "Feb ’25 – Present",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "interpersonal",
-                "leadership",
-                "teamwork"
-              ],
-              "short": "Inclusive Excellence Board"
-            },
-            {
-              "heading": "Member, Multifaith Council",
-              "dates": "Jan ’25 – Present",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "sikh-studies-community",
-                "interpersonal",
-                "teamwork"
-              ],
-              "short": "Multifaith Council"
-            },
-            {
-              "heading": "Organizer, ‘It’s Different for Girls’ Documentary Screening & Panel, NJIT ADHC & CSLA Co-Sponsored Colloquium",
-              "dates": "Mar ’26",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "history-of-medicine-ethics",
-                "leadership",
-                "planning-organisation"
-              ],
-              "short": "'It's Different for Girls' screening"
-            },
-            {
-              "heading": "NJIT Representative, BioNJ 33^{rd} Annual Dinner Meeting & Innovation Celebration",
-              "dates": "Feb ’26",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "client-facing",
-                "commercial-awareness",
-                "persuasion-negotiation",
-                "problem-solving-creativity"
-              ],
-              "short": "BioNJ representative"
-            },
-            {
-              "heading": "Steering Committee Lead, ADHC First Year Retreat",
-              "dates": "Mar ’25 – Aug ’25",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "leadership",
-                "planning-organisation",
-                "teamwork"
-              ],
-              "short": "First Year Retreat lead"
-            },
-            {
-              "heading": "Advisor, President (Former), Secretary (Former), Honors Hall Council",
-              "dates": "Feb ’24 – May ’25",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "interpersonal",
-                "leadership",
-                "planning-organisation",
-                "teamwork"
-              ],
-              "short": "Honors Hall Council"
-            },
-            {
-              "heading": "ADHC Representative, National Collegiate Honors Council Annual Conference",
-              "dates": "Nov ’24",
-              "bullets": [],
-              "tags": [
-                "leading-organizing",
-                "client-facing",
-                "persuasion-negotiation",
-                "teamwork"
-              ],
-              "short": "NCHC conference delegate"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "features",
-      "title": "Lectures & Features",
-      "type": "list",
-      "site": "talk",
-      "items": [
-        {
-          "text": "Invited Speaker (forthcoming). Science National Honor Society. Piscataway High School, 2026",
-          "kind": "talk",
-          "show": "both",
-          "tags": [
-            "research",
-            "writing-editing",
-            "speaking",
-            "teaching-mentoring",
-            "leading-organizing",
-            "peptide-protein-design",
-            "medicine-emergency-care",
-            "research-culture-publishing",
-            "ambition-commitment",
-            "analysis-research",
-            "client-facing",
-            "commercial-awareness",
-            "oral-communication",
-            "written-communication",
-            "independence-confidence",
-            "interpersonal",
-            "leadership",
-            "persuasion-negotiation",
-            "planning-organisation",
-            "problem-solving-creativity",
-            "teamwork",
-            "peer-review",
-            "emergency-care-emt-bls"
-          ],
-          "year": 2026
-        },
-        {
-          "text": "Invited Speaker. Student roundtable with Margo Chaly, New Jersey’s Secretary of Education. NJIT, 2026",
-          "kind": "talk",
-          "show": "both",
-          "tags": [
-            "speaking",
-            "leading-organizing",
-            "research-culture-publishing",
-            "ambition-commitment",
-            "client-facing",
-            "oral-communication",
-            "independence-confidence",
-            "interpersonal",
-            "leadership",
-            "persuasion-negotiation",
-            "planning-organisation"
-          ],
-          "year": 2026
-        },
-        {
-          "text": "Invited Speaker. Presentation on interdisciplinary research in medicine and healthcare to NJIT leadership, including the Interim President and Interim Provost. University Advancement Dinner, NJIT, 2026",
-          "kind": "talk",
-          "show": "both",
-          "year": 2026,
-          "tags": [
-            "research",
-            "speaking",
-            "leading-organizing",
-            "peptide-protein-design",
-            "medicine-emergency-care",
-            "adaptability",
-            "oral-communication",
-            "leadership",
-            "persuasion-negotiation",
-            "planning-organisation",
-            "problem-solving-creativity",
-            "customer-discovery"
-          ],
-          "short": "Invited talk, research in medicine"
-        },
-        {
-          "text": "Lecture Series. Ethics in Science and Research. Science Mentorship Institute, 2026",
-          "kind": "talk",
-          "show": "both",
-          "year": 2026,
-          "tags": [
-            "speaking",
-            "teaching-mentoring",
-            "history-of-medicine-ethics",
-            "oral-communication",
-            "interpersonal"
-          ],
-          "short": "Ethics in Science lectures"
-        },
-        {
-          "text": "Session Moderator. Student Oral Presentation (Communications). NCUR, 2026",
-          "kind": "talk",
-          "show": "both",
-          "year": 2026,
-          "tags": [
-            "speaking",
-            "research-culture-publishing",
-            "oral-communication"
-          ],
-          "short": "NCUR session moderator"
-        },
-        {
-          "text": "Featured Presenter. ‘Navigating peer review and the student journal landscape’. “Shaping Asia’s Future: Development, Innovation, and Society in Transition” organized by Nazarbayev University, Asian Universities Alliance, 2026",
-          "kind": "talk",
-          "show": "both",
-          "year": 2026,
-          "tags": [
-            "speaking",
-            "research-culture-publishing",
-            "oral-communication",
-            "problem-solving-creativity",
-            "peer-review"
-          ],
-          "short": "Navigating peer review, talk"
-        },
-        {
-          "text": "Featured Panelist. ‘It’s Different for Girls’ Documentary Screening & Panel. NJIT ADHC & CSLA Co-Sponsored Colloquium, NJIT 2026",
-          "kind": "talk",
-          "show": "both",
-          "year": 2026,
-          "tags": [
-            "speaking",
-            "history-of-medicine-ethics",
-            "oral-communication"
-          ],
-          "short": "'Different for Girls' panelist"
-        },
-        {
-          "text": "NJIT Makes: Undergraduate Research & Innovation, NJIT Promotional Material. NJIT, 2026",
-          "kind": "feature",
-          "show": "both",
-          "year": 2026,
-          "tags": [
-            "writing-editing",
-            "peptide-protein-design",
-            "written-communication",
-            "problem-solving-creativity"
-          ],
-          "short": "NJIT Makes feature"
-        },
-        {
-          "text": "Invited Speaker. Presentations to the NJIT Board of Trustees and the President’s Town Hall with squad leadership, at the request of NJIT President Teik Lim. NJIT First Aid Squad, 2025",
-          "kind": "talk",
-          "show": "both",
-          "year": 2025,
-          "tags": [
-            "clinical-care",
-            "leading-organizing",
-            "speaking",
-            "medicine-emergency-care",
-            "client-facing",
-            "oral-communication",
-            "leadership",
-            "teamwork",
-            "emergency-care-emt-bls"
-          ],
-          "short": "Talk to NJIT Board of Trustees"
-        },
-        {
-          "text": "Albert Dorman Honors College, Honors in Action 2025 (Research, Award, and Study Abroad Experience). ADHC Publication. NJIT, 2025",
-          "kind": "feature",
-          "show": "both",
-          "year": 2025,
-          "tags": [
-            "writing-editing",
-            "research-culture-publishing",
-            "ambition-commitment",
-            "written-communication"
-          ],
-          "short": "Honors in Action 2025"
-        },
-        {
-          "text": "Nayib Morán. ‘150+ Honors Scholars Showcase Findings at Interdisciplinary Research Forum’. Article Feature. NJIT News, 2025",
-          "kind": "feature",
-          "show": "both",
-          "year": 2025,
-          "tags": [
-            "writing-editing",
-            "research-culture-publishing",
-            "ambition-commitment",
-            "written-communication"
-          ],
-          "short": "Research Forum feature"
-        },
-        {
-          "text": "Featured Speaker. ADHC Advising Day. NJIT, 2024 & 2025",
-          "kind": "talk",
-          "show": "both",
-          "year": 2024,
-          "tags": [
-            "speaking",
-            "research-culture-publishing",
-            "oral-communication"
-          ],
-          "short": "ADHC Advising Day speaker"
-        },
-        {
-          "text": "Albert Dorman Honors College, Honors in Action 2024 (Research and Study Abroad Experience). ADHC Publication. NJIT, 2024",
-          "kind": "feature",
-          "show": "both",
-          "year": 2024,
-          "tags": [
-            "writing-editing",
-            "research-culture-publishing",
-            "written-communication"
-          ],
-          "short": "Honors in Action 2024"
-        },
-        {
-          "text": "Gurnoor Kaur. ‘Undergraduate Student Researchers on Campus’. Article Feature. NJIT (Student Newspaper – The Vector), 2024",
-          "kind": "feature",
-          "show": "both",
-          "year": 2024,
-          "tags": [
-            "writing-editing",
-            "research-culture-publishing",
-            "written-communication",
-            "interpersonal"
-          ],
-          "short": "Student researchers feature"
-        },
-        {
-          "text": "K. Singh. ‘Introduction to PyMOL and Linear Peptide Design’. Lecture. NJIT (Genetically Engineered Machines), 2024",
-          "kind": "talk",
-          "show": "both",
-          "year": 2024,
-          "tags": [
-            "speaking",
-            "peptide-protein-design",
-            "oral-communication",
-            "problem-solving-creativity",
-            "pymol"
-          ],
-          "short": "PyMOL & peptide design lecture"
-        }
-      ]
-    },
-    {
-      "id": "certifications",
-      "title": "Certifications & Licenses",
-      "type": "flatlist",
-      "site": "cert",
-      "items": [
-        {
-          "text": "New Jersey EMT License",
-          "show": "both",
-          "tags": [
-            "clinical-care",
-            "medicine-emergency-care",
-            "client-facing",
-            "interpersonal",
-            "emergency-care-emt-bls"
-          ],
-          "short": "NJ EMT License"
-        },
-        {
-          "text": "ACS “Stop the Bleed” Certification & Instructor License",
-          "show": "both",
-          "tags": [
-            "clinical-care",
-            "teaching-mentoring",
-            "medicine-emergency-care",
-            "client-facing",
-            "oral-communication",
-            "interpersonal",
-            "emergency-care-emt-bls"
-          ],
-          "short": "Stop the Bleed instructor license"
-        },
-        {
-          "text": "OSHA General Industry Safety & Health Certification",
-          "show": "both",
-          "tags": [
-            "research",
-            "analysis-research"
-          ],
-          "short": "OSHA safety certification"
-        },
-        {
-          "text": "CITI Biomedical Research Certification",
-          "show": "both",
-          "tags": [
-            "research",
-            "analysis-research"
-          ],
-          "short": "CITI biomedical research"
-        },
-        {
-          "text": "CITI RCR Basic Certification",
-          "show": "both",
-          "tags": [
-            "research",
-            "analysis-research"
-          ],
-          "short": "CITI RCR"
-        },
-        {
-          "text": "American Heart Association BLS & CPR for Adult/Child/Infant Certification",
-          "show": "both",
-          "tags": [
-            "clinical-care",
-            "medicine-emergency-care",
-            "emergency-care-emt-bls"
-          ],
-          "short": "BLS & CPR"
-        }
-      ]
-    },
-    {
-      "id": "leadership",
-      "title": "Leadership",
-      "type": "entries",
-      "site": "leadership",
-      "groups": [
-        {
-          "title": "",
-          "entries": [
-            {
-              "heading": "Ethics Coordinator, Mentor (Neuro + Bio), Ethics Curriculum Dev (Former), Admission Officer, Symposium Committee Organizer, Grant Writer, Science Mentorship Institute (Sci-Mi)",
-              "dates": "May ’24 – Present",
-              "bullets": [],
               "kind": "teaching",
+              "short": "Research Lead, Governor's STEM Scholars",
+              "tags": [
+                "leading-organizing",
+                "teaching-mentoring",
+                "research-culture-publishing",
+                "ambition-commitment",
+                "commercial-awareness",
+                "oral-communication",
+                "interpersonal",
+                "leadership",
+                "planning-organisation",
+                "problem-solving-creativity",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "science-mentorship-institute",
+              "heading": "Ethics Coordinator, Mentor (Neuroscience and Biology), Admissions Officer, Symposium Organizer and Grant Writer; former Ethics Curriculum Developer",
+              "org": "Science Mentorship Institute (Sci-Mi)",
+              "dates": "May 2024 – Present",
+              "bullets": [
+                {
+                  "text": "Contributed to ethics instruction and research mentoring; delivered 2026 lecture series on ethics in science and research.",
+                  "show": "both"
+                }
+              ],
+              "prompt": "Separate dates, number of mentees and outputs for each Sci-Mi responsibility.",
+              "kind": "teaching",
+              "short": "Science Mentorship Institute",
               "tags": [
                 "funding-ventures",
                 "leading-organizing",
@@ -1388,132 +1536,309 @@
                 "planning-organisation",
                 "teamwork",
                 "curriculum-design"
-              ],
-              "short": "Science Mentorship Institute"
+              ]
             },
             {
-              "heading": "Public Relations Chair, EMT, NJIT First Aid Squad",
-              "dates": "Oct ’25 – Present,\nJan ’24 – Present",
+              "id": "ta-honors-first-year-seminar",
+              "heading": "Teaching Assistant, Honors First Year Seminar",
+              "org": "Albert Dorman Honors College, NJIT",
+              "dates": "Sep 2024 – Dec 2024,\nSep 2025 – Dec 2025",
               "bullets": [],
-              "kind": "community",
+              "prompt": "Specify section size, instructional activities and evaluation tasks.",
+              "kind": "teaching",
+              "short": "TA, Honors First Year Seminar",
               "tags": [
-                "clinical-care",
-                "leading-organizing",
-                "medicine-emergency-care",
-                "client-facing",
+                "teaching-mentoring",
                 "oral-communication",
-                "interpersonal",
-                "leadership",
-                "persuasion-negotiation",
-                "teamwork",
-                "emergency-care-emt-bls"
-              ],
-              "short": "NJIT First Aid Squad"
+                "interpersonal"
+              ]
             },
             {
-              "heading": "Khalsa School Virsa (Sikh History) Teacher, Sikh Sabha of New Jersey",
-              "dates": "Sep ’20 – Present",
+              "id": "ta-grace-hopper-institute",
+              "heading": "Teaching Assistant, Computational Protein Design",
+              "org": "Grace Hopper AI Research Institute, NJIT",
+              "dates": "May – Aug 2025",
               "bullets": [],
               "kind": "teaching",
+              "short": "TA, Grace Hopper Institute",
+              "tags": [
+                "teaching-mentoring",
+                "peptide-protein-design",
+                "oral-communication",
+                "interpersonal",
+                "problem-solving-creativity",
+                "machine-learning"
+              ]
+            },
+            {
+              "id": "khalsa-school-sikh-history-teacher",
+              "heading": "Sikh History (Virsa) Teacher",
+              "org": "Khalsa School, Sikh Sabha of New Jersey",
+              "dates": "Sep 2020 – Present",
+              "bullets": [],
+              "kind": "teaching",
+              "short": "Khalsa School Sikh history teacher",
               "tags": [
                 "teaching-mentoring",
                 "sikh-studies-community",
                 "oral-communication",
                 "interpersonal"
-              ],
-              "short": "Khalsa School Sikh history teacher"
+              ]
             },
             {
-              "heading": "Youth Camp Organizer & Coordinator, Sikh Sabha of New Jersey",
-              "dates": "Aug ’21 – Present",
+              "id": "research-team-mentor-and-computational-instructo",
+              "heading": "Research-team mentor and computational instructor",
+              "org": "KumarLab; 15+ trainees",
+              "dates": "Oct 2023 – Present",
               "bullets": [],
-              "kind": "community",
               "tags": [
+                "teaching-mentoring",
                 "leading-organizing",
-                "sikh-studies-community",
-                "interpersonal",
+                "peptide-protein-design",
                 "leadership",
-                "planning-organisation"
-              ],
-              "short": "Sikh Sabha youth camp"
-            },
-            {
-              "heading": "Content Manager, The Mardana Project",
-              "dates": "May ’26 – Present",
-              "bullets": [],
-              "kind": "community",
-              "tags": [
-                "writing-editing",
-                "sikh-studies-community",
-                "written-communication",
-                "planning-organisation"
-              ],
-              "short": "The Mardana Project"
-            },
-            {
-              "heading": "Stop the Bleed Instructor, NJIT",
-              "dates": "Oct ’25 – Present",
-              "bullets": [],
-              "kind": "service",
-              "tags": [
-                "teaching-mentoring",
-                "medicine-emergency-care",
-                "client-facing",
-                "oral-communication",
-                "interpersonal",
-                "emergency-care-emt-bls"
-              ],
-              "short": "Stop the Bleed, NJIT"
-            },
-            {
-              "heading": "Vice President, President (Former), Events Coordinator (Former), Sikh Association of NJIT (SANJIT)",
-              "dates": "Dec ’23 – Present",
-              "bullets": [],
-              "kind": "leadership",
-              "tags": [
-                "leading-organizing",
-                "sikh-studies-community",
-                "leadership",
-                "planning-organisation"
-              ],
-              "short": "Sikh Association of NJIT"
-            },
-            {
-              "heading": "Stop the Bleed Instructor (Hybrid English–Punjabi), NJ Gurdwaras, NJ Office of Homeland Security & Preparedness (NJOHSP) & Sikh Youth Alliance",
-              "dates": "Jan ’26 – May ’26",
-              "bullets": [],
-              "kind": "community",
-              "tags": [
-                "teaching-mentoring",
-                "medicine-emergency-care",
-                "sikh-studies-community",
-                "adaptability",
-                "client-facing",
-                "oral-communication",
-                "interpersonal",
-                "emergency-care-emt-bls",
-                "punjabi"
-              ],
-              "short": "Stop the Bleed in Punjabi"
-            },
-            {
-              "heading": "Youth Camp Counselor, Guru Nanak Sikh Heritage",
-              "dates": "Aug ’21 – Aug ’25",
-              "bullets": [],
-              "kind": "community",
-              "tags": [
-                "teaching-mentoring",
-                "sikh-studies-community",
-                "oral-communication",
+                "teamwork",
                 "interpersonal"
+              ]
+            }
+          ],
+          "kind": "teaching"
+        },
+        {
+          "title": "National & professional",
+          "entries": [
+            {
+              "id": "research-chair-aapi-premed",
+              "heading": "Research Chair",
+              "org": "American Association of Physicians of Indian Origin (AAPI) PreMed Board",
+              "dates": "Jun 2025 – Present",
+              "bullets": [
+                {
+                  "text": "Lead research-focused committee and programming to support students, researchers and physicians.",
+                  "show": "both"
+                },
+                {
+                  "text": "Helped organize and host 2025 and 2026 Fall Virtual Research Symposia; sole MC in 2025 and co-MC in 2026, with 11 US and international presentations and seven physician judges recruited.",
+                  "show": "both"
+                }
               ],
-              "short": "Guru Nanak Sikh Heritage camp"
+              "short": "Research Chair, AAPI PreMed",
+              "tags": [
+                "leading-organizing",
+                "medicine-emergency-care",
+                "research-culture-publishing",
+                "leadership",
+                "teamwork"
+              ]
             },
             {
-              "heading": "President, Treasurer (Former), Co-Founder, NJIT MedicZero",
-              "dates": "Nov ’23 – May ’26",
+              "id": "mci-youth-advisory-board",
+              "heading": "Board Member",
+              "org": "Male Contraceptive Initiative (MCI) Youth Advisory Board",
+              "dates": "Aug 2025 – Present",
+              "bullets": [],
+              "short": "MCI Youth Advisory Board",
+              "tags": [
+                "leading-organizing",
+                "peptide-protein-design",
+                "interpersonal",
+                "leadership",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "apsa-pre-medical-committee",
+              "heading": "Member, Pre-Medical Ad Hoc Committee",
+              "org": "American Physician Scientists Association (APSA)",
+              "dates": "Mar 2026 – Present",
+              "bullets": [],
+              "short": "APSA Pre-Medical Committee",
+              "tags": [
+                "leading-organizing",
+                "medicine-emergency-care",
+                "teamwork"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "University",
+          "entries": [
+            {
+              "id": "student-conduct-board",
+              "heading": "Member, Student Conduct Board",
+              "org": "NJIT",
+              "dates": "Dec 2024 – Present",
+              "bullets": [
+                {
+                  "text": "Adjudicate academic and behavioral conduct cases alongside faculty, staff and university administrators.",
+                  "show": "both"
+                }
+              ],
+              "short": "Student Conduct Board",
+              "tags": [
+                "leading-organizing",
+                "history-of-medicine-ethics",
+                "analysis-research",
+                "interpersonal",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "chair-integrity-council",
+              "heading": "Chair; former Chair-in-Training",
+              "org": "Highlander Integrity Council, NJIT",
+              "dates": "Sep 2024 – Present",
+              "bullets": [],
+              "short": "Chair, Integrity Council",
+              "tags": [
+                "leading-organizing",
+                "history-of-medicine-ethics",
+                "leadership",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "inclusive-excellence-board",
+              "heading": "Member",
+              "org": "Inclusive Excellence Student Advisory Board, NJIT",
+              "dates": "Feb 2025 – Present",
+              "bullets": [],
+              "short": "Inclusive Excellence Board",
+              "tags": [
+                "leading-organizing",
+                "interpersonal",
+                "leadership",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "multifaith-council",
+              "heading": "Member",
+              "org": "Multifaith Council, NJIT",
+              "dates": "Jan 2025 – Present",
+              "bullets": [],
+              "short": "Multifaith Council",
+              "tags": [
+                "leading-organizing",
+                "sikh-studies-community",
+                "interpersonal",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "it-s-different-for-girls-screening",
+              "heading": "Organizer, ‘It’s Different for Girls’ screening and panel",
+              "org": "NJIT ADHC and CSLA co-sponsored colloquium",
+              "dates": "Mar 2026",
+              "bullets": [],
+              "short": "'It's Different for Girls' screening",
+              "tags": [
+                "leading-organizing",
+                "history-of-medicine-ethics",
+                "leadership",
+                "planning-organisation"
+              ]
+            },
+            {
+              "id": "bionj-representative",
+              "heading": "University Representative",
+              "org": "BioNJ 33rd Annual Dinner Meeting and Innovation Celebration",
+              "dates": "Feb 2026",
+              "bullets": [],
+              "short": "BioNJ representative",
+              "tags": [
+                "leading-organizing",
+                "client-facing",
+                "commercial-awareness",
+                "persuasion-negotiation",
+                "problem-solving-creativity"
+              ]
+            },
+            {
+              "id": "first-year-retreat-lead",
+              "heading": "Steering Committee Lead",
+              "org": "Albert Dorman Honors College First Year Retreat",
+              "dates": "Mar – Aug 2025",
+              "bullets": [],
+              "short": "First Year Retreat lead",
+              "tags": [
+                "leading-organizing",
+                "leadership",
+                "planning-organisation",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "honors-hall-council",
+              "heading": "Advisor; former President and Secretary",
+              "org": "Honors Hall Council, NJIT",
+              "dates": "Feb 2024 – May 2025",
+              "bullets": [],
+              "short": "Honors Hall Council",
+              "tags": [
+                "leading-organizing",
+                "interpersonal",
+                "leadership",
+                "planning-organisation",
+                "teamwork"
+              ]
+            },
+            {
+              "id": "nchc-conference-delegate",
+              "heading": "Honors College Representative",
+              "org": "National Collegiate Honors Council Annual Conference",
+              "dates": "Nov 2024",
+              "bullets": [],
+              "short": "NCHC conference delegate",
+              "tags": [
+                "leading-organizing",
+                "client-facing",
+                "persuasion-negotiation",
+                "teamwork"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "leadership",
+      "title": "Leadership & Community",
+      "type": "entries",
+      "site": "leadership",
+      "groups": [
+        {
+          "title": "",
+          "entries": [
+            {
+              "id": "sikh-association-of-njit",
+              "heading": "Vice President; former President and Events Coordinator",
+              "org": "Sikh Association of NJIT (SANJIT)",
+              "dates": "Dec 2023 – Present",
+              "bullets": [
+                {
+                  "text": "Vice President, 2026 – present; President, 2023 – 2026; earlier Events Coordinator.",
+                  "show": "both"
+                }
+              ],
+              "prompt": "Primary events you ran and turnout.",
+              "kind": "leadership",
+              "short": "Sikh Association of NJIT",
+              "tags": [
+                "leading-organizing",
+                "sikh-studies-community",
+                "leadership",
+                "planning-organisation"
+              ]
+            },
+            {
+              "id": "njit-mediczero",
+              "heading": "Co-founder; former President and Treasurer",
+              "org": "NJIT MedicZero",
+              "dates": "Nov 2023 – May 2026",
               "bullets": [],
               "kind": "leadership",
+              "short": "NJIT MedicZero",
               "tags": [
                 "clinical-care",
                 "leading-organizing",
@@ -1523,14 +1848,16 @@
                 "leadership",
                 "planning-organisation",
                 "problem-solving-creativity"
-              ],
-              "short": "NJIT MedicZero"
+              ]
             },
             {
-              "heading": "Co-Founder, Delta Epsilon Mu (Pre-medical Professional Fraternity)",
-              "dates": "Feb ’24 – May ’25",
+              "id": "delta-epsilon-mu",
+              "heading": "Co-founder",
+              "org": "Delta Epsilon Mu, pre-medical professional fraternity",
+              "dates": "Feb 2024 – May 2025",
               "bullets": [],
               "kind": "leadership",
+              "short": "Delta Epsilon Mu",
               "tags": [
                 "leading-organizing",
                 "medicine-emergency-care",
@@ -1538,68 +1865,168 @@
                 "leadership",
                 "problem-solving-creativity",
                 "teamwork"
-              ],
-              "short": "Delta Epsilon Mu"
+              ]
             },
             {
-              "heading": "Fellow, Honors Summer Research Institute Fellowship",
-              "dates": "Jun ’24 – Jul ’24,\nJun ’25 – Jul ’25",
-              "bullets": [],
-              "kind": "leadership",
-              "tags": [
-                "leading-organizing",
-                "peptide-protein-design",
-                "ambition-commitment",
-                "independence-confidence"
-              ],
-              "short": "HSRI Fellow"
-            },
-            {
-              "heading": "EMT Senior Squad Member, Cadet Crew Chief (Former), Marlboro First Aid Squad",
-              "dates": "Apr ’22 – Jan ’25",
+              "id": "sikh-sabha-youth-camp",
+              "heading": "Youth Camp Organizer and Coordinator",
+              "org": "Sikh Sabha of New Jersey",
+              "dates": "Aug 2021 – Present",
               "bullets": [],
               "kind": "community",
-              "tags": [
-                "clinical-care",
-                "medicine-emergency-care",
-                "client-facing",
-                "interpersonal",
-                "leadership",
-                "teamwork",
-                "emergency-care-emt-bls"
-              ],
-              "short": "Marlboro First Aid Squad"
-            },
-            {
-              "heading": "Fellow, No Patient Left Behind Fellowship",
-              "dates": "Jun ’24 – Aug ’24",
-              "bullets": [],
-              "kind": "leadership",
-              "tags": [
-                "clinical-care",
-                "medicine-emergency-care",
-                "ambition-commitment",
-                "client-facing",
-                "independence-confidence",
-                "interpersonal"
-              ],
-              "short": "No Patient Left Behind Fellow"
-            },
-            {
-              "heading": "Young Scholar, American College of Cardiology",
-              "dates": "May ’23 – Apr ’24",
-              "bullets": [],
-              "kind": "leadership",
+              "short": "Sikh Sabha youth camp",
               "tags": [
                 "leading-organizing",
-                "medicine-emergency-care",
-                "ambition-commitment"
-              ],
-              "short": "ACC Young Scholar"
+                "sikh-studies-community",
+                "interpersonal",
+                "leadership",
+                "planning-organisation"
+              ]
+            },
+            {
+              "id": "guru-nanak-sikh-heritage-camp",
+              "heading": "Youth Camp Counselor",
+              "org": "Guru Nanak Sikh Heritage",
+              "dates": "Aug 2021 – Aug 2025",
+              "bullets": [],
+              "kind": "community",
+              "short": "Guru Nanak Sikh Heritage camp",
+              "tags": [
+                "teaching-mentoring",
+                "sikh-studies-community",
+                "oral-communication",
+                "interpersonal"
+              ]
+            },
+            {
+              "id": "the-mardana-project",
+              "heading": "Content Manager",
+              "org": "The Mardana Project",
+              "dates": "May 2026 – Present",
+              "bullets": [],
+              "prompt": "Record content types, production ownership, audience and representative published work.",
+              "kind": "community",
+              "short": "The Mardana Project",
+              "tags": [
+                "writing-editing",
+                "sikh-studies-community",
+                "written-communication",
+                "planning-organisation"
+              ]
             }
           ]
         }
       ]
+    },
+    {
+      "id": "certifications",
+      "title": "Certifications",
+      "type": "flatlist",
+      "site": "cert",
+      "items": [
+        {
+          "text": "New Jersey Emergency Medical Technician licence",
+          "show": "both",
+          "id": "cert-new-jersey-emergency-medical-t",
+          "tags": [
+            "clinical-care",
+            "medicine-emergency-care",
+            "client-facing",
+            "interpersonal",
+            "emergency-care-emt-bls"
+          ],
+          "short": "NJ EMT License"
+        },
+        {
+          "text": "American College of Surgeons Stop the Bleed certification and instructor licence",
+          "show": "both",
+          "id": "cert-american-college-of-surgeons-s",
+          "tags": [
+            "clinical-care",
+            "teaching-mentoring",
+            "medicine-emergency-care",
+            "client-facing",
+            "oral-communication",
+            "interpersonal",
+            "emergency-care-emt-bls"
+          ],
+          "short": "Stop the Bleed instructor license"
+        },
+        {
+          "text": "OSHA General Industry Safety and Health certification",
+          "show": "both",
+          "id": "cert-osha-general-industry-safety-a",
+          "tags": [
+            "research",
+            "analysis-research"
+          ],
+          "short": "OSHA safety certification"
+        },
+        {
+          "text": "CITI Biomedical Research certification",
+          "show": "both",
+          "id": "cert-citi-biomedical-research-certi",
+          "tags": [
+            "research",
+            "analysis-research"
+          ],
+          "short": "CITI biomedical research"
+        },
+        {
+          "text": "CITI Responsible Conduct of Research (RCR) Basic certification",
+          "show": "both",
+          "id": "cert-citi-responsible-conduct-of-re",
+          "tags": [
+            "research",
+            "analysis-research"
+          ],
+          "short": "CITI RCR"
+        },
+        {
+          "text": "American Heart Association BLS and CPR, Adult/Child/Infant",
+          "show": "both",
+          "id": "cert-american-heart-association-bls",
+          "tags": [
+            "clinical-care",
+            "medicine-emergency-care",
+            "emergency-care-emt-bls"
+          ],
+          "short": "BLS & CPR"
+        }
+      ]
+    },
+    {
+      "id": "skills",
+      "title": "Skills & Languages",
+      "type": "table",
+      "rows": [
+        {
+          "label": "Computational biology",
+          "text": "Rosetta; RosettaScripts; PyMOL; GROMACS and GROMACS scripting; NAMD; VMD; OpenMM; CHARMM; AlphaFold; Boltz; ESMFold; protein language models"
+        },
+        {
+          "label": "Methods",
+          "text": "Computational peptide design; docking; molecular dynamics; statistical mechanics; RMSD analysis; mathematical and stochastic modeling"
+        },
+        {
+          "label": "Laboratory",
+          "text": "Surface plasmon resonance (SPR); general dissection"
+        },
+        {
+          "label": "Data and tools",
+          "text": "Python; LaTeX; molecular dynamics trajectory analysis"
+        },
+        {
+          "label": "Languages",
+          "text": "English (C2); Punjabi (C1); Swedish (B2); Spanish (B1); Russian (B1)"
+        }
+      ]
+    },
+    {
+      "id": "interests",
+      "title": "Interests",
+      "type": "text",
+      "text": "Gurmat Sangeet (classical Indian music in the Sikh devotional tradition); wrestling and martial arts; ping-pong; travel; reading history, epistemology and comparative theology."
     }
   ],
   "site": {

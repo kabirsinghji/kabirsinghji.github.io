@@ -20,6 +20,8 @@
 <script src="admin/tags.js?v=1" defer></script>
 <link rel="stylesheet" href="admin/linkedin.css?v=2">
 <script src="admin/linkedin.js?v=2" defer></script>
+<link rel="stylesheet" href="admin/profiles.css?v=1">
+<script src="admin/profiles.js?v=1" defer></script>
 <style>
 /* Admin-only styles; tokens and fonts come from style.css */
 body { font-size: 15px; }
@@ -400,6 +402,13 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       });
       if (sec.type === 'presentations') (sec.items || []).forEach(function (p, i) { if (!String(p.title || '').trim()) problems.push(sec.title + ': presentation ' + (i + 1) + ' has no title'); });
     });
+    var pids = {};
+    (S.data.profiles || []).forEach(function (p) {
+      if (!/^[a-z0-9][a-z0-9-]*$/.test(String(p.id || ''))) problems.push('Custom CVs: “' + (p.name || p.id) + '” needs a file name of lower-case letters, numbers and hyphens');
+      else if (pids[p.id]) problems.push('Custom CVs: two CVs share the file name “' + p.id + '”');
+      pids[p.id] = 1;
+    });
+    if (window.AdminProfiles) AdminProfiles.ensureIds(S.data);
     return problems.length ? 'Fix these before saving:<br>' + problems.map(esc).join('<br>') : '';
   }
 
@@ -450,6 +459,8 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   function countOf(sec) {
     if (sec.type === 'entries') return (sec.groups || []).reduce(function (n, g) { return n + (g.entries || []).length; }, 0);
     if (sec.type === 'publications') return (sec.groups || []).reduce(function (n, g) { return n + (g.items || []).length; }, 0);
+    if (sec.type === 'table') return (sec.rows || []).length;
+    if (sec.type === 'text') return '';
     return (sec.items || []).length;
   }
   function renderNav() {
@@ -458,6 +469,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     list.push({ id: 'why', label: 'Coin & why', n: '' });
     list.push({ id: 'linkedin', label: 'LinkedIn', n: ((S.data.site || {}).linkedin || {}).posts ? S.data.site.linkedin.posts.length : '' });
     list.push({ id: 'tags', label: 'Tags', n: S.data.tagset ? S.data.tagset.length : '' });
+    list.push({ id: 'profiles', label: 'Custom CVs', n: (S.data.profiles || []).length || '' });
     list.push({ id: 'meta', label: 'Header & contact', n: '' });
     list.forEach(function (it) {
       var b = document.createElement('button');
@@ -575,8 +587,13 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     var card = el('div', { class: 'card' + ((e.show || 'both') === 'site' ? ' is-hidden-cv' : '') });
     card.appendChild(el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Entry ' + (i + 1) }), mover(arr, i, rerender)]));
     card.appendChild(el('div', { class: 'row' }, [
-      field('Heading', e, 'heading', { area: true, preview: true }),
+      field('Heading', e, 'heading', { area: true, preview: true, hint: 'The bold title' }),
       field('Dates', e, 'dates', { area: true, hint: 'New line = line break on the PDF' })
+    ]));
+    card.appendChild(el('div', { class: 'row3' }, [
+      field('Organisation', e, 'org', { area: true, preview: true, hint: 'Second line; after a comma on one-line entries' }),
+      field('Location', e, 'location', { hint: 'Right-hand side, under the dates' }),
+      field('Note', e, 'note', { area: true, preview: true, hint: 'After a dash on one-line entries' })
     ]));
     card.appendChild(bulletsEditor(e, rerender));
     card.appendChild(tagBlock(e));
@@ -586,6 +603,8 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       field('Homepage category', e, 'kind', { select: CATS, dropEmpty: true }),
       field('Keep together (lines)', e, 'keep', { type: 'number', hint: 'Avoids a page break before this entry on the PDF' })
     ]));
+    adv.appendChild(field('Note to self', e, 'prompt', { area: true, hint: 'A grey prompt on CVs with “Notes to self” on (Custom CVs)' }));
+    if (e.id) adv.appendChild(el('p', { class: 'help', html: 'Id <code>' + esc(e.id) + '</code>, used by Custom CVs.' }));
     card.appendChild(adv);
     return card;
   }
@@ -635,6 +654,13 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       return;
     }
 
+    if (S.section === 'profiles') {
+      ed.innerHTML = '';
+      ed.appendChild(el('h2', { text: 'Custom CVs' }));
+      if (window.AdminProfiles) AdminProfiles.page(ed, S.data, TAGUI);
+      return;
+    }
+
     if (S.section === 'meta') {
       var m = S.data.meta = S.data.meta || {};
       ed.prepend(el('h2', { text: 'Header & contact' }));
@@ -642,6 +668,8 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
         el('div', { class: 'row' }, [field('Name', m, 'name'), field('Location', m, 'location')]),
         el('div', { class: 'row' }, [field('Email', m, 'email', { type: 'email' }), field('Phone (CV only)', m, 'phone')]),
         field('LinkedIn URL', m, 'linkedin', { type: 'url' }),
+        el('div', { class: 'row' }, [field('Website (on the CV)', m, 'website', { type: 'url' }), field('ORCID (on the CV)', m, 'orcid')]),
+        field('Objective line (under the header on the CV)', m, 'objective', { area: true, preview: true, hint: 'Custom CVs can replace it with their own.' }),
         field('Closing line on the PDF', m, 'closing'),
         field('“As of” date on the PDF and site', m, 'asOf', { hint: 'Set to the current month automatically when you save, unless you untick the box below.' }),
         el('label', { class: 'check' }, [(function () {
@@ -661,7 +689,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       sec.groups.forEach(function (g, gi) {
         g.entries = g.entries || [];
         var head = el('div', { class: 'group-head' }, [
-          field('Subheading', g, 'title', { hint: sec.groups.length > 1 || g.title ? 'Shown between ◇ marks on the PDF' : 'Leave blank for none' }),
+          field('Subheading', g, 'title', { hint: sec.groups.length > 1 || g.title ? 'Shown in italics above its entries on the PDF' : 'Leave blank for none' }),
           sec.id === 'research' ? field('Homepage colour', g, 'field', { select: [['science', 'Science (blue)'], ['history', 'History (gold)']] }) : null,
           mover(sec.groups, gi, rer)
         ]);
@@ -721,6 +749,19 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       });
       ed.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add presentation', onclick: function () {
         sec.items.unshift({ authors: '', title: '', show: 'both', venues: [{ name: '', format: 'Poster', year: String(new Date().getFullYear()) }] }); rer(); } })]));
+    }
+
+    if (sec.type === 'table') {
+      sec.rows = sec.rows || [];
+      sec.rows.forEach(function (r, i) {
+        ed.appendChild(el('div', { class: 'card' }, [el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Row ' + (i + 1) }), mover(sec.rows, i, rer)]),
+          el('div', { class: 'row' }, [field('Label', r, 'label'), field('Text', r, 'text', { area: true, preview: true })])]));
+      });
+      ed.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add row', onclick: function () { sec.rows.push({ label: '', text: '' }); rer(); } })]));
+    }
+
+    if (sec.type === 'text') {
+      ed.appendChild(el('div', { class: 'card' }, [field('Text', sec, 'text', { area: true, preview: true, rows: 4 })]));
     }
 
     if (sec.type === 'list' || sec.type === 'flatlist') {
