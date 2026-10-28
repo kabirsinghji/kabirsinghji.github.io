@@ -5,6 +5,8 @@
                        inhibitor. The trace is ERK activity over time. A model, not data.
    [data-fig="dying"]  history-of-medicine.html: a timeline from Quinlan (1976) to Modern Death (2017),
                        the two court cases above the line and the three books below it.
+   .flow               science.html: a density of cell-to-cell variation pushed through the MAPK/ERK
+                       model (images from tools/erk_density.py); hovering a label picks out one case.
    Each figure lays itself out wide or tall to fit its column, and starts when it scrolls into view.
    With reduced motion, everything is drawn at once and nothing travels. */
 (function () {
@@ -278,9 +280,34 @@
     if (!reduce) { axis.style.strokeDasharray = len + ' ' + len; axis.style.strokeDashoffset = len; onView(stage, play); }
   }
 
+  /* ---------------- the density pushed through the model (science.html) ---------------- */
+  function flow(fig) {
+    var tags = fig.querySelectorAll('.flow-tag'), layers = fig.querySelectorAll('.flow-c');
+    function pick(c) {
+      fig.classList.toggle('is-pick', !!c);
+      [].forEach.call(tags, function (t) { t.classList.toggle('is-on', t.getAttribute('data-c') === c); });
+      [].forEach.call(layers, function (l) { l.classList.toggle('is-on', l.getAttribute('data-c') === c); });
+    }
+    [].forEach.call(tags, function (t) {
+      var c = t.getAttribute('data-c');
+      t.addEventListener('mouseenter', function () { pick(c); });
+      t.addEventListener('focus', function () { pick(c); });
+      t.addEventListener('mouseleave', function () { pick(null); });
+      t.addEventListener('blur', function () { pick(null); });
+      t.addEventListener('click', function () { pick(fig.classList.contains('is-pick') && t.classList.contains('is-on') ? null : c); });
+    });
+    if (reduce) return;
+    fig.classList.add('is-wait');
+    onView(fig, function () {
+      fig.classList.add('is-go'); fig.classList.remove('is-wait');
+      setTimeout(function () { fig.classList.remove('is-go'); }, 3400);   // so hovering later is not delayed
+    });
+  }
+
   function start() {
     [].forEach.call(document.querySelectorAll('[data-fig="mapk"]'), mapk);
     [].forEach.call(document.querySelectorAll('[data-fig="dying"]'), dying);
+    [].forEach.call(document.querySelectorAll('.flow'), flow);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();

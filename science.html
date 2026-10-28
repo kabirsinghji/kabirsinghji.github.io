@@ -23,7 +23,7 @@
 <script src="peek.js?v=9" defer></script>
 <script src="beat.js?v=2" defer></script>
 <script src="antibody.js?v=1" defer></script>
-<script src="figs.js?v=2" defer></script>
+<script src="figs.js?v=3" defer></script>
 <script src="pager.js?v=1" defer></script>
 </head>
 <body>
@@ -192,6 +192,40 @@
       <dt>Where it stands</dt>
       <dd>Independent study, fall 2026.</dd>
     </dl>
+    <figure class="flow" id="fig-flow">
+      <div class="flow-row" role="img" aria-label="A round density of cell-to-cell variation in two pathway rates, pushed through the MAPK/ERK model, becomes three densities of ERK response: normal cells spread out in a comet shape, with varied adaptation; cells with Raf stuck on sit at high ERK with no adaptation; adding a MEK inhibitor lowers ERK but does not restore adaptation.">
+        <div class="flow-panel flow-in">
+          <div class="flow-sq"><img class="lt" src="fig/theta-light.webp" alt="" width="520" height="520" loading="lazy"><img class="dk" src="fig/theta-dark.webp" alt="" width="520" height="520" loading="lazy"></div>
+          <p class="flow-cap">Cell-to-cell variation<span>&theta; = (Raf rate, feedback strength)</span></p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">
+          <span>MAPK/ERK model</span>
+          <svg viewBox="0 0 120 12"><path d="M2 6H116M108 1L116 6L108 11"/></svg>
+        </div>
+        <div class="flow-panel flow-out">
+          <div class="flow-sq flow-axes">
+            <div class="flow-c" data-c="normal"><img class="lt" src="fig/erk-normal-light.webp" alt="" width="520" height="520" loading="lazy"><img class="dk" src="fig/erk-normal-dark.webp" alt="" width="520" height="520" loading="lazy"></div>
+            <div class="flow-c" data-c="mutant"><img class="lt" src="fig/erk-mutant-light.webp" alt="" width="520" height="520" loading="lazy"><img class="dk" src="fig/erk-mutant-dark.webp" alt="" width="520" height="520" loading="lazy"></div>
+            <div class="flow-c" data-c="drug"><img class="lt" src="fig/erk-drug-light.webp" alt="" width="520" height="520" loading="lazy"><img class="dk" src="fig/erk-drug-dark.webp" alt="" width="520" height="520" loading="lazy"></div>
+            <button type="button" class="flow-tag" data-c="normal" style="left:30%;top:44%">normal</button>
+            <button type="button" class="flow-tag is-red" data-c="mutant" style="left:80%;top:93%">Raf stuck on</button>
+            <button type="button" class="flow-tag" data-c="drug" style="left:22%;top:93%">+ MEK inhibitor</button>
+            <span class="flow-ax flow-ax--x">peak ERK &rarr;</span>
+            <span class="flow-ax flow-ax--y">adaptation &rarr;</span>
+          </div>
+          <p class="flow-cap"><i>f</i>(&theta;)<span>the cells&rsquo; ERK response</span></p>
+        </div>
+      </div>
+      <figcaption>
+        <p class="fig-state">Every cell runs the pathway with slightly different rates. Draw those
+        rates from a density, run each draw through the model, and the cells&rsquo; responses form a
+        new density. Normal cells spread out: some adapt a lot, some barely. With Raf stuck on,
+        the population collapses to high ERK that never adapts; a MEK inhibitor lowers ERK but
+        does not bring adaptation back.</p>
+        <span>80,000 simulated cells &middot; hover or tap a label</span>
+        <span>A toy model, not data</span>
+      </figcaption>
+    </figure>
     <figure class="fig" id="fig-mapk" data-fig="mapk">
       <div class="fig-stage"></div>
       <figcaption>
