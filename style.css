@@ -716,3 +716,44 @@ a.d-row:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
 @media (hover: none), (max-width: 700px) {
   :root:not([data-home="diptych"]) .pager-row { margin-top: .9rem; }
 }
+
+/* ---- figs.js: the signalling-pathway model (science) and the end-of-life timeline (history of medicine) ---- */
+.fig { margin: 1.8rem 0 0; max-width: 46rem; }
+.fig-stage svg { display: block; width: 100%; height: auto; overflow: visible; }
+.fig figcaption { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .4rem 1.4rem; margin-top: .7rem; padding-top: .6rem; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: .72rem; line-height: 1.6; color: var(--soft); }
+.fig figcaption .k { white-space: nowrap; }
+.fig figcaption .k::before { content: "\2501  "; color: var(--c); }
+.fig-state { flex: 1 1 100%; margin: 0; font-family: var(--read); font-size: .98rem; line-height: 1.5; color: var(--ink); min-height: 3em; }
+.fig-btn { padding: .3rem 0; border: 0; background: none; color: var(--sky); font: 600 .74rem/1.4 var(--mono); cursor: pointer; }
+.fig-btn:hover { color: var(--ink); }
+.fig-btn:focus-visible { outline: 2px solid var(--sky); outline-offset: 3px; border-radius: 3px; }
+.fig .f-lab { font-family: var(--mono); font-size: 11px; fill: var(--soft); }
+.fig .f-ink { fill: var(--ink); }
+.fig .f-ttl { font-family: var(--read); font-style: italic; font-size: 16px; fill: var(--ink); }
+.fig .f-axis { stroke: var(--rule); stroke-width: 1.2; }
+.fig .f-time { stroke: var(--soft); stroke-width: 1.4; }
+.fig .f-wire { fill: none; stroke-width: 1.6; opacity: .55; }
+.fig .f-dash { stroke-dasharray: 4 4; }
+.fig .f-line { fill: none; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
+.fig .f-thick { stroke-width: 2.4; }
+.fig .f-ghost { stroke: var(--faint); stroke-dasharray: 3 4; opacity: .7; }
+.fig .f-sky { stroke: var(--sky); } .fig .f-gold { stroke: var(--gold); } .fig .f-soft { stroke: var(--soft); }
+.fig .f-sky-fill { fill: var(--sky); } .fig .f-gold-fill { fill: var(--gold); }
+.fig .f-sky-t { fill: var(--sky); } .fig .f-gold-t { fill: var(--gold); }
+.fig .ah { fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.fig .ah.f-sky { stroke: var(--sky); } .fig .ah.f-gold { stroke: var(--gold); }
+.fig .f-node { fill: var(--surface); stroke: var(--rule); stroke-width: 1.2; }
+.fig.is-weak .f-gold.f-wire { opacity: .18; }
+.fig.is-weak .f-gold-t { opacity: .4; }
+.fig .f-mark { cursor: pointer; opacity: 0; transition: opacity .5s; outline: none; }
+.fig .f-mark.is-in { opacity: 1; }
+.fig .f-mark .f-dot { stroke-width: 2; transition: r .2s; }
+.fig .is-law .f-dot { fill: var(--gold-t); stroke: var(--gold); }
+.fig .is-book .f-dot { fill: var(--sky-t); stroke: var(--sky); }
+.fig .f-leader { stroke: var(--rule); stroke-width: 1.2; }
+.fig .f-hit { fill: transparent; }
+.fig .f-mark.is-on .f-dot, .fig .f-mark:focus-visible .f-dot { r: 7.5; }
+.fig .f-mark.is-on .f-ttl, .fig .f-mark:focus-visible .f-ttl { fill: var(--c, var(--ink)); }
+.fig .is-law { --c: var(--gold); } .fig .is-book { --c: var(--sky); }
+.fig .f-mark:focus-visible .f-leader { stroke: var(--c); }
+@media (prefers-reduced-motion: reduce) { .fig .f-mark { transition: none; } }

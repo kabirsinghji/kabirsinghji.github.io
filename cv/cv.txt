@@ -18,7 +18,7 @@ Albert Dorman Honors College and Jordan Hu College of Sciences and Liberal Arts,
   Biomedical: Applications in Healthcare; Biochemistry; Cell & Molecular Biology
   Medicine & society: Biomedical Ethics; Health, Justice, & Capitalism; Medical Sociology; Medicine & Law in Modern History
   Quantitative: Applied Numerical Methods; Differential Equations (ordinary & partial); Linear Algebra; Mathematical Modeling; Stochastic & Discrete Models in Biology
-  Independent study: Hawkes process model of amyloid nucleation (Dr James Maclaurin); simplifying & modeling biophysical neuron systems (Dr Horacio Rotstein, in progress); American medicine & end-of-life care (Dr Stephen Pemberton, in progress); intellectual history in the early modern Khalsa (Harvard Sikh Center & Satnam Singh, in progress)
+  Independent study: Hawkes process model of amyloid nucleation (Dr James Maclaurin); signal transduction pathways in neurological disease (Dr Horacio Rotstein, in progress); American medicine & end-of-life care (Dr Stephen Pemberton, in progress); intellectual history in the early modern Khalsa (Harvard Sikh Center & Satnam Singh, in progress)
 
 Exchange semester (Global E3), Lund University, Sweden | Jan 2025 – Jun 2025
 Faculty of Engineering (LTH); 44 ECTS | Lund, Sweden
@@ -48,7 +48,7 @@ PI: Prof Stefano Angioletti-Uberti, Department of Materials, Imperial College Lo
 
 Undergraduate Researcher, Mathematical Neuroscience | Sep 2026 – Present
 PI: Dr Horacio Rotstein, NJIT | Newark, NJ, USA
-  - Derive reduced mathematical descriptions of biophysical neuronal models and characterize the dynamical properties retained by the reduced systems.
+  - Model signal transduction pathways in neurological disease as dynamical systems, beginning with GRK/beta-arrestin receptor desensitization as a negative-feedback adaptation motif.
 
 Undergraduate Researcher, Mathematical Modeling | Oct 2025 – May 2026
 PI: Dr James Maclaurin, NJIT | Newark, NJ, USA
@@ -66,7 +66,8 @@ Harvard Sikh Center; mentor: Satnam Singh | Remote
 
 Undergraduate Researcher, History of Medicine and Bioethics | Sep 2026 – Present
 PI: Dr Stephen Pemberton, NJIT | Newark, NJ, USA
-  - Synthesize legal, clinical and cultural developments in American end-of-life care from the late twentieth century to today; develop scholarship intended for submission to a peer-reviewed humanities journal.
+  - Trace the legal history of end-of-life decision-making from In re Quinlan (1976) to Cruzan v. Director, Missouri Department of Health (1990).
+  - Compare how three physician-authors, Sherwin Nuland, Atul Gawande and Haider Warraich, account for dying in modern American medicine; develop scholarship intended for submission to a peer-reviewed humanities journal.
 
 Undergraduate Researcher, Digital History and Urban Studies | Jan 2024 – May 2024, Jan 2026 – May 2026
 PI: Dr Louis Hamilton, NJIT; field research in Rome and Florence | Newark, NJ, USA / Italy

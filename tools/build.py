@@ -853,7 +853,7 @@ def linkedin_section(cv):
 
 
 # ─────────────────────────────────────────────────────────── page parts ──
-CSS_V = 14
+CSS_V = 15
 # the menu, in order; { } (pager.js) steps through the same pages with Home in front
 NAV = [("cv.html", "CV"), ("science.html", "Science"), ("history.html", "History"), ("about.html", "About")]
 INTRO = ("I design therapeutic peptides with KumarLab, work on computational protein design at Imperial College London, "
