@@ -972,9 +972,9 @@ def build_diptych(cv):
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kabir Singh — the Diptych homepage</title>
 <link rel="canonical" href="https://kabirsinghji.github.io/home-diptych.html">
-<meta name="description" content="Kabir Singh — Mathematical Biology, NJIT. Computational protein and peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.">
+<meta name="description" content="Kabir Singh — Mathematical Biology, NJIT. Computational protein and peptide design, MAPK/ERK pathway modelling, the history of medicine, and early modern Sikh history.">
 <meta property="og:title" content="Kabir Singh">
-<meta property="og:description" content="Mathematical Biology at NJIT. Computational protein and peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.">
+<meta property="og:description" content="Mathematical Biology at NJIT. Computational protein and peptide design, MAPK/ERK pathway modelling, the history of medicine, and early modern Sikh history.">
 <meta property="og:url" content="https://kabirsinghji.github.io/">
 <meta property="og:image" content="https://kabirsinghji.github.io/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -998,7 +998,7 @@ def build_diptych(cv):
   "name": "Kabir Singh",
   "url": "https://kabirsinghji.github.io/",
   "image": "https://kabirsinghji.github.io/photo.webp",
-  "description": "Mathematical Biology at NJIT. Computational protein and peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.",
+  "description": "Mathematical Biology at NJIT. Computational protein and peptide design, MAPK/ERK pathway modelling, the history of medicine, and early modern Sikh history.",
   "affiliation": {{ "@type": "CollegeOrUniversity", "name": "New Jersey Institute of Technology", "url": "https://www.njit.edu/" }},
   "sameAs": ["https://www.linkedin.com/in/kabir-singh-ji", "https://orcid.org/0009-0002-5159-5879", "https://scholar.google.com/citations?user=-RpJmPsAAAAJ"]
 }}
@@ -1188,7 +1188,7 @@ def build_index(cv):
 <!-- GENERATED from data/cv.json by tools/build.py. Edit through admin.html; changes made here are overwritten on the next build. -->
 <html lang="en">
 <head>
-{page_head("Kabir Singh", "", "Kabir Singh — aspiring physician-scientist, Mathematical Biology at NJIT. Computational peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.", top=f'''
+{page_head("Kabir Singh", "", "Kabir Singh — aspiring physician-scientist, Mathematical Biology at NJIT. Computational peptide design, MAPK/ERK pathway modelling, the history of medicine, and early modern Sikh history.", top=f'''
 <script src="arrival.js?v={ARRIVAL_JS_V}"></script>''')}
 <script type="application/ld+json">
 {{
@@ -1197,7 +1197,7 @@ def build_index(cv):
   "name": "Kabir Singh",
   "url": "https://kabirsinghji.github.io/",
   "image": "https://kabirsinghji.github.io/photo.webp",
-  "description": "Mathematical Biology at NJIT. Computational protein and peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.",
+  "description": "Mathematical Biology at NJIT. Computational protein and peptide design, MAPK/ERK pathway modelling, the history of medicine, and early modern Sikh history.",
   "affiliation": {{ "@type": "CollegeOrUniversity", "name": "New Jersey Institute of Technology", "url": "https://www.njit.edu/" }},
   "sameAs": ["https://www.linkedin.com/in/kabir-singh-ji", "{ORCID}", "{SCHOLAR}"]
 }}
@@ -1442,7 +1442,7 @@ def design_page(design, body_class, body):
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kabir Singh</title>
 <link rel="canonical" href="https://kabirsinghji.github.io/">
-<meta name="description" content="Kabir Singh — Mathematical Biology, NJIT. Computational protein and peptide design, mathematical neuroscience, the history of medicine, and early modern Sikh history.">
+<meta name="description" content="Kabir Singh — Mathematical Biology, NJIT. Computational protein and peptide design, MAPK/ERK pathway modelling, the history of medicine, and early modern Sikh history.">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">

@@ -68,7 +68,7 @@
                 },
                 {
                   "label": "Independent study",
-                  "text": "Hawkes process model of amyloid nucleation (Dr James Maclaurin); **signal transduction pathways in neurological disease** (Dr Horacio Rotstein, in progress); American medicine & end-of-life care (Dr Stephen Pemberton, in progress); intellectual history in the early modern Khalsa (Harvard Sikh Center & Satnam Singh, in progress)"
+                  "text": "Hawkes process model of amyloid nucleation (Dr James Maclaurin); **simplifying & modeling the MAPK/ERK pathway for therapeutic intervention** (Dr Horacio Rotstein, in progress); American medicine & end-of-life care (Dr Stephen Pemberton, in progress); intellectual history in the early modern Khalsa (Harvard Sikh Center & Satnam Singh, in progress)"
                 }
               ],
               "short": "NJIT Honors College",
@@ -198,18 +198,18 @@
             },
             {
               "id": "mathematical-neuroscience",
-              "heading": "Undergraduate Researcher, Mathematical Neuroscience",
+              "heading": "Undergraduate Researcher, Systems Biology",
               "org": "PI: Dr Horacio Rotstein, NJIT",
               "location": "Newark, NJ, USA",
               "dates": "Sep 2026 – Present",
               "bullets": [
                 {
-                  "text": "Model signal transduction pathways in neurological disease as dynamical systems, beginning with GRK/beta-arrestin receptor desensitization as a negative-feedback adaptation motif.",
+                  "text": "Simplify and model the MAPK/ERK (Ras-Raf-MEK-ERK) signaling pathway in cancer as a dynamical system, to identify points for therapeutic intervention.",
                   "show": "both"
                 }
               ],
-              "prompt": "Which neuron models, reduction method and validation comparison?",
-              "short": "Mathematical neuroscience",
+              "prompt": "Which reduction of the MAPK/ERK cascade, what it predicts, and how it is validated?",
+              "short": "MAPK/ERK pathway modeling",
               "tags": [
                 "research",
                 "neuroscience-modelling",
@@ -2055,7 +2055,7 @@
       },
       {
         "field": "science",
-        "title": "Reducing biophysical neuron models",
+        "title": "Modelling the MAPK/ERK pathway in cancer",
         "years": "2026–present",
         "status": "Ongoing",
         "href": "science.html"

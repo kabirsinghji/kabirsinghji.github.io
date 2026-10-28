@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scientific Research — Kabir Singh</title>
 <link rel="canonical" href="https://kabirsinghji.github.io/science.html">
-<meta name="description" content="Computational protein and peptide design, signalling pathways in neurological disease, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
+<meta name="description" content="Computational protein and peptide design, modelling the MAPK/ERK pathway in cancer, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
 <meta property="og:title" content="Scientific Research — Kabir Singh">
-<meta property="og:description" content="Computational protein and peptide design, signalling pathways in neurological disease, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
+<meta property="og:description" content="Computational protein and peptide design, modelling the MAPK/ERK pathway in cancer, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
 <meta property="og:url" content="https://kabirsinghji.github.io/science.html">
 <meta property="og:image" content="https://kabirsinghji.github.io/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -23,7 +23,7 @@
 <script src="peek.js?v=9" defer></script>
 <script src="beat.js?v=2" defer></script>
 <script src="antibody.js?v=1" defer></script>
-<script src="figs.js?v=1" defer></script>
+<script src="figs.js?v=2" defer></script>
 <script src="pager.js?v=1" defer></script>
 </head>
 <body>
@@ -176,27 +176,31 @@
   </section>
 
   <section class="project">
-    <h2>Signalling pathways in neurological disease</h2>
+    <h2>Modelling the MAPK/ERK pathway in cancer</h2>
     <p class="project-meta"><img class="mark" src="logos/njit.webp" alt="" width="264" height="263">NJIT &middot; PI: Dr. Horacio Rotstein &middot; 2026&ndash;present</p>
     <dl class="qa">
       <dt>Question</dt>
-      <dd>Neurological disease often runs through signal transduction pathways
-          that no longer turn themselves down. What do those pathways look like
-          as dynamical systems, and what changes when their feedback fails?</dd>
+      <dd>The MAPK/ERK pathway relays growth signals from the cell surface to the
+          nucleus, and in many cancers a mutation along it leaves that signal
+          switched on. Can the pathway be simplified into a model small enough to
+          reason about, yet faithful enough to show where a therapy should
+          intervene?</dd>
       <dt>Approach</dt>
-      <dd>Mathematical models of signalling pathways, starting with receptor
-          desensitization: GRKs and &beta;-arrestin switch a receptor off while its
-          signal is still arriving, a negative-feedback loop that lets a neuron
-          adapt to a sustained input.</dd>
+      <dd>Simplifying and modelling the Ras&ndash;Raf&ndash;MEK&ndash;ERK cascade as a
+          dynamical system, with its feedback loops, for therapeutic
+          intervention.</dd>
       <dt>Where it stands</dt>
       <dd>Independent study, fall 2026.</dd>
     </dl>
-    <figure class="fig" id="fig-adapt" data-fig="adapt">
+    <figure class="fig" id="fig-mapk" data-fig="mapk">
       <div class="fig-stage"></div>
       <figcaption>
-        <p class="fig-state" aria-live="polite">Intact: the response peaks, then desensitization brings it down.</p>
-        <button type="button" class="fig-btn" aria-pressed="false">[ feedback intact &middot; weaken it ]</button>
-        <span><span class="k" style="--c: var(--sky)">signal</span> &nbsp;<span class="k" style="--c: var(--gold)">feedback</span> &nbsp;<span class="k" style="--c: var(--faint)">the other case</span></span>
+        <p class="fig-state" aria-live="polite">Normal: a brief growth signal gives a brief pulse of ERK, and ERK&rsquo;s feedback onto Raf keeps it in check.</p>
+        <span class="fig-btns">
+          <button type="button" class="fig-btn" data-k="mut" aria-pressed="false">[ Raf normal &middot; mutate it ]</button>
+          <button type="button" class="fig-btn" data-k="inh" aria-pressed="false">[ no drug &middot; add a MEK inhibitor ]</button>
+        </span>
+        <span><span class="k" style="--c: var(--sky)">signal</span> &nbsp;<span class="k" style="--c: var(--gold)">feedback</span> &nbsp;<span class="k" style="--c: var(--faint)">normal, for comparison</span></span>
         <span>A toy model, not data</span>
       </figcaption>
     </figure>

@@ -743,8 +743,10 @@ a.d-row:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
 .fig .ah { fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .fig .ah.f-sky { stroke: var(--sky); } .fig .ah.f-gold { stroke: var(--gold); }
 .fig .f-node { fill: var(--surface); stroke: var(--rule); stroke-width: 1.2; }
-.fig.is-weak .f-gold.f-wire { opacity: .18; }
-.fig.is-weak .f-gold-t { opacity: .4; }
+.fig .f-tag { transition: opacity .3s; }
+.fig .f-strike { stroke: var(--gold); stroke-width: 2; stroke-linecap: round; }
+.fig .f-n.is-hot .f-node { fill: var(--gold-t); stroke: var(--gold); }
+.fig-btns { display: flex; flex-wrap: wrap; gap: 0 1.4rem; }
 .fig .f-mark { cursor: pointer; opacity: 0; transition: opacity .5s; outline: none; }
 .fig .f-mark.is-in { opacity: 1; }
 .fig .f-mark .f-dot { stroke-width: 2; transition: r .2s; }
