@@ -388,6 +388,7 @@ def build_txt(cv, prof):
 DOCX_FONT = "Charter"
 TW = 9866                       # text width in twentieths of a point: A4 (11906) less two 1.8 cm margins
 _RUN_TAGS = re.compile(r"(<strong>|</strong>|<em>|</em>|<sup>|</sup>|<sub>|</sub>|<a href=\"[^\"]*\">|</a>)")
+_DOCX_LINKS = {}                # url -> relationship id, for the document being written (build_docx resets it)
 
 
 def _x(s):
@@ -396,7 +397,7 @@ def _x(s):
 
 def _runs(text, bold=False, italic=False, size=None, caps=False, color=None):
     """Markup -> <w:r> runs. bold/italic set the base style; **x** and *x* inside toggle on top of it."""
-    out, b, i, va = [], 0, 0, None
+    out, b, i, va, link = [], 0, 0, None, None
     for part in _RUN_TAGS.split(to_html(text or "")):
         if part in ("<strong>", "</strong>"):
             b = part == "<strong>"
@@ -406,8 +407,13 @@ def _runs(text, bold=False, italic=False, size=None, caps=False, color=None):
             va = "superscript" if part == "<sup>" else "subscript"
         elif part in ("</sup>", "</sub>"):
             va = None
-        elif part.startswith("<a ") or part == "</a>":
-            pass
+        elif part.startswith("<a "):
+            link = (html.unescape(part[9:-2]), len(out))
+        elif part == "</a>":
+            if link:                     # wrap the link's runs so they click through to it
+                rid = _DOCX_LINKS.setdefault(link[0], "rIdLink%d" % (len(_DOCX_LINKS) + 1))
+                out[link[1]:] = ['<w:hyperlink r:id="%s" w:history="1">%s</w:hyperlink>' % (rid, "".join(out[link[1]:]))]
+            link = None
         elif part:
             pr = ""
             if bold or b:
@@ -464,6 +470,7 @@ def _rows(lefts, rights, before):
 def build_docx(cv, prof, path):
     import zipfile
     m = cv["meta"]
+    _DOCX_LINKS.clear()
     P = [_p(_runs(m.get("name", ""), bold=True, size=34), align="center", after=60),
          _p(_runs(" · ".join(t for t, u in contacts(m)), size=19), align="center")]
     obj = objective(cv, prof)
@@ -537,7 +544,9 @@ def build_docx(cv, prof, path):
     rels = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
             '<Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
             '<Relationship Id="rIdNumbering" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>'
-            '<Relationship Id="rIdFooter" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>'
+            '<Relationship Id="rIdFooter" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>' +
+            "".join('<Relationship Id="%s" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="%s" TargetMode="External"/>'
+                    % (rid, _x(url)) for url, rid in _DOCX_LINKS.items()) +
             '</Relationships>')
     types = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
              '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>'
