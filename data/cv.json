@@ -1940,8 +1940,24 @@
         {
           "text": "National Institutes of Health, Introduction to the Principles and Practice of Clinical Research (IPPCR), certificate of completion",
           "show": "both",
-          "tags": [],
-          "id": "national-institutes-of-health-introduction-to-th"
+          "tags": [
+            "clinical-care",
+            "medicine-emergency-care",
+            "history-of-medicine-ethics",
+            "analysis-research",
+            "client-facing",
+            "commercial-awareness",
+            "interpersonal",
+            "leadership",
+            "planning-organisation",
+            "problem-solving-creativity",
+            "teamwork",
+            "statistical-mechanics",
+            "field-research",
+            "peer-review"
+          ],
+          "id": "national-institutes-of-health-introduction-to-th",
+          "short": "NIH IPPCR"
         },
         {
           "text": "American College of Surgeons Stop the Bleed certification and instructor licence",
