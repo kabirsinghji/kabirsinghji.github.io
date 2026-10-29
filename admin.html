@@ -87,7 +87,7 @@ body { font-size: 15px; }
 .f small { font-size: .76rem; color: var(--faint); }
 .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 12rem); gap: .8rem; }
 .row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
-input[type="text"], input[type="password"], input[type="number"], textarea, select {
+input[type="text"], input[type="password"], input[type="number"], input[type="url"], input[type="email"], textarea, select {
   font: inherit; font-size: .92rem; width: 100%; padding: .5rem .6rem; border-radius: 6px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); }
 textarea { resize: vertical; min-height: 2.6rem; line-height: 1.45; field-sizing: content; }
 input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outline-offset: 0; border-color: transparent; }
@@ -512,7 +512,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     input.addEventListener(o.select ? 'change' : 'input', function () {
       var v = input.value;
       if (o.type === 'number') { if (v === '') delete obj[key]; else obj[key] = Number(v); }
-      else if (o.select && o.dropEmpty && v === '') delete obj[key];
+      else if (o.dropEmpty && v === '') delete obj[key];
       else if (o.select && o.dropDefault && v === o.select[0][0]) delete obj[key];
       else obj[key] = v;
       if (pv) pv.innerHTML = preview(v);
@@ -595,6 +595,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       field('Location', e, 'location', { hint: 'Right-hand side, under the dates' }),
       field('Note', e, 'note', { area: true, preview: true, hint: 'After a dash on one-line entries' })
     ]));
+    card.appendChild(field('Link', e, 'url', { type: 'url', dropEmpty: true, hint: 'Paste an address to make the title clickable on the PDF, Word file and site' }));
     card.appendChild(bulletsEditor(e, rerender));
     card.appendChild(tagBlock(e));
     var adv = el('details', { class: 'adv' }, [el('summary', { text: 'More options' })]);

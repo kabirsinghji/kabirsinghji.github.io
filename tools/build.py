@@ -222,9 +222,19 @@ def contacts(m):
     return out
 
 
+def linked(e):
+    """The heading, made a link to the entry's "url" when it has one (and isn't already linked)."""
+    h, u = e["heading"], (e.get("url") or "").strip()
+    if not u or "[" in h or "]" in h:
+        return h
+    if not re.match(r"(https?:|mailto:)", u):
+        u = "https://" + u
+    return "[%s](%s)" % (h, u.replace(" ", "%20").replace(")", "%29"))
+
+
 def line_text(e):
     """One-line entries: **title**, organisation – note (markup)."""
-    s = "**%s**" % e["heading"]
+    s = "**%s**" % linked(e)
     if e.get("org"):
         s += ", " + e["org"]
     if e.get("note"):
@@ -285,7 +295,7 @@ def build_tex(cv, prof):
             elif k == "head":
                 e = b[1]
                 d = date_lines(e)
-                w(r"\headentry{%s}{%s}{%s}{%s}" % (to_tex(e["heading"]), to_tex(d[0]) if d else "", to_tex(e.get("org", "")),
+                w(r"\headentry{%s}{%s}{%s}{%s}" % (to_tex(linked(e)), to_tex(d[0]) if d else "", to_tex(e.get("org", "")),
                                                     _tex_right(d[1:] + [e.get("location", "")])))
             elif k == "line":
                 w(r"\lineentry{%s}{%s}" % (to_tex(line_text(b[1])), _tex_right(date_lines(b[1]))))
@@ -352,7 +362,7 @@ def build_txt(cv, prof):
                 L += ["", _txt(b[1]), "-" * len(_txt(b[1]))]
             elif k == "head":
                 e = b[1]
-                L += ["", _txt(e["heading"]) + (" | " + _txt_dates(e) if e.get("dates") else ""),
+                L += ["", _txt(linked(e)) + (" | " + _txt_dates(e) if e.get("dates") else ""),
                       _txt(e.get("org", "")) + (" | " + _txt(e["location"]) if e.get("location") else "")]
             elif k == "line":
                 L += ["", _txt(line_text(b[1])) + (" | " + _txt_dates(b[1]) if b[1].get("dates") else "")]
@@ -487,7 +497,7 @@ def build_docx(cv, prof, path):
             elif k == "head":
                 e = b[1]
                 d = date_lines(e)
-                P += _rows([_runs(e["heading"], bold=True), _runs(e.get("org", ""))], d + ([e["location"]] if e.get("location") else []), 80)
+                P += _rows([_runs(linked(e), bold=True), _runs(e.get("org", ""))], d + ([e["location"]] if e.get("location") else []), 80)
             elif k == "line":
                 P += _rows([_runs(line_text(b[1]))], date_lines(b[1]), 80)
             elif k == "bullets":
@@ -1299,7 +1309,7 @@ def cv_sections(cv):
                     extra = "<ul>" + "".join(f"<li>{b}</li>" for b in bl) + "</ul>" if bl else ""
                     sub = " – ".join(to_html(x) for x in (e.get("org"), e.get("note")) if x)
                     sub = f' <span class="grey">{sub}</span>' if sub else ""
-                    items.append(d_row(site_dates(e.get("dates")), f"<b>{to_html(e['heading'], strip_bold=True)}</b>{sub}", extra=extra))
+                    items.append(d_row(site_dates(e.get("dates")), f"<b>{to_html(linked(e), strip_bold=True)}</b>{sub}", extra=extra))
         elif t == "publications":
             items = [pub_row(g, p) for g, p in published(cv)]
         elif t == "presentations":

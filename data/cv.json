@@ -1,5 +1,5 @@
 {
-  "_readme": "Single source for the CV PDF (cv/cv.tex) and the homepage (index.html). Edit it through admin.html; a GitHub Action rebuilds both on every save. Markup: **bold**, *italic*, [text](https://link), ^{nd} for superscript. In dates, a new line becomes a line break on the PDF. show: both | cv | site. Entries: heading (bold title), org (second line, or after a comma on one-line entries), location (right-hand side, under the dates), note (after an en dash on one-line entries), dates, bullets, table (label/text rows), prompt (a note to yourself, printed only by a profile with prompts on), id (used by profiles). _{d} is a subscript. profiles: the CVs built from this file. The one with id \"cv\" is cv/cv.pdf, .docx and .txt; each other one is cv/cv-ID.*. A profile takes every entry (or, if it lists tags, every entry with one of those tags) from its sections, plus \"include\" ids, minus \"exclude\" ids; descriptions: false drops bullets and tables.",
+  "_readme": "Single source for the CV PDF (cv/cv.tex) and the homepage (index.html). Edit it through admin.html; a GitHub Action rebuilds both on every save. Markup: **bold**, *italic*, [text](https://link), ^{nd} for superscript. In dates, a new line becomes a line break on the PDF. show: both | cv | site. Entries: heading (bold title), org (second line, or after a comma on one-line entries), location (right-hand side, under the dates), note (after an en dash on one-line entries), url (makes the heading a link), dates, bullets, table (label/text rows), prompt (a note to yourself, printed only by a profile with prompts on), id (used by profiles). _{d} is a subscript. profiles: the CVs built from this file. The one with id \"cv\" is cv/cv.pdf, .docx and .txt; each other one is cv/cv-ID.*. A profile takes every entry (or, if it lists tags, every entry with one of those tags) from its sections, plus \"include\" ids, minus \"exclude\" ids; descriptions: false drops bullets and tables.",
   "meta": {
     "name": "Kabir Singh",
     "location": "New Jersey",
@@ -1227,7 +1227,7 @@
             },
             {
               "id": "student-researchers-feature",
-              "heading": "[Article feature: ‘Undergraduate Student Researchers on Campus’](https://njitvector.com/19044/features/undergraduate-student-researchers-on-campus/)",
+              "heading": "Article feature: ‘Undergraduate Student Researchers on Campus’",
               "dates": "2024",
               "bullets": [
                 {
@@ -1242,7 +1242,8 @@
                 "research-culture-publishing",
                 "written-communication",
                 "interpersonal"
-              ]
+              ],
+              "url": "https://njitvector.com/19044/features/undergraduate-student-researchers-on-campus/"
             },
             {
               "id": "pymol-peptide-design-lecture",
