@@ -1,6 +1,7 @@
 /* The welcome. Arriving at a homepage from outside the site, a visitor gets a short, quiet one:
-   the name on a dark screen, letters rising, a thin line with light passing along it, then the page
-   fades up (about two seconds, sooner if they press a key, click or scroll).
+   a dark screen, Ustad Mansur's chameleon (painted for Jahangir, c. 1612; cut out as a white mark in
+   arrival/chameleon.webp) rising into place over a thin line with light passing along it, then the
+   page fades up (about two seconds, sooner if they press a key, click or scroll).
    The three long intros play only when asked for, from the long way round (curious.html):
    - procession: figures cut from Mughal, Persian and Sikh paintings parade before the walls of
      Surat (arrival/procession.js)
@@ -54,15 +55,12 @@
     '#arv.arv-q{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;' +
     'gap:.9rem;background:#16130F;color:#EEE7DA;transition:opacity .7s ease,visibility 0s linear .7s}' +
     '#arv.arv-q.q-out{opacity:0;visibility:hidden}' +
-    '.q-w{margin:0;font:400 clamp(1.8rem,4.6vw,2.7rem)/1.1 Newsreader,Georgia,serif;letter-spacing:.05em;white-space:nowrap}' +
-    '.q-w span{display:inline-block;opacity:0;transform:translateY(14px);animation:qIn 1.1s cubic-bezier(.2,.9,.3,1) forwards;' +
-    'animation-delay:calc(var(--i) * 65ms)}' +
-    '.q-w .sp{width:.32em}' +
-    '.q-pa{margin:0;font:400 1.05rem/1.5 "Noto Serif Gurmukhi",serif;color:#F0957C;opacity:0;animation:qFade .9s ease .8s forwards}' +
+    '.q-mark{display:block;width:clamp(120px,22vw,190px);height:auto;opacity:0;transform:translateY(10px);' +
+    'animation:qIn .9s cubic-bezier(.16,1,.3,1) .1s forwards}' +
     '.q-bar{position:relative;display:block;width:min(240px,44vw);height:1px;margin-top:1.4rem;background:rgba(238,231,218,.14);overflow:hidden}' +
     '.q-bar i{position:absolute;left:0;top:0;width:35%;height:100%;' +
     'background:linear-gradient(90deg,rgba(238,231,218,0),rgba(238,231,218,.85),rgba(238,231,218,0));animation:qSlide 2s cubic-bezier(.4,0,.2,1) infinite}' +
-    '@keyframes qIn{60%,100%{opacity:1;transform:none}}@keyframes qFade{to{opacity:1}}' +
+    '@keyframes qIn{to{opacity:1;transform:none}}' +
     '@keyframes qSlide{from{transform:translateX(-120%)}to{transform:translateX(360%)}}';
   document.head.appendChild(style);
 
@@ -101,10 +99,9 @@
   }
   // the quiet welcome: ends once the page has loaded and the name has had time to settle
   function quiet(end) {
-    var o = document.createElement('div'), name = 'Kabir Singh', w = '', t0 = performance.now(), over = false;
-    for (var i = 0; i < name.length; i++) w += name[i] === ' ' ? '<span class="sp"></span>' : '<span style="--i:' + i + '">' + name[i] + '</span>';
+    var o = document.createElement('div'), t0 = performance.now(), over = false;
     o.id = 'arv'; o.className = 'arv-q'; o.setAttribute('aria-hidden', 'true');
-    o.innerHTML = '<p class="q-w">' + w + '</p><p class="q-pa" lang="pa">\u0a15\u0a2c\u0a40\u0a30 \u0a38\u0a3f\u0a70\u0a18</p><span class="q-bar"><i></i></span>';
+    o.innerHTML = '<img class="q-mark" src="' + base + 'arrival/chameleon.webp" alt="" width="720" height="387"><span class="q-bar"><i></i></span>';
     document.body.appendChild(o);
     A.started = true;
     function finish() {
@@ -143,7 +140,7 @@
   var kind = KINDS.indexOf(forced) >= 0 || forced === 'quiet' ? forced : forced !== 'off' && eligible() ? 'quiet' : null;
   if (kind) {
     root.classList.add('arv-cover');
-    if (kind === 'quiet') root.classList.add('arv-q');
+    if (kind === 'quiet') { root.classList.add('arv-q'); new Image().src = base + 'arrival/chameleon.webp'; }
     cover = setTimeout(done, 4000);                // in case the page never finishes loading
     if (kind === 'procession') ['arrival/fort.jpg', 'arrival/cast.webp', 'arrival/welcome.webp'].forEach(function (f) { new Image().src = base + f; });
     document.addEventListener('DOMContentLoaded', function () {
