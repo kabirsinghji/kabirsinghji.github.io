@@ -1403,7 +1403,7 @@ def build_curious(cv):
     """curious.html: the long way round. The intros, the archived homepages, and the things that move."""
     m = cv["meta"]
     intros = '<div class="cards3">' + "".join(f'''<a class="cardx" href="./?arrival={k}"><img src="curious/intro-{k}.webp" alt="A frame from the {n.lower()} intro" width="640" height="400" loading="lazy"><span class="b"><span class="n"><span>{i + 1:02d} / 03</span><span>[play &rarr;]</span></span><span class="t">{n}</span><span class="p">{d}</span></span></a>''' for i, (k, n, d) in enumerate(INTROS)) + "</div>"
-    intros = '<p class="lede" style="margin:0 0 1.4rem"><span>One of the three plays, at random, when you arrive from outside the site. Any key, click or scroll skips it. These links play one on demand.</span></p>' + intros
+    intros = '<p class="lede" style="margin:0 0 1.4rem"><span>These three play only from here. Arriving from outside the site, you get <a href="./?arrival=quiet">a quieter welcome</a> instead. Any key, click or scroll skips either.</span></p>' + intros
     books = "".join(f'''<div class="book" style="--bk:{bg};--bf:{fg}"><button class="book-spine" type="button" aria-expanded="false" aria-label="{n}"><span class="n">{i + 1:02d}</span><span class="t">{n}</span></button>
       <div class="book-cover"><div><p class="n">DESIGN {i + 1:02d} / 05</p><h3>{n}</h3><p>{d}</p><p><a href="{href}">[open it &rarr;]</a></p></div><img src="curious/{href.replace(".html", ".webp")}" alt="The {n} homepage design" width="560" height="350" loading="lazy"></div></div>''' for i, (href, n, bg, fg, d) in enumerate(SHELF))
     shelf = f'''<p class="lede" style="margin:0 0 1.4rem"><span>The site has had five homepages. Run your cursor along the shelf.</span></p>
@@ -1443,7 +1443,7 @@ def build_curious(cv):
 HOME_JS_V = 3
 HOME_CSS_V = 1
 # arrival.js plays a short welcome on a visitor's first arrival (arrival/: the procession and the fold)
-ARRIVAL_JS_V = 1
+ARRIVAL_JS_V = 2
 ORCID = "https://orcid.org/0009-0002-5159-5879"
 SCHOLAR = "https://scholar.google.com/citations?user=-RpJmPsAAAAJ"
 PA_DIGITS = str.maketrans("0123456789", "੦੧੨੩੪੫੬੭੮੯")

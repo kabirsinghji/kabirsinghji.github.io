@@ -1,20 +1,20 @@
-/* The intro: a few seconds of welcome when someone arrives at the homepage, then out of the way.
-   One of three, picked at random each time:
+/* The welcome. Arriving at a homepage from outside the site, a visitor gets a short, quiet one:
+   the name on a dark screen, letters rising, a thin line with light passing along it, then the page
+   fades up (about two seconds, sooner if they press a key, click or scroll).
+   The three long intros play only when asked for, from the long way round (curious.html):
    - procession: figures cut from Mughal, Persian and Sikh paintings parade before the walls of
      Surat (arrival/procession.js)
    - unfold: the page threaded along Kabir's antibody structure; a simulation unfolds it and its
      chains settle onto the page (arrival/unfold.js)
    - darbar: a painted court welcome, drawn from scratch (arrival/darbar.js)
-   It plays when the visitor arrives at a homepage from outside the site; not when they come from
-   another page here, reload or go back, follow a link to a #section, or their device asks for
-   reduced motion or reduced data, and never for crawlers. Any key, click, tap or scroll ends it at
-   once, and there is a Skip button. The footer, next to Admin, can play any of the three;
-   ?arrival=procession|unfold|darbar forces one and ?arrival=off none. Loaded in <head> right after
-   home.js, without defer, so it can hide the page before the first paint; the parts that draw are
-   fetched only when an intro will actually play. */
+   The quiet welcome is skipped when the visitor comes from another page here, reloads or goes back,
+   follows a link to a #section, or their device asks for reduced motion or reduced data, and never
+   shown to crawlers. ?arrival=procession|unfold|darbar|quiet forces one and ?arrival=off none.
+   Loaded in <head> without defer, so it can hide the page before the first paint; the long intros
+   are fetched only when one will actually play. */
 (function () {
   'use strict';
-  var KINDS = ['procession', 'unfold', 'darbar'], NAMES = { procession: 'Procession', unfold: 'Protein', darbar: 'Darbar' }, V = 2;
+  var KINDS = ['procession', 'unfold', 'darbar'], V = 2;
   var root = document.documentElement, A = window.KSArrival = window.KSArrival || {};
   var base = (document.currentScript && document.currentScript.src || 'arrival.js').replace(/arrival\.js[^/]*$/, '');
   var params = new URLSearchParams(location.search), forced = params.get('arrival');
@@ -36,7 +36,6 @@
     if (hop && Date.now() - hop[1] < 5000) { ref = hop[0]; how = hop[2] || 'navigate'; }
   } catch (e) {}
 
-  function pick() { return KINDS[Math.floor(Math.random() * KINDS.length)]; }
   function eligible() {
     var outside = !ref || ref.indexOf(location.origin + '/') !== 0;
     return outside && how === 'navigate' && !location.hash && !reduce.matches &&
@@ -49,9 +48,22 @@
     '.arv-skip{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));z-index:2147483001;' +
     'min-height:36px;padding:0 16px;border:1px solid currentColor;border-radius:999px;background:rgba(250,246,236,.92);color:#3E2E16;' +
     'font:600 13px/1 "Hanken Grotesk",system-ui,sans-serif;cursor:pointer}' +
-    '.arv-skip:focus-visible,.arv-intros button:focus-visible{outline:2px solid #2A6FAE;outline-offset:2px}' +
-    '.arv-intros button{margin:0;padding:0;border:0;background:none;font:inherit;color:inherit;text-decoration:underline;' +
-    'text-underline-offset:.15em;cursor:pointer}';
+    '.arv-skip:focus-visible{outline:2px solid #2A6FAE;outline-offset:2px}' +
+    // the quiet welcome
+    'html.arv-q body{background:#16130F!important}' +
+    '#arv.arv-q{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+    'gap:.9rem;background:#16130F;color:#EEE7DA;transition:opacity .7s ease,visibility 0s linear .7s}' +
+    '#arv.arv-q.q-out{opacity:0;visibility:hidden}' +
+    '.q-w{margin:0;font:400 clamp(1.8rem,4.6vw,2.7rem)/1.1 Newsreader,Georgia,serif;letter-spacing:.05em;white-space:nowrap}' +
+    '.q-w span{display:inline-block;opacity:0;transform:translateY(14px);animation:qIn 1.1s cubic-bezier(.2,.9,.3,1) forwards;' +
+    'animation-delay:calc(var(--i) * 65ms)}' +
+    '.q-w .sp{width:.32em}' +
+    '.q-pa{margin:0;font:400 1.05rem/1.5 "Noto Serif Gurmukhi",serif;color:#F0957C;opacity:0;animation:qFade .9s ease .8s forwards}' +
+    '.q-bar{position:relative;display:block;width:min(240px,44vw);height:1px;margin-top:1.4rem;background:rgba(238,231,218,.14);overflow:hidden}' +
+    '.q-bar i{position:absolute;left:0;top:0;width:35%;height:100%;' +
+    'background:linear-gradient(90deg,rgba(238,231,218,0),rgba(238,231,218,.85),rgba(238,231,218,0));animation:qSlide 2s cubic-bezier(.4,0,.2,1) infinite}' +
+    '@keyframes qIn{60%,100%{opacity:1;transform:none}}@keyframes qFade{to{opacity:1}}' +
+    '@keyframes qSlide{from{transform:translateX(-120%)}to{transform:translateX(360%)}}';
   document.head.appendChild(style);
 
   var running = false, skipBtn = null, cover = null;
@@ -60,7 +72,7 @@
     var st = document.createElement('style');
     st.textContent = '*,*::before,*::after{transition:none!important}';
     document.head.appendChild(st);
-    root.classList.remove('arv-cover');
+    root.classList.remove('arv-cover', 'arv-q');
     void document.body.offsetHeight;
     st.remove();
   }
@@ -87,6 +99,27 @@
     s.onerror = done;
     document.head.appendChild(s);
   }
+  // the quiet welcome: ends once the page has loaded and the name has had time to settle
+  function quiet(end) {
+    var o = document.createElement('div'), name = 'Kabir Singh', w = '', t0 = performance.now(), over = false;
+    for (var i = 0; i < name.length; i++) w += name[i] === ' ' ? '<span class="sp"></span>' : '<span style="--i:' + i + '">' + name[i] + '</span>';
+    o.id = 'arv'; o.className = 'arv-q'; o.setAttribute('aria-hidden', 'true');
+    o.innerHTML = '<p class="q-w">' + w + '</p><p class="q-pa" lang="pa">\u0a15\u0a2c\u0a40\u0a30 \u0a38\u0a3f\u0a70\u0a18</p><span class="q-bar"><i></i></span>';
+    document.body.appendChild(o);
+    A.started = true;
+    function finish() {
+      if (over) return; over = true;
+      end();                                            // the page is shown beneath; the screen fades off it
+      requestAnimationFrame(function () {
+        o.classList.add('q-out');
+        setTimeout(function () { o.remove(); }, 800);
+      });
+    }
+    A.skip = finish;
+    function ready() { setTimeout(finish, Math.max(0, 1900 - (performance.now() - t0))); }
+    if (document.readyState === 'complete') ready(); else addEventListener('load', ready);
+    setTimeout(finish, 3200);                           // a slow page still gets shown
+  }
   function play(kind) {
     if (running) return;
     running = true;
@@ -94,6 +127,7 @@
     clearTimeout(cover);
     cover = setTimeout(function () { if (!A.started) { A.cancelled = true; done(); } }, 4000);   // never leave the page hidden
     EVENTS.forEach(function (ev) { addEventListener(ev, onInput, { capture: true, passive: true }); });
+    if (kind === 'quiet') return quiet(done);
     load(kind, function () {
       if (!running) return;
       A.base = base;
@@ -105,16 +139,11 @@
       document.body.appendChild(skipBtn);
     });
   }
-  A.play = function (kind) {
-    if (running) return;
-    scrollTo({ top: 0, left: 0, behavior: 'instant' });    // an intro always lands on the top of the homepage
-    root.classList.add('arv-cover');
-    play(KINDS.indexOf(kind) >= 0 ? kind : pick());
-  };
 
-  var kind = KINDS.indexOf(forced) >= 0 ? forced : forced !== 'off' && eligible() ? pick() : null;
+  var kind = KINDS.indexOf(forced) >= 0 || forced === 'quiet' ? forced : forced !== 'off' && eligible() ? 'quiet' : null;
   if (kind) {
     root.classList.add('arv-cover');
+    if (kind === 'quiet') root.classList.add('arv-q');
     cover = setTimeout(done, 4000);                // in case the page never finishes loading
     if (kind === 'procession') ['arrival/fort.jpg', 'arrival/cast.webp', 'arrival/welcome.webp'].forEach(function (f) { new Image().src = base + f; });
     document.addEventListener('DOMContentLoaded', function () {
@@ -123,22 +152,4 @@
     });
   }
 
-  // "Intro: Procession · Protein · Darbar" in the footer, after the Admin link
-  document.addEventListener('DOMContentLoaded', function () {
-    var admin = document.querySelector('a[href="admin.html"]');
-    if (!admin) return;
-    var span = document.createElement('span');
-    span.className = 'arv-intros';
-    span.appendChild(document.createTextNode(' · Intro: '));
-    KINDS.forEach(function (k, i) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.textContent = NAMES[k];
-      b.title = 'Play the ' + NAMES[k].toLowerCase() + ' intro';
-      b.addEventListener('click', function () { A.play(k); });
-      span.appendChild(b);
-      if (i < KINDS.length - 1) span.appendChild(document.createTextNode(' · '));
-    });
-    admin.parentNode.insertBefore(span, admin.nextSibling);
-  });
 })();
