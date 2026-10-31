@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="admin/linkedin.css?v=2">
 <script src="admin/linkedin.js?v=2" defer></script>
 <link rel="stylesheet" href="admin/profiles.css?v=1">
-<script src="admin/profiles.js?v=1" defer></script>
+<script src="admin/profiles.js?v=2" defer></script>
 <style>
 /* Admin-only styles; tokens and fonts come from style.css */
 body { font-size: 15px; }
@@ -80,6 +80,10 @@ body { font-size: 15px; }
 .group-head .f { flex: 1 1 16rem; }
 .card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: .9rem 1rem 1rem; margin-bottom: .7rem; }
 .card.is-hidden-cv { border-style: dashed; }
+.sub-card { border: 1px dashed var(--rule); border-radius: 8px; padding: .6rem .75rem .7rem; margin: .4rem 0; }
+.photo-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.photo-thumb { max-height: 5.5rem; max-width: 9rem; border-radius: 6px; border: 1px solid var(--rule); object-fit: cover; }
+.photo-wait { font-size: .82rem; color: var(--soft); }
 .card-top { display: flex; align-items: center; gap: .3rem; margin-bottom: .5rem; }
 .card-top .n { font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); flex: 1; }
 .f { display: grid; gap: .25rem; margin-bottom: .6rem; min-width: 0; }
@@ -582,6 +586,92 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     return wrap;
   }
 
+  /* An image picked here, made smaller and committed straight to the public repository (images/cv/…), so the
+     site and the CV build can use it; needs the token. Resolves to the file's path. A photo removed later stays
+     in the repository; only the CV stops pointing at it. */
+  function uploadImage(file, base, type, edge) {
+    var c = cfg();
+    if (!c.token || S.source !== 'github') return Promise.reject(new Error('connect a GitHub token in Settings first; photos are saved straight to the repository'));
+    if (!/^image\//.test(file.type)) return Promise.reject(new Error('that file is not an image'));
+    if (!window.createImageBitmap) return Promise.reject(new Error('this browser cannot resize images'));
+    return createImageBitmap(file).then(function (bmp) {
+      var k = Math.min(1, edge / Math.max(bmp.width, bmp.height));
+      var cnv = document.createElement('canvas');
+      cnv.width = Math.round(bmp.width * k); cnv.height = Math.round(bmp.height * k);
+      var ctx = cnv.getContext('2d');
+      if (type === 'image/jpeg') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cnv.width, cnv.height); }
+      ctx.drawImage(bmp, 0, 0, cnv.width, cnv.height);
+      return new Promise(function (res) { cnv.toBlob(res, type, 0.88); });
+    }).then(function (blob) {
+      if (!blob || blob.type !== type) throw new Error('this browser could not convert the image');
+      return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(String(r.result).split(',')[1]); }; r.onerror = rej; r.readAsDataURL(blob); });
+    }).then(function (b64) {
+      var path = 'images/cv/' + (String(base || 'photo').replace(/[^a-z0-9-]/g, '') || 'photo') + '-' + Math.random().toString(36).slice(2, 8) + (type === 'image/jpeg' ? '.jpg' : '.webp');
+      return gh('/repos/' + c.repo + '/contents/' + path, { method: 'PUT', body: { message: 'Add CV photo ' + path, content: b64, branch: c.branch } })
+        .then(function () { return path; });
+    });
+  }
+  var localPics = {};     /* path -> the picked file, shown until GitHub Pages publishes it */
+  function photoBlock(obj, key, o, rerender) {
+    var box = el('div', { class: 'f photo-f' }, [el('span', { text: o.label })]);
+    var row = el('div', { class: 'photo-row' });
+    if (obj[key]) {
+      var img = el('img', { class: 'photo-thumb', alt: '' });
+      img.onerror = function () { img.replaceWith(el('span', { class: 'photo-wait', text: 'Saved; it shows here once the site publishes it.' })); };
+      img.src = localPics[obj[key]] || obj[key];
+      row.appendChild(img);
+    }
+    var pick = el('input', { type: 'file', accept: 'image/*', hidden: '', 'aria-label': o.label });
+    var btn = el('button', { type: 'button', class: 'btn btn--small', text: obj[key] ? 'Replace' : '+ Add photo' });
+    btn.onclick = function () { pick.click(); };
+    pick.onchange = function () {
+      var f = pick.files && pick.files[0]; if (!f) return;
+      btn.disabled = true; btn.textContent = 'Uploading…';
+      uploadImage(f, o.base, o.type, o.edge).then(function (path) {
+        localPics[path] = URL.createObjectURL(f); obj[key] = path; syncBar(); rerender();
+        note('ok', 'Photo uploaded. <b>Save &amp; publish</b> to put it on the ' + esc(o.where) + '.');
+      }).catch(function (e) {
+        btn.disabled = false; btn.textContent = obj[key] ? 'Replace' : '+ Add photo';
+        note('err', 'The photo was not uploaded: ' + esc(e.message) + '.');
+      });
+    };
+    row.appendChild(btn); row.appendChild(pick);
+    if (obj[key]) row.appendChild(el('button', { type: 'button', class: 'btn btn--small btn--danger', text: 'Remove', onclick: function () {
+      delete obj[key]; if (o.alt) delete obj[o.alt]; syncBar(); rerender(); } }));
+    box.appendChild(row);
+    if (o.hint) box.appendChild(el('small', { text: o.hint }));
+    if (obj[key] && o.alt) box.appendChild(field('Caption', obj, o.alt, { dropEmpty: true, hint: 'Under the photo; also read out by screen readers' }));
+    return box;
+  }
+  function projectsEditor(e, rerender) {
+    var wrap = el('div', { class: 'f' }, [el('span', { text: 'Projects' }),
+      el('small', { text: 'Each prints as an italic title, its bullets, then its status line. The entry’s own bullets come first.' })]);
+    (e.projects || []).forEach(function (pr, i) {
+      wrap.appendChild(el('div', { class: 'sub-card' }, [
+        el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Project ' + (i + 1) }), mover(e.projects, i, rerender)]),
+        field('Title', pr, 'title', { area: true, preview: true }),
+        bulletsEditor(pr, rerender),
+        field('Status', pr, 'status', { area: true, preview: true, dropEmpty: true, hint: 'The last bullet, e.g. ‘Independent study’ module, project complete, manuscript in preparation' })
+      ]));
+    });
+    wrap.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Project', onclick: function () {
+      (e.projects = e.projects || []).push({ title: '', bullets: [], status: '' }); rerender(); } })]));
+    return wrap;
+  }
+  function rolesEditor(e, rerender) {
+    var wrap = el('div', { class: 'f' }, [el('span', { text: 'Roles' }),
+      el('small', { text: 'Dated lines under the heading, e.g. one per squad. Leave the entry’s own Dates empty.' })]);
+    (e.roles || []).forEach(function (r, i) {
+      wrap.appendChild(el('div', { class: 'sub-card' }, [
+        el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Role ' + (i + 1) }), mover(e.roles, i, rerender)]),
+        el('div', { class: 'row3' }, [field('Role', r, 'title', { area: true, preview: true }), field('Organisation', r, 'org', { area: true, preview: true, dropEmpty: true }),
+          field('Dates', r, 'dates', { area: true })])]));
+    });
+    wrap.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Role', onclick: function () {
+      (e.roles = e.roles || []).push({ title: '', dates: '' }); rerender(); } })]));
+    return wrap;
+  }
+
   function entryCard(sec, g, arr, i, rerender) {
     var e = arr[i];
     var card = el('div', { class: 'card' + ((e.show || 'both') === 'site' ? ' is-hidden-cv' : '') });
@@ -596,7 +686,14 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       field('Note', e, 'note', { area: true, preview: true, hint: 'After a dash on one-line entries' })
     ]));
     card.appendChild(field('Link', e, 'url', { type: 'url', dropEmpty: true, hint: 'Paste an address to make the title clickable on the PDF, Word file and site' }));
+    if (sec.id === 'funding' || e.amount || e.selectivity) card.appendChild(el('div', { class: 'row' }, [
+      field('Amount', e, 'amount', { dropEmpty: true, hint: 'e.g. $6,500; printed after the title' }),
+      field('How selective', e, 'selectivity', { dropEmpty: true, hint: 'e.g. 1 recipient per annum, 1 of 15 fellows' })]));
+    if (e.roles && e.roles.length) card.appendChild(rolesEditor(e, rerender));
     card.appendChild(bulletsEditor(e, rerender));
+    if (sec.id === 'research' || (e.projects && e.projects.length)) card.appendChild(projectsEditor(e, rerender));
+    card.appendChild(photoBlock(e, 'photo', { label: 'Photo (site only)', base: e.id, type: 'image/webp', edge: 1600, alt: 'photoAlt', where: 'site',
+      hint: 'Shown under this entry on the site’s CV page, not on the PDF or Word file' }, rerender));
     card.appendChild(tagBlock(e));
     var adv = el('details', { class: 'adv' }, [el('summary', { text: 'More options' })]);
     adv.appendChild(el('div', { class: 'row3' }, [
@@ -605,6 +702,10 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       field('Keep together (lines)', e, 'keep', { type: 'number', hint: 'Avoids a page break before this entry on the PDF' })
     ]));
     adv.appendChild(field('Note to self', e, 'prompt', { area: true, hint: 'A grey prompt on CVs with “Notes to self” on (Custom CVs)' }));
+    if (!(e.roles && e.roles.length)) adv.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Roles under this heading',
+      onclick: function () { e.roles = [{ title: '', dates: '' }]; rerender(); } })]));
+    if (sec.id !== 'research' && !(e.projects && e.projects.length)) adv.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Projects under this entry',
+      onclick: function () { e.projects = [{ title: '', bullets: [], status: '' }]; rerender(); } })]));
     if (e.id) adv.appendChild(el('p', { class: 'help', html: 'Id <code>' + esc(e.id) + '</code>, used by Custom CVs.' }));
     card.appendChild(adv);
     return card;
@@ -672,6 +773,12 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
         el('div', { class: 'row' }, [field('Website (on the CV)', m, 'website', { type: 'url' }), field('ORCID (on the CV)', m, 'orcid')]),
         field('Objective line (under the header on the CV)', m, 'objective', { area: true, preview: true, hint: 'Custom CVs can replace it with their own.' }),
         field('Closing line on the PDF', m, 'closing'),
+        photoBlock(m, 'headshot', { label: 'Headshot', base: 'headshot', type: 'image/jpeg', edge: 900, where: 'CVs',
+          hint: 'Printed beside your name on CVs with “Headshot” ticked in Custom CVs' }, function () { var y = window.scrollY; renderEditor(); window.scrollTo(0, y); }),
+        el('label', { class: 'check' }, [(function () {
+          var cb = el('input', { type: 'checkbox' }); cb.checked = !!m.ampersand;
+          cb.onchange = function () { if (cb.checked) m.ampersand = true; else delete m.ampersand; syncBar(); }; return cb;
+        })(), document.createTextNode(' Write “and” as “&” on the CV (paper, talk and project titles, and anything in quotes, keep “and”)')]),
         field('“As of” date on the PDF and site', m, 'asOf', { hint: 'Set to the current month automatically when you save, unless you untick the box below.' }),
         el('label', { class: 'check' }, [(function () {
           var cb = el('input', { type: 'checkbox' }); cb.checked = S.autoAsOf !== false;

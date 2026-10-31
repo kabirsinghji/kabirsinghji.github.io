@@ -70,7 +70,8 @@ window.AdminProfiles = (function () {
     add.onclick = function () {
       var id = 'custom', k = 2;
       while (data.profiles.some(function (x) { return x.id === id; })) id = 'custom-' + (k++);
-      data.profiles.push({ id: id, name: 'New custom CV', tags: [], include: [], exclude: [], sections: [], descriptions: true, prompts: false });
+      data.profiles.push({ id: id, name: 'New custom CV', tags: [], include: [], exclude: [], sections: [], descriptions: true, prompts: false,
+                           selected: true, fullLink: true });
       current = id; ui.sync(); ui.rerender();
     };
     bar.appendChild(add);
@@ -105,7 +106,11 @@ window.AdminProfiles = (function () {
     }
     kids.push(el('div', { class: 'pf-checks' }, [
       check('No objective line', 'hideObjective', false),
-      check('Descriptions', 'descriptions', true, '(bullets, coursework, contributions; off gives one line per entry)'),
+      check('Descriptions', 'descriptions', true, '(bullets, projects, coursework; off gives one line per entry)'),
+      check('Subheadings', 'subheadings', true),
+      p.id !== 'cv' ? check('“Selected” on trimmed sections', 'selected', false, '(e.g. Selected Research Experience)') : null,
+      p.id !== 'cv' ? check('Full CV link', 'fullLink', false, '(top of pages 2+)') : null,
+      check('Headshot', 'headshot', false, (data.meta || {}).headshot ? '(beside your name)' : '(add one in Header & contact first)'),
       check('Notes to self', 'prompts', false, '(the grey prompts; the files are public)')]));
     kids.push(files);
     if (p.id !== 'cv') {

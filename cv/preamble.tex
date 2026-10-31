@@ -10,7 +10,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{charter}
 \usepackage[margin=1.8cm,includefoot,footskip=0.8cm]{geometry}
-\usepackage{xcolor,enumitem,array,tabularx,needspace,fancyhdr,lastpage,microtype}
+\usepackage{xcolor,enumitem,array,tabularx,needspace,fancyhdr,lastpage,microtype,multicol,graphicx}
 \usepackage[hidelinks]{hyperref}
 
 \definecolor{promptgray}{gray}{0.46}
@@ -21,6 +21,8 @@
 \emergencystretch=2em
 \pagestyle{fancy}\fancyhf{}
 \renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{14pt}
+\setlength{\multicolsep}{2pt}
 \fancyfoot[R]{\footnotesize Page \thepage\ of \pageref{LastPage}}
 % the left footer ("Kabir Singh · Curriculum Vitae · <as of>") is set in each cv*.tex
 
@@ -45,7 +47,11 @@
 %   two lines: bold title + dates, then organisation + (second date line, location)
 \newcommand{\headentry}[4]{\needspace{2\baselineskip}\vspace{\entrygap}\noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{1em}}r@{}}\textbf{#1}&#2\\[-1pt]#3&#4\end{tabularx}\par}
 % \lineentry{text}{dates}: one line, as in the two-page CV
-\newcommand{\lineentry}[2]{\needspace{1.3\baselineskip}\vspace{\entrygap}\noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{1em}}r@{}}#1 & #2\end{tabularx}\par}
+\newcommand{\lineentry}[2]{\needspace{1.3\baselineskip}\vspace{\entrygap}\noindent\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X@{\hspace{1em}}r@{}}#1 & #2\end{tabularx}\par}
+% \roleline{text}{dates}: one of several roles under an entry (no gap above)
+\newcommand{\roleline}[2]{\noindent\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X@{\hspace{1em}}r@{}}#1 & #2\end{tabularx}\par}
+% \project{title}: an italic project title under a research position
+\newcommand{\project}[1]{\needspace{2\baselineskip}\vspace{1pt}\noindent{\itshape #1}\par}
 % grey note to self, printed only by profiles with prompts on
 \newcommand{\prompt}[1]{\begin{itemize}[leftmargin=1.45em]\item[\textcolor{promptgray}{$\rightarrow$}]\textcolor{promptgray}{\itshape #1}\end{itemize}}
 % label / text rows (coursework, skills)
