@@ -24,6 +24,20 @@
       "descriptions": true,
       "prompts": false,
       "sections": []
+    },
+    {
+      "id": "kabir-singh-resume-10-30-2026",
+      "name": "Prehealth",
+      "tags": [],
+      "include": [],
+      "exclude": [],
+      "sections": [],
+      "descriptions": true,
+      "prompts": false,
+      "selected": true,
+      "fullLink": false,
+      "headshot": true,
+      "hideObjective": true
     }
   ],
   "sections": [
