@@ -38,10 +38,10 @@ KumarLab; PI: Dr Vivek Kumar, University of Houston (previously NJIT) | Houston,
   - Lead undergraduates & graduates in computational development of peptide therapeutics; trained 15+ lab associates & secured over $15,000 in direct project funding.
   - Conducted dissections & assisted animal work on angiogenic hydrogels subsequently published; maintained computational research after the lab relocated to Houston.
 A novel cyclic peptide that blocks human autoimmune antibodies for the treatment of multiple sclerosis.
-  - Designed cyclic peptides against multiple sclerosis autoantibodies eight-residue design scaffold & Rosetta/FlexPepDock workflow; ran molecular-dynamics simulations for my top-ranked peptide CAP8, with GROMACS simulations & alanine scanning; in the published study, CAP8 bound anti-GlialCAM autoantibody with Kd = 0.294 mM, versus 4.82 mM linear & 2.61 mM unrelated cyclic controls & cut epitope detection on Western blot by 69% versus 27% & 5% for controls.
+  - Designed cyclic peptides against multiple sclerosis autoantibodies with eight-residue design scaffold & Rosetta/FlexPepDock workflow; ran molecular-dynamics simulations for my top-ranked peptide CAP8, with GROMACS simulations & alanine scanning; in the published study, CAP8 bound anti-GlialCAM autoantibody with Kd = 0.294 mM, versus 4.82 mM linear & 2.61 mM unrelated cyclic controls & cut epitope detection on Western blot by 69% versus 27% & 5% for controls.
   - Partial work through ‘independent study’ module, published in the European Journal of Medicinal Chemistry [1].
 A novel cyclic peptide that blocks fertilization protein for a male contraceptive.
-  - Secured & led a funded non-hormonal male-contraception project: machine-learning-guided cyclic peptide design against redacted target, docking & refinement along.
+  - Secured & led a funded non-hormonal male-contraception project: machine-learning-guided cyclic peptide design against redacted target, docking & refinement.
   - 8 poster presentations, scientific manuscript & patent application in preparation [2].
 Lipidated self-assembled peptides that modulate GPCR signaling of CB1 receptor.
   - Helped run in-silico validation using NAMD, GROMACS for membrane simulations, aggregation propensity, docking, & persistence studies of peptide.
@@ -204,7 +204,7 @@ Male Contraceptive Initiative Youth Advisory Board project grant; $1,000; 1 reci
   - Grantee-led male-contraceptive project
   - Personal compensation included
 
-Male Contraceptive Initiative travel award; $500; only Trainee selected | May 2025
+Male Contraceptive Initiative travel award; $500; only trainee selected | May 2025
   - National Contraception Meeting, Durham, North Carolina
 
 NJIT Undergraduate Research & Innovation Student Seed Grant; $3,000 | Oct 2024 – May 2025
