@@ -1,0 +1,378 @@
+KABIR SINGH
+kabirsinghji@gmail.com · +1 917 636 8664 · kabirsinghji.github.io · ORCID 0009-0002-5159-5879
+
+
+EDUCATION
+=========
+
+B.S. Mathematical Sciences (Mathematical Biology) | Sep 2023 – May 2027 (Expected)
+Albert Dorman Honors College & Jordan Hu College of Sciences & Liberal Arts, NJIT | Newark, NJ, USA
+  - Dean’s List all semesters.
+  - Minors: Biomedical Engineering Technology, History, Philosophy & Applied Ethics; Honors tracks: Medical Humanities & Global Studies (first Honors College student to pursue two).
+  - Academic scholarships exceeding $100,000, including Academic Excellence, Honors Merit, Honors Residential, & Highlander Achievement scholarships; tuition & board scholarship support.
+  Biomedical: Applications in Healthcare; Biochemistry; Biomedical Mechatronics; Cell & Molecular Biology
+  Medicine & society: Biomedical Ethics; Health, Justice, & Capitalism; Medical Sociology; Medicine & Law in Modern History
+  Quantitative: Applied Numerical Methods; Differential Equations (ordinary & partial); Linear Algebra; Mathematical Modeling; Stochastic & Discrete Models in Biology
+  Independent study: Bioengineering (Dr Vivek Kumar); Maths (Dr James Maclaurin, Dr Horacio Rotstein); History (Dr Stephen Pemberton, Satnam Singh)
+
+Exchange semester (Global E3), Lund University, Sweden | Jan 2025 – Jun 2025
+Faculty of Engineering (LTH); 44 ECTS | Lund, Sweden
+  - Fellow, Institute of International Education’s Global Engineering Education Exchange (Global E3).
+  Master’s level: Biomathematics; Immunotechnology; Microscopy, Bio-Imaging; Ultrasound Physics & Technology
+  Undergraduate: Patent & Intellectual Property Rights
+
+
+RESEARCH EXPERIENCE
+===================
+
+Computational & Mathematical Biology
+------------------------------------
+
+Undergraduate Researcher & Computational Biology Team Lead | Oct 2023 – Present
+KumarLab; PI: Dr Vivek Kumar, University of Houston (previously NJIT) | Houston, TX / Newark, NJ, USA
+  - Lead undergraduates & graduates in computational development of peptide therapeutics; trained 15+ lab associates & secured over $15,000 in direct project funding.
+  - Conducted dissections & assisted animal work on angiogenic hydrogels subsequently published; maintained computational research after the lab relocated to Houston.
+A novel cyclic peptide that blocks human autoimmune antibodies for the treatment of multiple sclerosis.
+  - Designed cyclic peptides against multiple sclerosis autoantibodies with eight-residue design scaffold & Rosetta/FlexPepDock workflow; ran molecular-dynamics simulations for my top-ranked peptide CAP8, with GROMACS simulations & alanine scanning; in the published study, CAP8 bound anti-GlialCAM autoantibody with Kd = 0.294 mM, versus 4.82 mM linear & 2.61 mM unrelated cyclic controls & cut epitope detection on Western blot by 69% versus 27% & 5% for controls.
+  - Partial work through ‘independent study’ module, published in the European Journal of Medicinal Chemistry [1].
+A novel cyclic peptide that blocks fertilization protein for a male contraceptive.
+  - Secured & led a funded non-hormonal male-contraception project: machine-learning-guided cyclic peptide design against redacted target, docking & refinement.
+  - 8 poster presentations, scientific manuscript & patent application in preparation [2].
+Lipidated self-assembled peptides that modulate GPCR signaling of CB1 receptor.
+  - Helped run in-silico validation using NAMD, GROMACS for membrane simulations, aggregation propensity, docking, & persistence studies of peptide.
+  - Project still underway, simulations in progress, 1 poster presentation.
+
+Undergraduate Researcher, Computational Bionanotechnology | Jun 2026 – Present
+SoftNanoLab; PI: Prof Stefano Angioletti-Uberti, Imperial College London | London, UK
+Binder squeeze: mimicking natural binders.
+  - Apply statistical mechanics, molecular dynamics, protein language models & machine-learning methods to enzyme & binder design & soft-matter/biomaterial systems; specifically developing methodology from previous papers “Mind the Gap” & “Squeezing Enzymes” (preprint) to develop more efficient miniproteins derived from natural binders.
+  - Project still underway, contributed code to BAGEL (Biomolecular Algorithm for Guidance in Energy Landscape); investigate peptide designs that mimic natural ligands; develop mathematical theory & equations from ‘squeeze’ & its complement ‘grow’.
+
+Undergraduate Researcher, Mathematical Oncology | Sep 2026 – Present
+PI: Dr Horacio Rotstein, NJIT | Newark, NJ, USA
+A simplified model of the MAPK/ERK pathway for therapeutic modeling.
+  - Derive reduced mathematical descriptions & characterize retained dynamical properties for practical implementation.
+  - ‘Independent study’ module, project still underway, poster in preparation.
+
+Undergraduate Researcher, Mathematical Modeling | Oct 2025 – May 2026
+PI: Dr James Maclaurin, NJIT | Newark, NJ, USA
+Modeling amyloid as an epidemic.
+  - Applied Hawkes self-exciting point processes in reframing Aβ42 secondary nucleation dynamics & feedback in amyloid formation.
+  - ‘Independent study’ module, project complete, internal paper for course written.
+
+Intellectual & Cultural History
+-------------------------------
+
+Emerging Scholars Research Fellow, Early Modern Sikh History | Sep 2026 – Dec 2026
+Harvard Sikh Center; mentor: Satnam Singh | Remote
+Dissemination and the making of Khalsa authority in a contested panth.
+  - How the early Khalsa came to dominate the wider Sikh world against rival claimants, including the Bandai Khalsa, Minas, Ram Raiyas & Hindaliyas.
+  - Argue that the answer lies less in politics than in transmission: the Khalsa’s consolidation of ‘authentic Sikh teachings’ through katha preceded & enabled its control of the panth.
+  - Sources: Gurmukhi & Persian primary materials, including works attributed to Bhai Mani Singh, hukamname, rahit-nama & sampardaic literature, alongside Persian & European accounts of the period.
+  - Twelve-week fellowship term producing a paper & a presentation: first, a characterization of the intellectual landscape & its conflicts; second, a prosopography linking intellectual influences to the period’s political figures.
+
+Undergraduate Researcher, History of Medicine & Bioethics | Sep 2026 – Present
+PI: Dr Stephen Pemberton, NJIT | Newark, NJ, USA
+Physician, heal thyself: hidden death in American medicine.
+  - Trace the legal history of end-of-life decision-making from In re Quinlan (1976) to Cruzan v. Director, Missouri Department of Health (1990).
+  - Compare how three physician-authors, Sherwin Nuland, Atul Gawande & Haider Warraich, account for dying in modern American medicine.
+  - ‘Independent study’ module, project complete, academic manuscript in preparation.
+
+Undergraduate Researcher, Digital History & Urban Studies | Jan 2024 – May 2024, Jan 2026 – May 2026
+PI: Dr Louis Hamilton, NJIT; field research in Rome & Florence | Newark, NJ, USA / Italy
+  - Two solo-authored geospatial narratives (StoryMapJS) mapping sites visited on foot against historical & archival sources.
+Power vs. the People: the Via Giulia, Rome.
+  - Mapped 18 sites, layering Counter-Reformation Marian shrines against Julius II’s 1508 papal axis along the Via Giulia, Rome, drawing on the Early Modern Rome Reconstructed database & Rufini’s 1853 shrine census; argued the street shows superimposition & negotiation rather than a papal-versus-popular divide.
+  - Course project (HIST 328), complete; published online as a StoryMap.
+Processions and Power: Florence.
+  - Mapped 22 Florentine sites to examine how urban expansion transformed liturgical processions into contests of ecclesiastical & household prestige, read against Dante’s critique of the gente nuova.
+  - Course project (HIST 329), complete; published online as a StoryMap.
+
+Emergency Care & Health Services
+--------------------------------
+
+Undergraduate Researcher, Collegiate Emergency Medical Services | Sep 2025 – Present
+PI: Dr Chang Yaramothu, NJIT | Newark, NJ, USA
+A comprehensive study of operational models in university based EMS organisations.
+  - Co-developed IRB protocol, questionnaire & recruitment materials for a national study of collegiate EMS organizations; examined resources, organizational structures, operating models & capabilities across US collegiate EMS squads.
+  - Data collection & analysis underway.
+
+
+PUBLICATIONS & MANUSCRIPTS
+==========================
+
+[1] C. Heffernan, O. West, K. Singh, J. Dodd-o, M. James, A. Baradi, K. Rybak, A. Lateef, S. Elkabes, V. Kumar. “A novel cyclic peptide that blocks human autoimmune antibodies for the treatment of multiple sclerosis.” Eur. J. Med. Chem. (2026). https://doi.org/10.1016/j.ejmech.2026.119173
+    Contribution: ran the molecular dynamics simulations; designed the published peptide
+
+[2] K. Singh, C. Heffernan, O. West, J. Dodd-o, V. Kumar. “Machine learning for rational design of a cyclic peptide-based male contraceptive.” In preparation; patent application in preparation
+
+[3] J. Lau, D. Yun, K. Singh, A. Patananan, N. Jadavji. “Academic publishing as a launchpad: how publishing research in an undergraduate journal shapes future careers.” In preparation
+
+
+PRESENTATIONS
+=============
+
+M. Kotta, G. Victorio, G. Karmacharya, K. Singh, N. Giovannetti, B. Shadpoor, J. Dodd-O, V. Kumar. “Putative computational design of novel inhibitors to modulate de-novo targets for CB1 receptor.”
+  - University of Houston, Undergraduate Research Day (Poster & podium), 2026
+
+K. Singh, C. Heffernan, J. Dodd-O, V. Kumar. “Development of a novel male contraceptive using cyclic peptides to inhibit fertilization.”
+  - AAP/ASCI/APSA Joint Meeting (Poster), 2026
+  - NJIT AI Exploration Day (Poster), 2026
+  - NJIT Honors Interdisciplinary Research Forum, first place (Poster), Fall 2025
+  - National Contraception Meeting (Poster), 2025
+  - NJIT Honors Interdisciplinary Research Forum (Poster), Spring 2025
+  - NJIT Dana Knox Research Showcase (Poster), 2025
+  - NJIT Undergraduate Research & Innovation (Abstract & podium), 2025
+  - Biomedical Engineering Society (BMES), co-presenter (Abstract & poster), 2024
+  - NJIT Undergraduate Research & Innovation (Abstract & podium), 2024
+
+K. Singh, J. Lau, H. Gerber, A. Alibilli, L. Goralsky. “Mitigating knowledge drain: a case study in optimizing workflow and training in a high-turnover, international peer-reviewed undergraduate science academic journal.”
+  - National Conference on Undergraduate Research (NCUR) (Poster), 2026
+
+
+LECTURES & FEATURES
+===================
+
+Invited speaker (forthcoming), Science National Honor Society – Piscataway High School | 2026
+
+Invited student roundtable speaker (https://news.njit.edu/njit-students-meet-state-secretary-higher-education) | 2026
+  - Margo Chaly, New Jersey Secretary of Education; NJIT
+
+Invited speaker, NJIT University Advancement Dinner | 2026
+  - Interdisciplinary medicine & healthcare research for NJIT leadership, including interim president & interim provost
+
+Speaker, ‘Shaping the Future of Healthcare & Innovation’ dinner | Oct 2026
+  - Peptide therapeutics, published multiple sclerosis research, & emergency care; alongside Dr Genoa R. Warner & Dr Bryan Pfister, NJIT
+
+Lecture series, Ethics in Science and Research – Science Mentorship Institute | 2026
+
+Session moderator, Student Oral Presentations (Communications) – NCUR | 2026
+
+Featured presenter, ‘Navigating peer review and the student journal landscape’ | 2026
+  - ‘Shaping Asia’s Future: Development, Innovation, and Society in Transition’, Nazarbayev University / Asian Universities Alliance
+
+Featured panelist, ‘It’s Different for Girls’ | 2026
+  - Documentary screening & panel; NJIT ADHC & CSLA co-sponsored colloquium
+
+NJIT Makes: Undergraduate Research and Innovation – NJIT promotional material | 2026
+
+Invited speaker, NJIT Board of Trustees and President’s Town Hall | 2025
+  - Presented with NJIT First Aid Squad leadership at the request of President Teik Lim
+
+Honors in Action 2025 | 2025
+  - Albert Dorman Honors College publication: research, awards & study abroad
+
+Article feature: ‘150+ Honors Scholars Showcase Findings at Interdisciplinary Research Forum’ (https://news.njit.edu/150-honors-scholars-showcase-findings-interdisciplinary-research-forum) – Nayib Morán, NJIT News | 2025
+
+Featured speaker, ADHC Advising Day – NJIT; appearances in both 2024 & 2025 | 2024, 2025
+
+Honors in Action 2024 | 2024
+  - Albert Dorman Honors College publication: research & study abroad
+
+Article feature: ‘Undergraduate Student Researchers on Campus’ (https://njitvector.com/19044/features/undergraduate-student-researchers-on-campus/) | 2024
+  - Gurnoor Kaur, The Vector, NJIT student newspaper
+
+Lecture, ‘Introduction to PyMOL and Linear Peptide Design’ – NJIT, Genetically Engineered Machines | 2024
+
+
+RESEARCH FUNDING & HONOURS
+==========================
+
+Grants & awards
+---------------
+
+Undergraduate Research Opportunities Programme (UROP) bursary; ~£100 | Jun – Jul 2026
+  - Imperial College London, Department of Materials; project: using protein language models to mimic natural ligands
+  - Personal compensation included
+
+NSF I-Corps Regional Program, Northeast Hub; $750 | May – Jun 2026
+  - Competitive cohort & customer-discovery project funding for Axioma Therapeutics
+
+Grace Hopper AI Research Institute grant; $3,330 | May – Aug 2025
+  - NJIT, computational protein design course development
+
+Honors College Moonshot Grant for Engaged Scholarship; $6,500; 1 recipient per annum | Jun – Jul 2025
+  - Male-contraceptive project
+  - Personal compensation included
+
+Male Contraceptive Initiative Youth Advisory Board project grant; $1,000; 1 recipient in 2025 | Jan – Jun 2025
+  - Grantee-led male-contraceptive project
+  - Personal compensation included
+
+Male Contraceptive Initiative travel award; $500; only trainee selected | May 2025
+  - National Contraception Meeting, Durham, North Carolina
+
+NJIT Undergraduate Research & Innovation Student Seed Grant; $3,000 | Oct 2024 – May 2025
+  - Phase-2 longitudinal research project, cyclic peptide therapeutic for multiple sclerosis
+
+Honors Summer Research Institute (HSRI) grant; $3,000 | Jun – Jul 2024
+  - ADHC & NJIT URI; multiple sclerosis & male-contraceptive projects
+  - Personal compensation included
+
+First place, Honors Interdisciplinary Research Forum | Fall 2025
+  - Male-contraceptive poster, NJIT Albert Dorman Honors College
+
+Academic Excellence, Honors Merit, Honors Residential scholarships | 2023 – 2027
+  - NJIT merit scholarships, part of award package exceeding $100,000
+
+Highlander Achievement Scholarship – NJIT | 2023 – 2027
+
+Fellowships & selective programmes
+----------------------------------
+
+Emerging Scholars Research Fellowship | 2026
+  - Harvard Sikh Center; early modern Sikh history
+
+Honors Summer Research Institute Fellowship – Fellow | Jun 2024 – Jul 2024, Jun 2025 – Jul 2025
+
+Goldwater Ambassadors Program | Aug 2025 – Present
+  - Selected mentee, mentored by Goldwater Scholars; programme for underserved or underrepresented students
+
+National Science Foundation Accelerating Research Translation Integrated Student Ambassador Network (ARTISAN); 1 of 15 fellows | Apr 2025 – Present
+  - Selected/inducted on the basis of translational-research engagement
+
+No Patient Left Behind Fellowship – Fellow | Jun – Aug 2024
+
+American College of Cardiology – Young Scholar | May 2023 – Apr 2024
+
+
+SKILLS & LANGUAGES
+==================
+  Computational biology: Rosetta; RosettaScripts; PyMOL; GROMACS & GROMACS scripting; NAMD; VMD; OpenMM; CHARMM; AlphaFold; Boltz; ESMFold; protein language models
+  Methods: Computational peptide design; docking; molecular dynamics; statistical mechanics; RMSD analysis; mathematical & stochastic modeling
+  Laboratory: Surface plasmon resonance (SPR); general dissection
+  Data & tools: Python; LaTeX; molecular dynamics trajectory analysis
+  Languages: English (C2); Punjabi (C1); Swedish (B2); Spanish (B1); Russian (B1)
+
+
+CLINICAL & TRANSLATIONAL
+========================
+
+Emergency medical services
+--------------------------
+
+Emergency Medical Technician
+Public Relations Chair, NJIT First Aid Squad | Jan 2024 – Present
+Senior Squad Member; former Cadet Crew Chief, Marlboro First Aid Squad | Apr 2022 – Jan 2025
+  - Licensed New Jersey EMT; over 2,000 hours handling emergency medical situations across EMS roles.
+  - Represented the squad in presentations to NJIT senior leadership & Board of Trustees.
+
+Public health education
+-----------------------
+
+Stop the Bleed Instructor
+NJIT; ACS-certified instruction | Oct 2025 – Present
+New Jersey gurdwaras (hybrid English–Punjabi); NJ Office of Homeland Security & Preparedness; Sikh Youth Alliance | Jan – May 2026
+  - Taught hemorrhage-control skills to 100+ people across NJIT & gurdwara outreach.
+  - Bilingual delivery because those most likely to be first on scene in a gurdwara are not always the most comfortable in English.
+
+Commercialisation
+-----------------
+
+Co-founder & Technical Lead | May 2026 – Present
+Axioma Therapeutics; funded through NSF I-Corps Northeast Hub
+  - Led customer discovery & lean-startup validation for peptide & mini-protein therapeutics targeting degenerative eye diseases.
+
+
+ACADEMIC SERVICE
+================
+
+Editorial & peer review
+-----------------------
+
+22nd Editor-in-Chief; former Associate Editor | Dec 2024 – Present
+Journal of Young Investigators (JYI)
+  - Led oldest international undergraduate research journal, funded & featured by Nature, Science, NSF & the Burroughs Wellcome Fund; earlier associate-editor work spanned biology, physical sciences & social sciences.
+  - Developed structured, multi-stage hiring, asynchronous onboarding, tiered training, & a shared manuscript workflow board to reduce institutional knowledge loss; re-established translations, bolstered peer review, restored perspective articles, & developed partnerships for undergraduate research events.
+  - 2025–26: 27 new staff from 96 applications; two associate editors & a research editor assigned to each manuscript, with a two-week review window; author/reviewer AI policy published.
+
+Teaching & mentorship
+---------------------
+
+Research Lead | Sep 2026 – May 2027 (Expected)
+Governor’s STEM Scholars; Research & Development Council of New Jersey
+  - Mentor high-school team on a year-long engineering & research project aligned to a UN Sustainable Development Goal & a New Jersey community need; oversee meetings, budget, milestones & deliverables, with final presentation planned across four statewide conferences; $1,000 stipend.
+
+Ethics Coordinator, Mentor (Neuroscience & Biology), Admissions Officer, Symposium Organizer & Grant Writer; former Ethics Curriculum Developer | May 2024 – Present
+Science Mentorship Institute (Sci-Mi)
+  - Contributed to ethics instruction & research mentoring; delivered 2026 lecture series on ethics in science & research.
+
+Teaching Assistant, Honors First Year Seminar, Albert Dorman Honors College, NJIT | Sep 2024 – Dec 2024, Sep 2025 – Dec 2025
+
+Teaching Assistant, Computational Protein Design, Grace Hopper AI Research Institute, NJIT | May – Aug 2025
+
+Sikh History (Virsa) Teacher, Khalsa School, Sikh Sabha of New Jersey | Sep 2020 – Present
+
+Research-team mentor & computational instructor, KumarLab; 15+ trainees | Oct 2023 – Present
+
+National & professional
+-----------------------
+
+Research Chair | Jun 2025 – Present
+American Association of Physicians of Indian Origin (AAPI) PreMed Board
+  - Lead research-focused committee & programming to support students, researchers & physicians.
+  - Helped organize & host 2025 & 2026 Fall Virtual Research Symposia; sole MC in 2025 & co-MC in 2026, with 11 US & international presentations & seven physician judges recruited.
+
+Board Member & Grant Reviewer, Male Contraceptive Initiative (MCI) Youth Advisory Board | Aug 2025 – Present
+
+Member, Pre-Medical Committee, American Physician Scientists Association (APSA) | Mar 2026 – Present
+
+University
+----------
+
+Member, Student Conduct Board | Dec 2024 – Present
+NJIT
+  - Adjudicate academic & behavioral conduct cases alongside faculty, staff & university administrators.
+
+Chair; former Chair-in-Training, Highlander Integrity Council, NJIT | Sep 2024 – Present
+
+Member, Inclusive Excellence Student Advisory Board, NJIT | Feb 2025 – Present
+
+Member, Multifaith Council, NJIT | Jan 2025 – Present
+
+Organizer, ‘It’s Different for Girls’ screening & panel, NJIT ADHC & CSLA co-sponsored colloquium | Mar 2026
+
+University Representative, BioNJ 33rd Annual Dinner Meeting & Innovation Celebration | Feb 2026
+
+Steering Committee Lead, Albert Dorman Honors College First Year Retreat | Mar – Aug 2025
+
+Advisor; former President & Secretary, Honors Hall Council, NJIT | Feb 2024 – May 2025
+
+Honors College Representative, National Collegiate Honors Council Annual Conference | Nov 2024
+
+
+LEADERSHIP & COMMUNITY
+======================
+
+Vice President; former President & Events Coordinator | Dec 2023 – Present
+Sikh Association of NJIT (SANJIT)
+  - Vice President, 2026 – present; President, 2023 – 2026; earlier Events Coordinator.
+
+Co-founder; former President & Treasurer, NJIT MedicZero | Nov 2023 – May 2026
+
+Co-founder, Delta Epsilon Mu, pre-medical professional fraternity | Feb 2024 – May 2025
+
+Youth Camp Organizer & Coordinator, Sikh Sabha of New Jersey | Aug 2021 – Present
+
+Youth Camp Counselor, Guru Nanak Sikh Heritage | Aug 2021 – Aug 2025
+
+Content Manager, The Mardana Project | May 2026 – Present
+
+
+CERTIFICATIONS
+==============
+  - New Jersey Emergency Medical Technician licence
+  - American College of Surgeons Stop the Bleed certification & instructor licence
+  - NIH, Introduction to the Principles & Practice of Clinical Research (IPPCR), certificate of completion
+  - OSHA General Industry Safety & Health certification
+  - CITI Biomedical Research certification
+  - CITI Responsible Conduct of Research (RCR) Basic certification
+  - American Heart Association BLS & CPR, Adult/Child/Infant
+
+
+SUPPLEMENTAL INTERESTS
+======================
+Gurmat Sangeet (classical Indian music in the Sikh devotional tradition); wrestling & martial arts; ping-pong; travel; reading history, epistemology & comparative theology.
+
+
+References available upon request
