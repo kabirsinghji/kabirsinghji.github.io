@@ -506,6 +506,16 @@
           "status": "prep",
           "items": [
             {
+              "authors": "S. Saxena, **K. Singh**, M. Young, A. Pallera, C. Brewer, K. Carpenter",
+              "title": "Impact of a youth-focused microgrant on undergraduate and graduate research",
+              "venue": "In preparation",
+              "doi": "",
+              "year": 2026,
+              "show": "both",
+              "tags": [],
+              "id": "impact-of-a-youth-focused-microgrant-on-undergra"
+            },
+            {
               "authors": "**K. Singh**, C. Heffernan, O. West, J. Dodd-o, V. Kumar",
               "title": "Machine learning for rational design of a cyclic peptide-based male contraceptive",
               "venue": "In preparation; patent application in preparation",
@@ -1752,6 +1762,30 @@
         {
           "title": "University",
           "entries": [
+            {
+              "heading": "Senior Representative",
+              "dates": "Sep 2026 – Present",
+              "bullets": [],
+              "tags": [
+                "speaking",
+                "leading-organizing",
+                "adaptability",
+                "ambition-commitment",
+                "client-facing",
+                "oral-communication",
+                "written-communication",
+                "independence-confidence",
+                "interpersonal",
+                "leadership",
+                "persuasion-negotiation",
+                "planning-organisation",
+                "problem-solving-creativity",
+                "teamwork"
+              ],
+              "org": "Honors Scholar Council",
+              "roles": [],
+              "id": "senior-representative"
+            },
             {
               "id": "student-conduct-board",
               "heading": "Member, Student Conduct Board",
