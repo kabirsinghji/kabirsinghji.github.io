@@ -104,9 +104,11 @@ PUBLICATIONS & MANUSCRIPTS
 [1] C. Heffernan, O. West, K. Singh, J. Dodd-o, M. James, A. Baradi, K. Rybak, A. Lateef, S. Elkabes, V. Kumar. “A novel cyclic peptide that blocks human autoimmune antibodies for the treatment of multiple sclerosis.” Eur. J. Med. Chem. (2026). https://doi.org/10.1016/j.ejmech.2026.119173
     Contribution: ran the molecular dynamics simulations; designed the published peptide
 
-[2] K. Singh, C. Heffernan, O. West, J. Dodd-o, V. Kumar. “Machine learning for rational design of a cyclic peptide-based male contraceptive.” In preparation; patent application in preparation
+[2] S. Saxena, K. Singh, M. Young, A. Pallera, C. Brewer, K. Carpenter. “Impact of a youth-focused microgrant on undergraduate and graduate research.” In preparation
 
-[3] J. Lau, D. Yun, K. Singh, A. Patananan, N. Jadavji. “Academic publishing as a launchpad: how publishing research in an undergraduate journal shapes future careers.” In preparation
+[3] K. Singh, C. Heffernan, O. West, J. Dodd-o, V. Kumar. “Machine learning for rational design of a cyclic peptide-based male contraceptive.” In preparation; patent application in preparation
+
+[4] J. Lau, D. Yun, K. Singh, A. Patananan, N. Jadavji. “Academic publishing as a launchpad: how publishing research in an undergraduate journal shapes future careers.” In preparation
 
 
 PRESENTATIONS
@@ -319,6 +321,8 @@ Member, Pre-Medical Committee, American Physician Scientists Association (APSA) 
 
 University
 ----------
+
+Senior Representative, Honors Scholar Council | Sep 2026 – Present
 
 Member, Student Conduct Board | Dec 2024 – Present
 NJIT
