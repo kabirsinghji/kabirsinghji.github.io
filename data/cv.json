@@ -11,7 +11,8 @@
     "website": "https://kabirsinghji.github.io",
     "orcid": "0009-0002-5159-5879",
     "objective": "Aspiring physician-scientist in translational medicine: designing peptide therapeutics computationally and modelling biological systems, alongside research in the history of medicine and early modern Sikh history.",
-    "ampersand": true
+    "ampersand": true,
+    "headshot": "images/cv/headshot-bqbvw8.jpg"
   },
   "profiles": [
     {
@@ -21,7 +22,8 @@
       "include": [],
       "exclude": [],
       "descriptions": true,
-      "prompts": false
+      "prompts": false,
+      "sections": []
     }
   ],
   "sections": [
