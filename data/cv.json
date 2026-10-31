@@ -134,7 +134,7 @@
                   "title": "A novel cyclic peptide that blocks human autoimmune antibodies for the treatment of multiple sclerosis.",
                   "bullets": [
                     {
-                      "text": "Designed cyclic peptides against multiple sclerosis autoantibodies eight-residue design scaffold & Rosetta/FlexPepDock workflow; ran molecular-dynamics simulations for my top-ranked peptide CAP8, with GROMACS simulations & alanine scanning; in the published study, CAP8 bound anti-GlialCAM autoantibody with *K*_{d} = 0.294 mM, versus 4.82 mM linear & 2.61 mM unrelated cyclic controls & cut epitope detection on Western blot by 69% versus 27% & 5% for controls.",
+                      "text": "Designed cyclic peptides against multiple sclerosis autoantibodies with eight-residue design scaffold & Rosetta/FlexPepDock workflow; ran molecular-dynamics simulations for my top-ranked peptide CAP8, with GROMACS simulations & alanine scanning; in the published study, CAP8 bound anti-GlialCAM autoantibody with *K*_{d} = 0.294 mM, versus 4.82 mM linear & 2.61 mM unrelated cyclic controls & cut epitope detection on Western blot by 69% versus 27% & 5% for controls.",
                       "show": "both"
                     }
                   ],
@@ -144,7 +144,7 @@
                   "title": "A novel cyclic peptide that blocks fertilization protein for a male contraceptive.",
                   "bullets": [
                     {
-                      "text": "Secured and led a funded non-hormonal male-contraception project: machine-learning-guided cyclic peptide design against *redacted target*, docking & refinement along.",
+                      "text": "Secured and led a funded non-hormonal male-contraception project: machine-learning-guided cyclic peptide design against *redacted target*, docking & refinement.",
                       "show": "both"
                     }
                   ],
@@ -1126,7 +1126,7 @@
               "id": "contraception-meeting-travel-award",
               "heading": "Male Contraceptive Initiative travel award",
               "amount": "$500",
-              "selectivity": "only Trainee selected",
+              "selectivity": "only trainee selected",
               "dates": "May 2025",
               "bullets": [
                 {
