@@ -368,6 +368,7 @@ CERTIFICATIONS
   - New Jersey Emergency Medical Technician licence
   - American College of Surgeons Stop the Bleed certification & instructor licence
   - NIH, Introduction to the Principles & Practice of Clinical Research (IPPCR), certificate of completion
+  - NIH, Introduction to the Principles of Clinical Pharmacology, certificate of completion
   - OSHA General Industry Safety & Health certification
   - CITI Biomedical Research certification
   - CITI Responsible Conduct of Research (RCR) Basic certification
