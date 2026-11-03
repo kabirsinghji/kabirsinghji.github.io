@@ -16,20 +16,22 @@
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=9">
-<script src="theme.js?v=1"></script>
+<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=15">
+<script src="theme.js?v=2"></script>
 <script src="peek.js?v=9" defer></script>
+<script src="beat.js?v=2" defer></script>
+<script src="pager.js?v=1" defer></script>
 <script src="structure.js?v=9" defer></script>
 </head>
 <body>
 <header class="wrap top">
-  <a class="brand" href="./">Kabir Singh</a>
+  <a class="brand" href="./">Kabir Singh<span class="pa" lang="pa">ਕਬੀਰ ਸਿੰਘ</span></a>
   <nav class="nav" aria-label="Site">
-    <a href="./">CV</a>
-    <a href="science.html">Scientific Research</a>
-    <a href="history.html">History Research</a>
+    <a href="cv.html">CV</a>
+    <a href="science.html">Science</a>
+    <a href="history.html">History</a>
     <a href="about.html" aria-current="page">About</a>
   </nav>
 </header>
@@ -41,7 +43,6 @@
 
   <header class="masthead masthead--center">
     <h1>About</h1>
-    <p class="byline" lang="pa">ਕਬੀਰ ਸਿੰਘ</p>
   </header>
 
   <section class="about-intro" aria-labelledby="mathbio-h">
@@ -76,32 +77,34 @@
       cyclic peptides built to bind one target and do one job. That work started
       at KumarLab, continued as the lab moved to the University of Houston, and
       has since widened into energy-landscape methods at Imperial College London,
-      stochastic models of amyloid aggregation, and reduced descriptions of
-      neuronal dynamics. Alongside all of it, I ride as an EMT.
+      stochastic models of amyloid aggregation, and models of the MAPK/ERK
+      signalling pathway in cancer.
     </p>
     <p>
-      Beyond my studies, I&rsquo;m passionate about Sikh history and theology. I teach
-      Sikh history at Khalsa School Virsa and help organise youth camps for the
-      Sikh Sabha of New Jersey, working to build better resources for Sikh
-      students in Sunday classes and camps. I&rsquo;d like to write in this area
-      eventually; for now I&rsquo;m still mostly reading.
+      Beyond my studies, I&rsquo;m passionate about Sikh history and theology. I help
+      organise youth camps for the Sikh Sabha of New Jersey, working to build
+      better resources for Sikh students in Sunday classes and camps. I&rsquo;d like
+      to write in this area eventually; for now I&rsquo;m still mostly reading.
     </p>
-    <p>
-      In my free time I wrestle and practise martial arts, work on my Punjabi,
-      play ping-pong, and sing classical Indian music &mdash; Gurmat Sangeet in
-      particular. Since starting undergrad I&rsquo;ve caught the travel bug. I read a
-      great deal, mostly history, epistemology, and comparative theology.
-    </p>
+  </section>
+
+  <section class="about-more" aria-labelledby="beyond-h">
+    <div class="prose"><h2 id="beyond-h">Beyond research</h2></div>
+    <div class="beyond">
+      <div><h3>On call</h3><p>A New Jersey&ndash;licensed EMT, riding with the NJIT First Aid Squad and previously the Marlboro First Aid Squad.</p></div>
+      <div><h3>In the gurdwara</h3><p>Teaching Sikh history at Khalsa School Virsa since 2020, and Stop the Bleed in hybrid English and Punjabi at New Jersey gurdwaras.</p></div>
+      <div><h3>Gurmat Sangeet</h3><p>Classical Indian music in the Sikh devotional tradition; an ongoing practice rather than a project.</p></div>
+      <div><h3>Off hours</h3><p>Wrestling and martial arts, Punjabi, ping-pong, and travel. Reading mostly history, epistemology, and comparative theology.</p></div>
+    </div>
   </section>
 
   <section class="prose about-more" aria-labelledby="elsewhere-h">
     <h2 id="elsewhere-h">Elsewhere</h2>
     <ul class="plain">
-      <li><a href="https://njitvector.com/19044/features/undergraduate-student-researchers-on-campus/">Undergraduate Student Researchers on Campus</a> &mdash; The Vector, NJIT, 2024</li>
       <li><a href="https://www.linkedin.com/in/kabir-singh-ji">LinkedIn</a></li>
       <li><a href="https://orcid.org/0009-0002-5159-5879">ORCID 0009-0002-5159-5879</a></li>
       <li><a href="https://scholar.google.com/citations?user=-RpJmPsAAAAJ">Google Scholar</a></li>
-      <li><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a></li>
+      <li><a href="#" data-u="kabirsinghji" data-d="gmail" data-t="com">kabirsinghji [at] gmail [dot] com</a></li>
     </ul>
   </section>
 
@@ -109,9 +112,9 @@
 
 <footer class="foot">
   <div class="wrap">
-    <p class="meta"><a href="./">&larr; Back to the CV</a><br><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a> &middot; <a href="admin.html">Admin</a></p>
+    <p class="meta"><span class="open">Open to correspondence</span> &middot; <a href="#" data-u="kabirsinghji" data-d="gmail" data-t="com">kabirsinghji [at] gmail [dot] com</a><br>Last updated October 2026 &middot; <a href="curious.html">The long way round</a> &middot; <a href="admin.html">Admin</a></p>
     <div class="sign-off">
-      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
+      <p class="couplet" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
       <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     </div>
   </div>

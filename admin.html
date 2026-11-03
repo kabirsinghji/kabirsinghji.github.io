@@ -7,7 +7,7 @@
 <title>Admin — Kabir Singh</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css?v=9">
-<script src="theme.js?v=1"></script>
+<script src="theme.js?v=2"></script>
 <link rel="stylesheet" href="admin/masters.css?v=2">
 <script src="admin/masters.js?v=2" defer></script>
 <link rel="stylesheet" href="admin/attach.css?v=1">
@@ -18,6 +18,10 @@
 <script src="admin/dying.js?v=4" defer></script>
 <link rel="stylesheet" href="admin/tags.css?v=1">
 <script src="admin/tags.js?v=1" defer></script>
+<link rel="stylesheet" href="admin/linkedin.css?v=2">
+<script src="admin/linkedin.js?v=2" defer></script>
+<link rel="stylesheet" href="admin/profiles.css?v=1">
+<script src="admin/profiles.js?v=2" defer></script>
 <style>
 /* Admin-only styles; tokens and fonts come from style.css */
 body { font-size: 15px; }
@@ -76,6 +80,10 @@ body { font-size: 15px; }
 .group-head .f { flex: 1 1 16rem; }
 .card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: .9rem 1rem 1rem; margin-bottom: .7rem; }
 .card.is-hidden-cv { border-style: dashed; }
+.sub-card { border: 1px dashed var(--rule); border-radius: 8px; padding: .6rem .75rem .7rem; margin: .4rem 0; }
+.photo-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.photo-thumb { max-height: 5.5rem; max-width: 9rem; border-radius: 6px; border: 1px solid var(--rule); object-fit: cover; }
+.photo-wait { font-size: .82rem; color: var(--soft); }
 .card-top { display: flex; align-items: center; gap: .3rem; margin-bottom: .5rem; }
 .card-top .n { font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); flex: 1; }
 .f { display: grid; gap: .25rem; margin-bottom: .6rem; min-width: 0; }
@@ -83,7 +91,7 @@ body { font-size: 15px; }
 .f small { font-size: .76rem; color: var(--faint); }
 .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 12rem); gap: .8rem; }
 .row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
-input[type="text"], input[type="password"], input[type="number"], textarea, select {
+input[type="text"], input[type="password"], input[type="number"], input[type="url"], input[type="email"], textarea, select {
   font: inherit; font-size: .92rem; width: 100%; padding: .5rem .6rem; border-radius: 6px; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); }
 textarea { resize: vertical; min-height: 2.6rem; line-height: 1.45; field-sizing: content; }
 input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outline-offset: 0; border-color: transparent; }
@@ -321,7 +329,10 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       S.saved = json(S.data);
       S.sha = res.sha; S.source = res.source;
       if (!S.section) S.section = S.data.sections[0].id;
+      var li = window.AdminLinkedIn ? AdminLinkedIn.take(S.data) : null;   /* posts sent by the LinkedIn bookmark */
+      if (li) S.section = 'linkedin';
       renderAll();
+      if (li) note('ok', li);
     }).catch(function (e) {
       setSrc('Could not load the CV.');
       note('err', 'Loading failed: ' + esc(e.message) + (e.status === 401 ? '. The token was rejected; check it in Settings.' : ''));
@@ -360,7 +371,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   }
 
   function watchBuild(sha, box) {
-    var c = cfg(), start = Date.now(), seen = false;
+    var c = cfg(), start = Date.now(), seen = false, misses = 0;
     (function poll() {
       gh('/repos/' + c.repo + '/actions/runs?head_sha=' + sha + '&per_page=5').then(function (r) {
         var run = (r.workflow_runs || []).filter(function (w) { return /cv|build/i.test(w.name || ''); })[0] || (r.workflow_runs || [])[0];
@@ -380,6 +391,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
         }
         setTimeout(poll, 5000);
       }).catch(function (e) {
+        if (++misses < 4) { setTimeout(poll, 5000); return; }   /* a dropped connection: keep watching */
         box.step(1, 'fail', 'Could not check the build: ' + esc(e.message) + '. Your data is saved; see the Actions tab on GitHub.');
       });
     })();
@@ -394,6 +406,13 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       });
       if (sec.type === 'presentations') (sec.items || []).forEach(function (p, i) { if (!String(p.title || '').trim()) problems.push(sec.title + ': presentation ' + (i + 1) + ' has no title'); });
     });
+    var pids = {};
+    (S.data.profiles || []).forEach(function (p) {
+      if (!/^[a-z0-9][a-z0-9-]*$/.test(String(p.id || ''))) problems.push('Custom CVs: “' + (p.name || p.id) + '” needs a file name of lower-case letters, numbers and hyphens');
+      else if (pids[p.id]) problems.push('Custom CVs: two CVs share the file name “' + p.id + '”');
+      pids[p.id] = 1;
+    });
+    if (window.AdminProfiles) AdminProfiles.ensureIds(S.data);
     return problems.length ? 'Fix these before saving:<br>' + problems.map(esc).join('<br>') : '';
   }
 
@@ -444,12 +463,17 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   function countOf(sec) {
     if (sec.type === 'entries') return (sec.groups || []).reduce(function (n, g) { return n + (g.entries || []).length; }, 0);
     if (sec.type === 'publications') return (sec.groups || []).reduce(function (n, g) { return n + (g.items || []).length; }, 0);
+    if (sec.type === 'table') return (sec.rows || []).length;
+    if (sec.type === 'text') return '';
     return (sec.items || []).length;
   }
   function renderNav() {
     var nav = $('secnav'); nav.innerHTML = '';
     var list = S.data.sections.map(function (s) { return { id: s.id, label: s.title, n: countOf(s) }; });
+    list.push({ id: 'why', label: 'Coin & why', n: '' });
+    list.push({ id: 'linkedin', label: 'LinkedIn', n: ((S.data.site || {}).linkedin || {}).posts ? S.data.site.linkedin.posts.length : '' });
     list.push({ id: 'tags', label: 'Tags', n: S.data.tagset ? S.data.tagset.length : '' });
+    list.push({ id: 'profiles', label: 'Custom CVs', n: (S.data.profiles || []).length || '' });
     list.push({ id: 'meta', label: 'Header & contact', n: '' });
     list.forEach(function (it) {
       var b = document.createElement('button');
@@ -492,7 +516,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     input.addEventListener(o.select ? 'change' : 'input', function () {
       var v = input.value;
       if (o.type === 'number') { if (v === '') delete obj[key]; else obj[key] = Number(v); }
-      else if (o.select && o.dropEmpty && v === '') delete obj[key];
+      else if (o.dropEmpty && v === '') delete obj[key];
       else if (o.select && o.dropDefault && v === o.select[0][0]) delete obj[key];
       else obj[key] = v;
       if (pv) pv.innerHTML = preview(v);
@@ -529,6 +553,18 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     rerender: function () { var y = window.scrollY; renderEditor(); after(); window.scrollTo(0, y); },
     go: function (id) { S.section = id; renderNav(); renderEditor(); window.scrollTo({ top: 0 }); }
   };
+  /* The coin under the homepage hero (tools/build.py why_section): site.why, one story per side.
+     A blank line starts a paragraph; *italic* sets a phrase in the serif, **bold** colours it. */
+  var WHY_DRAFT = {
+    shared: 'Molecules and manuscripts are two different interests, but they are two sides of one coin, and that coin is who I am. University is meant to teach you how to think, and each turban I wear teaches me a different way.',
+    molecules: '*I stumbled into research.* It started as a box to check on the way to medicine. In my first semester I joined a peptide lab as a math major, surrounded by chemists, with no clue what I was getting myself into. I took it seriously anyway, and **it became the career I want**.\n\n' +
+      '*Not everything goes to plan.* When our lab moved to Houston, **our team kept the work going from Newark**.\n\n' +
+      '*On the ambulance, medicine is about the next ten minutes. In the lab, it is about the next ten years.* **Translational medicine sits between the two**, and that is where I want to work: treating patients, and helping build treatments that reach far more than one person.',
+    manuscripts: '*I stumbled into history too.* While studying abroad in Sweden, I met Satnam Singh, a Danish historian. I read his work and **wanted to add to the field myself**.\n\n' +
+      '*The tools are getting extraordinary.* Soon we will design molecules faster than we can test them, and the hardest questions will not be computational: who gets these therapies, who patients trust, how we care for people at the end of life. **History helps me think about those.**\n\n' +
+      '*Sikh history stays with me too,* as **a pursuit of its own**.'
+  };
+  var LIUI = { el: el, esc: esc, note: note, sync: TAGUI.sync, rerender: TAGUI.rerender, publish: function () { save(); } };   /* admin/linkedin.js */
   function tagBlock(e) { return window.AdminTags ? AdminTags.block(e, S.data, TAGUI) : null; }
 
   function bulletsEditor(entry, rerender) {
@@ -550,15 +586,114 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     return wrap;
   }
 
+  /* An image picked here, made smaller and committed straight to the public repository (images/cv/…), so the
+     site and the CV build can use it; needs the token. Resolves to the file's path. A photo removed later stays
+     in the repository; only the CV stops pointing at it. */
+  function uploadImage(file, base, type, edge) {
+    var c = cfg();
+    if (!c.token || S.source !== 'github') return Promise.reject(new Error('connect a GitHub token in Settings first; photos are saved straight to the repository'));
+    if (!/^image\//.test(file.type)) return Promise.reject(new Error('that file is not an image'));
+    if (!window.createImageBitmap) return Promise.reject(new Error('this browser cannot resize images'));
+    return createImageBitmap(file).then(function (bmp) {
+      var k = Math.min(1, edge / Math.max(bmp.width, bmp.height));
+      var cnv = document.createElement('canvas');
+      cnv.width = Math.round(bmp.width * k); cnv.height = Math.round(bmp.height * k);
+      var ctx = cnv.getContext('2d');
+      if (type === 'image/jpeg') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cnv.width, cnv.height); }
+      ctx.drawImage(bmp, 0, 0, cnv.width, cnv.height);
+      return new Promise(function (res) { cnv.toBlob(res, type, 0.88); });
+    }).then(function (blob) {
+      if (!blob || blob.type !== type) throw new Error('this browser could not convert the image');
+      return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(String(r.result).split(',')[1]); }; r.onerror = rej; r.readAsDataURL(blob); });
+    }).then(function (b64) {
+      var path = 'images/cv/' + (String(base || 'photo').replace(/[^a-z0-9-]/g, '') || 'photo') + '-' + Math.random().toString(36).slice(2, 8) + (type === 'image/jpeg' ? '.jpg' : '.webp');
+      return gh('/repos/' + c.repo + '/contents/' + path, { method: 'PUT', body: { message: 'Add CV photo ' + path, content: b64, branch: c.branch } })
+        .then(function () { return path; });
+    });
+  }
+  var localPics = {};     /* path -> the picked file, shown until GitHub Pages publishes it */
+  function photoBlock(obj, key, o, rerender) {
+    var box = el('div', { class: 'f photo-f' }, [el('span', { text: o.label })]);
+    var row = el('div', { class: 'photo-row' });
+    if (obj[key]) {
+      var img = el('img', { class: 'photo-thumb', alt: '' });
+      img.onerror = function () { img.replaceWith(el('span', { class: 'photo-wait', text: 'Saved; it shows here once the site publishes it.' })); };
+      img.src = localPics[obj[key]] || obj[key];
+      row.appendChild(img);
+    }
+    var pick = el('input', { type: 'file', accept: 'image/*', hidden: '', 'aria-label': o.label });
+    var btn = el('button', { type: 'button', class: 'btn btn--small', text: obj[key] ? 'Replace' : '+ Add photo' });
+    btn.onclick = function () { pick.click(); };
+    pick.onchange = function () {
+      var f = pick.files && pick.files[0]; if (!f) return;
+      btn.disabled = true; btn.textContent = 'Uploading…';
+      uploadImage(f, o.base, o.type, o.edge).then(function (path) {
+        localPics[path] = URL.createObjectURL(f); obj[key] = path; syncBar(); rerender();
+        note('ok', 'Photo uploaded. <b>Save &amp; publish</b> to put it on the ' + esc(o.where) + '.');
+      }).catch(function (e) {
+        btn.disabled = false; btn.textContent = obj[key] ? 'Replace' : '+ Add photo';
+        note('err', 'The photo was not uploaded: ' + esc(e.message) + '.');
+      });
+    };
+    row.appendChild(btn); row.appendChild(pick);
+    if (obj[key]) row.appendChild(el('button', { type: 'button', class: 'btn btn--small btn--danger', text: 'Remove', onclick: function () {
+      delete obj[key]; if (o.alt) delete obj[o.alt]; syncBar(); rerender(); } }));
+    box.appendChild(row);
+    if (o.hint) box.appendChild(el('small', { text: o.hint }));
+    if (obj[key] && o.alt) box.appendChild(field('Caption', obj, o.alt, { dropEmpty: true, hint: 'Under the photo; also read out by screen readers' }));
+    return box;
+  }
+  function projectsEditor(e, rerender) {
+    var wrap = el('div', { class: 'f' }, [el('span', { text: 'Projects' }),
+      el('small', { text: 'Each prints as an italic title, its bullets, then its status line. The entry’s own bullets come first.' })]);
+    (e.projects || []).forEach(function (pr, i) {
+      wrap.appendChild(el('div', { class: 'sub-card' }, [
+        el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Project ' + (i + 1) }), mover(e.projects, i, rerender)]),
+        field('Title', pr, 'title', { area: true, preview: true }),
+        bulletsEditor(pr, rerender),
+        field('Status', pr, 'status', { area: true, preview: true, dropEmpty: true, hint: 'The last bullet, e.g. ‘Independent study’ module, project complete, manuscript in preparation' })
+      ]));
+    });
+    wrap.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Project', onclick: function () {
+      (e.projects = e.projects || []).push({ title: '', bullets: [], status: '' }); rerender(); } })]));
+    return wrap;
+  }
+  function rolesEditor(e, rerender) {
+    var wrap = el('div', { class: 'f' }, [el('span', { text: 'Roles' }),
+      el('small', { text: 'Dated lines under the heading, e.g. one per squad. Leave the entry’s own Dates empty.' })]);
+    (e.roles || []).forEach(function (r, i) {
+      wrap.appendChild(el('div', { class: 'sub-card' }, [
+        el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Role ' + (i + 1) }), mover(e.roles, i, rerender)]),
+        el('div', { class: 'row3' }, [field('Role', r, 'title', { area: true, preview: true }), field('Organisation', r, 'org', { area: true, preview: true, dropEmpty: true }),
+          field('Dates', r, 'dates', { area: true })])]));
+    });
+    wrap.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Role', onclick: function () {
+      (e.roles = e.roles || []).push({ title: '', dates: '' }); rerender(); } })]));
+    return wrap;
+  }
+
   function entryCard(sec, g, arr, i, rerender) {
     var e = arr[i];
     var card = el('div', { class: 'card' + ((e.show || 'both') === 'site' ? ' is-hidden-cv' : '') });
     card.appendChild(el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Entry ' + (i + 1) }), mover(arr, i, rerender)]));
     card.appendChild(el('div', { class: 'row' }, [
-      field('Heading', e, 'heading', { area: true, preview: true }),
+      field('Heading', e, 'heading', { area: true, preview: true, hint: 'The bold title' }),
       field('Dates', e, 'dates', { area: true, hint: 'New line = line break on the PDF' })
     ]));
+    card.appendChild(el('div', { class: 'row3' }, [
+      field('Organisation', e, 'org', { area: true, preview: true, hint: 'Second line; after a comma on one-line entries' }),
+      field('Location', e, 'location', { hint: 'Right-hand side, under the dates' }),
+      field('Note', e, 'note', { area: true, preview: true, hint: 'After a dash on one-line entries' })
+    ]));
+    card.appendChild(field('Link', e, 'url', { type: 'url', dropEmpty: true, hint: 'Paste an address to make the title clickable on the PDF, Word file and site' }));
+    if (sec.id === 'funding' || e.amount || e.selectivity) card.appendChild(el('div', { class: 'row' }, [
+      field('Amount', e, 'amount', { dropEmpty: true, hint: 'e.g. $6,500; printed after the title' }),
+      field('How selective', e, 'selectivity', { dropEmpty: true, hint: 'e.g. 1 recipient per annum, 1 of 15 fellows' })]));
+    if (e.roles && e.roles.length) card.appendChild(rolesEditor(e, rerender));
     card.appendChild(bulletsEditor(e, rerender));
+    if (sec.id === 'research' || (e.projects && e.projects.length)) card.appendChild(projectsEditor(e, rerender));
+    card.appendChild(photoBlock(e, 'photo', { label: 'Photo (site only)', base: e.id, type: 'image/webp', edge: 1600, alt: 'photoAlt', where: 'site',
+      hint: 'Shown under this entry on the site’s CV page, not on the PDF or Word file' }, rerender));
     card.appendChild(tagBlock(e));
     var adv = el('details', { class: 'adv' }, [el('summary', { text: 'More options' })]);
     adv.appendChild(el('div', { class: 'row3' }, [
@@ -566,6 +701,12 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       field('Homepage category', e, 'kind', { select: CATS, dropEmpty: true }),
       field('Keep together (lines)', e, 'keep', { type: 'number', hint: 'Avoids a page break before this entry on the PDF' })
     ]));
+    adv.appendChild(field('Note to self', e, 'prompt', { area: true, hint: 'A grey prompt on CVs with “Notes to self” on (Custom CVs)' }));
+    if (!(e.roles && e.roles.length)) adv.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Roles under this heading',
+      onclick: function () { e.roles = [{ title: '', dates: '' }]; rerender(); } })]));
+    if (sec.id !== 'research' && !(e.projects && e.projects.length)) adv.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn btn--small', text: '+ Projects under this entry',
+      onclick: function () { e.projects = [{ title: '', bullets: [], status: '' }]; rerender(); } })]));
+    if (e.id) adv.appendChild(el('p', { class: 'help', html: 'Id <code>' + esc(e.id) + '</code>, used by Custom CVs.' }));
     card.appendChild(adv);
     return card;
   }
@@ -576,10 +717,49 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
     var rer = function () { var y = window.scrollY; renderEditor(); after(); window.scrollTo(0, y); };
     ed.appendChild(el('p', { class: 'help', html: 'Formatting: <code>**bold**</code> <code>*italic*</code> <code>[text](https://link)</code> <code>22^{nd}</code>. When a field uses formatting, the line under it shows how it will look.' }));
 
+    if (S.section === 'why') {
+      ed.prepend(el('h2', { text: 'Coin & why' }));
+      var why = (S.data.site || {}).why;
+      if (!why) {
+        ed.appendChild(el('div', { class: 'card' }, [
+          el('p', { html: 'A coin under your name on the homepage turns over between <b>molecules</b> and <b>manuscripts</b>, with a short story for each side. It isn&rsquo;t on the site yet.' }),
+          el('button', { type: 'button', class: 'btn btn--primary', text: 'Start from the draft text', onclick: function () {
+            (S.data.site = S.data.site || {}).why = JSON.parse(JSON.stringify(WHY_DRAFT)); rer();
+          } })
+        ]));
+        return;
+      }
+      ed.appendChild(el('div', { class: 'card' }, [
+        field('Under the coin (both sides)', why, 'shared', { area: true, preview: true }),
+        field('Molecules side', why, 'molecules', { area: true, preview: true, rows: 8, hint: 'A blank line starts a new paragraph. *Italic* sets a phrase in the serif; **bold** colours it blue.' }),
+        field('Manuscripts side', why, 'manuscripts', { area: true, preview: true, rows: 8, hint: 'The same, with **bold** in gold. Both sides need some text for the coin to show.' })
+      ]));
+      var off = el('span', {});
+      off.appendChild(el('button', { type: 'button', class: 'btn btn--small btn--danger', text: 'Take the coin off the homepage', onclick: function () {
+        if (confirmInline(off, function () { delete S.data.site.why; rer(); })) return;
+      } }));
+      ed.appendChild(el('div', { class: 'add' }, [off]));
+      return;
+    }
+
+    if (S.section === 'linkedin') {
+      ed.innerHTML = '';
+      ed.appendChild(el('h2', { text: 'LinkedIn posts' }));
+      if (window.AdminLinkedIn) AdminLinkedIn.page(ed, S.data, LIUI);
+      return;
+    }
+
     if (S.section === 'tags') {
       ed.innerHTML = '';
       ed.appendChild(el('h2', { text: 'Tags' }));
       if (window.AdminTags) AdminTags.page(ed, S.data, TAGUI);
+      return;
+    }
+
+    if (S.section === 'profiles') {
+      ed.innerHTML = '';
+      ed.appendChild(el('h2', { text: 'Custom CVs' }));
+      if (window.AdminProfiles) AdminProfiles.page(ed, S.data, TAGUI);
       return;
     }
 
@@ -590,7 +770,15 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
         el('div', { class: 'row' }, [field('Name', m, 'name'), field('Location', m, 'location')]),
         el('div', { class: 'row' }, [field('Email', m, 'email', { type: 'email' }), field('Phone (CV only)', m, 'phone')]),
         field('LinkedIn URL', m, 'linkedin', { type: 'url' }),
+        el('div', { class: 'row' }, [field('Website (on the CV)', m, 'website', { type: 'url' }), field('ORCID (on the CV)', m, 'orcid')]),
+        field('Objective line (under the header on the CV)', m, 'objective', { area: true, preview: true, hint: 'Custom CVs can replace it with their own.' }),
         field('Closing line on the PDF', m, 'closing'),
+        photoBlock(m, 'headshot', { label: 'Headshot', base: 'headshot', type: 'image/jpeg', edge: 900, where: 'CVs',
+          hint: 'Printed beside your name on CVs with “Headshot” ticked in Custom CVs' }, function () { var y = window.scrollY; renderEditor(); window.scrollTo(0, y); }),
+        el('label', { class: 'check' }, [(function () {
+          var cb = el('input', { type: 'checkbox' }); cb.checked = !!m.ampersand;
+          cb.onchange = function () { if (cb.checked) m.ampersand = true; else delete m.ampersand; syncBar(); }; return cb;
+        })(), document.createTextNode(' Write “and” as “&” on the CV (paper, talk and project titles, and anything in quotes, keep “and”)')]),
         field('“As of” date on the PDF and site', m, 'asOf', { hint: 'Set to the current month automatically when you save, unless you untick the box below.' }),
         el('label', { class: 'check' }, [(function () {
           var cb = el('input', { type: 'checkbox' }); cb.checked = S.autoAsOf !== false;
@@ -609,7 +797,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       sec.groups.forEach(function (g, gi) {
         g.entries = g.entries || [];
         var head = el('div', { class: 'group-head' }, [
-          field('Subheading', g, 'title', { hint: sec.groups.length > 1 || g.title ? 'Shown between ◇ marks on the PDF' : 'Leave blank for none' }),
+          field('Subheading', g, 'title', { hint: sec.groups.length > 1 || g.title ? 'Shown in italics above its entries on the PDF' : 'Leave blank for none' }),
           sec.id === 'research' ? field('Homepage colour', g, 'field', { select: [['science', 'Science (blue)'], ['history', 'History (gold)']] }) : null,
           mover(sec.groups, gi, rer)
         ]);
@@ -669,6 +857,19 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       });
       ed.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add presentation', onclick: function () {
         sec.items.unshift({ authors: '', title: '', show: 'both', venues: [{ name: '', format: 'Poster', year: String(new Date().getFullYear()) }] }); rer(); } })]));
+    }
+
+    if (sec.type === 'table') {
+      sec.rows = sec.rows || [];
+      sec.rows.forEach(function (r, i) {
+        ed.appendChild(el('div', { class: 'card' }, [el('div', { class: 'card-top' }, [el('span', { class: 'n', text: 'Row ' + (i + 1) }), mover(sec.rows, i, rer)]),
+          el('div', { class: 'row' }, [field('Label', r, 'label'), field('Text', r, 'text', { area: true, preview: true })])]));
+      });
+      ed.appendChild(el('div', { class: 'add' }, [el('button', { type: 'button', class: 'btn', text: '+ Add row', onclick: function () { sec.rows.push({ label: '', text: '' }); rer(); } })]));
+    }
+
+    if (sec.type === 'text') {
+      ed.appendChild(el('div', { class: 'card' }, [field('Text', sec, 'text', { area: true, preview: true, rows: 4 })]));
     }
 
     if (sec.type === 'list' || sec.type === 'flatlist') {

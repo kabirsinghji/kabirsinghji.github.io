@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scientific Research — Kabir Singh</title>
 <link rel="canonical" href="https://kabirsinghji.github.io/science.html">
-<meta name="description" content="Computational protein and peptide design, mathematical neuroscience, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
+<meta name="description" content="Computational protein and peptide design, modelling the MAPK/ERK pathway in cancer, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
 <meta property="og:title" content="Scientific Research — Kabir Singh">
-<meta property="og:description" content="Computational protein and peptide design, mathematical neuroscience, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
+<meta property="og:description" content="Computational protein and peptide design, modelling the MAPK/ERK pathway in cancer, stochastic modelling of amyloid aggregation, and the history of end-of-life care.">
 <meta property="og:url" content="https://kabirsinghji.github.io/science.html">
 <meta property="og:image" content="https://kabirsinghji.github.io/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -16,30 +16,27 @@
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/spectral-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/hanken-grotesk-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=9">
-<script src="theme.js?v=1"></script>
+<link rel="preload" href="fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/newsreader-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=15">
+<script src="theme.js?v=2"></script>
 <script src="peek.js?v=9" defer></script>
+<script src="beat.js?v=2" defer></script>
+<script src="antibody.js?v=1" defer></script>
+<script src="figs.js?v=3" defer></script>
+<script src="pager.js?v=1" defer></script>
 </head>
 <body>
 <header class="wrap top">
-  <a class="brand" href="./">Kabir Singh</a>
+  <a class="brand" href="./">Kabir Singh<span class="pa" lang="pa">ਕਬੀਰ ਸਿੰਘ</span></a>
   <nav class="nav" aria-label="Site">
-    <a href="./">CV</a>
-    <a href="science.html" aria-current="page">Scientific Research</a>
-    <a href="history.html">History Research</a>
+    <a href="cv.html">CV</a>
+    <a href="science.html" aria-current="page">Science</a>
+    <a href="history.html">History</a>
     <a href="about.html">About</a>
   </nav>
 </header>
 <main class="wrap page">
-
-  <figure class="illustration illustration--wide">
-    <img src="science-header.webp"
-         alt="Close-up of a protein surface rendered in blue, grey and pink, with a peptide drawn as green and violet sticks entering a pocket at the right"
-         width="1398" height="350" fetchpriority="high">
-  </figure>
-
 
   <header class="masthead masthead--sub">
     <h1>Scientific Research</h1>
@@ -49,6 +46,14 @@
       directly.
     </p>
   </header>
+
+  <figure class="mol">
+    <div class="mol-stage">
+      <canvas tabindex="0" role="img" aria-label="The anti-GlialCAM antibody fragment from the paper, drawn from its coordinates; it turns with the cursor, and clicking, or pressing Enter, docks copies of the peptide CAP8 into its binding site."></canvas>
+      <p class="mol-chip" aria-live="polite">[bound] CAP8 &middot; K<sub>d</sub> 0.294 mM</p>
+    </div>
+    <figcaption><span><span class="k k-l">light chain</span> <span class="k k-h">heavy chain</span> <span class="k k-p">CAP8, cyclo-KPYPFWDD</span></span><span>[move to turn it &middot; click to dock]</span></figcaption>
+  </figure>
 
   <figure class="lab-photo">
     <img src="research-lab.webp"
@@ -171,13 +176,68 @@
   </section>
 
   <section class="project">
-    <h2>Reducing biophysical neuron models</h2>
+    <h2>Modelling the MAPK/ERK pathway in cancer</h2>
     <p class="project-meta"><img class="mark" src="logos/njit.webp" alt="" width="264" height="263">NJIT &middot; PI: Dr. Horacio Rotstein &middot; 2026&ndash;present</p>
     <dl class="qa">
       <dt>Question</dt>
-      <dd>Detailed neuronal models have too many parameters to reason about.
-          Which reduced descriptions preserve the dynamics that matter?</dd>
+      <dd>The MAPK/ERK pathway relays growth signals from the cell surface to the
+          nucleus, and in many cancers a mutation along it leaves that signal
+          switched on. Can the pathway be simplified into a model small enough to
+          reason about, yet faithful enough to show where a therapy should
+          intervene?</dd>
+      <dt>Approach</dt>
+      <dd>Simplifying and modelling the Ras&ndash;Raf&ndash;MEK&ndash;ERK cascade as a
+          dynamical system, with its feedback loops, for therapeutic
+          intervention.</dd>
+      <dt>Where it stands</dt>
+      <dd>Independent study, fall 2026.</dd>
     </dl>
+    <figure class="flow" id="fig-flow">
+      <div class="flow-row" role="img" aria-label="A round density of cell-to-cell variation in two pathway rates, pushed through the MAPK/ERK model, becomes three densities of ERK response: normal cells spread out in a comet shape, with varied adaptation; cells with Raf stuck on sit at high ERK with no adaptation; adding a MEK inhibitor lowers ERK but does not restore adaptation.">
+        <div class="flow-panel flow-in">
+          <div class="flow-sq"><img class="lt" src="fig/theta-light.webp" alt="" width="520" height="520" loading="lazy"><img class="dk" src="fig/theta-dark.webp" alt="" width="520" height="520" loading="lazy"></div>
+          <p class="flow-cap">Cell-to-cell variation<span>&theta; = (Raf rate, feedback strength)</span></p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">
+          <span>MAPK/ERK model</span>
+          <svg viewBox="0 0 120 12"><path d="M2 6H116M108 1L116 6L108 11"/></svg>
+        </div>
+        <div class="flow-panel flow-out">
+          <div class="flow-sq flow-axes">
+            <div class="flow-c" data-c="normal"><img class="lt" src="fig/erk-normal-light.webp" alt="" width="520" height="520" loading="lazy"><img class="dk" src="fig/erk-normal-dark.webp" alt="" width="520" height="520" loading="lazy"></div>
+            <div class="flow-c" data-c="mutant"><img class="lt" src="fig/erk-mutant-light.webp" alt="" width="520" height="520" loading="lazy"><img class="dk" src="fig/erk-mutant-dark.webp" alt="" width="520" height="520" loading="lazy"></div>
+            <div class="flow-c" data-c="drug"><img class="lt" src="fig/erk-drug-light.webp" alt="" width="520" height="520" loading="lazy"><img class="dk" src="fig/erk-drug-dark.webp" alt="" width="520" height="520" loading="lazy"></div>
+            <button type="button" class="flow-tag" data-c="normal" style="left:30%;top:44%">normal</button>
+            <button type="button" class="flow-tag is-red" data-c="mutant" style="left:80%;top:93%">Raf stuck on</button>
+            <button type="button" class="flow-tag" data-c="drug" style="left:22%;top:93%">+ MEK inhibitor</button>
+            <span class="flow-ax flow-ax--x">peak ERK &rarr;</span>
+            <span class="flow-ax flow-ax--y">adaptation &rarr;</span>
+          </div>
+          <p class="flow-cap"><i>f</i>(&theta;)<span>the cells&rsquo; ERK response</span></p>
+        </div>
+      </div>
+      <figcaption>
+        <p class="fig-state">Every cell runs the pathway with slightly different rates. Draw those
+        rates from a density, run each draw through the model, and the cells&rsquo; responses form a
+        new density. Normal cells spread out: some adapt a lot, some barely. With Raf stuck on,
+        the population collapses to high ERK that never adapts; a MEK inhibitor lowers ERK but
+        does not bring adaptation back.</p>
+        <span>80,000 simulated cells &middot; hover or tap a label</span>
+        <span>A toy model, not data</span>
+      </figcaption>
+    </figure>
+    <figure class="fig" id="fig-mapk" data-fig="mapk">
+      <div class="fig-stage"></div>
+      <figcaption>
+        <p class="fig-state" aria-live="polite">Normal: a brief growth signal gives a brief pulse of ERK, and ERK&rsquo;s feedback onto Raf keeps it in check.</p>
+        <span class="fig-btns">
+          <button type="button" class="fig-btn" data-k="mut" aria-pressed="false">[ Raf normal &middot; mutate it ]</button>
+          <button type="button" class="fig-btn" data-k="inh" aria-pressed="false">[ no drug &middot; add a MEK inhibitor ]</button>
+        </span>
+        <span><span class="k" style="--c: var(--sky)">signal</span> &nbsp;<span class="k" style="--c: var(--gold)">feedback</span> &nbsp;<span class="k" style="--c: var(--faint)">normal, for comparison</span></span>
+        <span>A toy model, not data</span>
+      </figcaption>
+    </figure>
   </section>
 
 
@@ -190,9 +250,9 @@
 
 <footer class="foot">
   <div class="wrap">
-    <p class="meta"><a href="./">&larr; Back to the CV</a><br><a href="mailto:kabirsinghji@gmail.com">kabirsinghji@gmail.com</a> &middot; <a href="admin.html">Admin</a></p>
+    <p class="meta"><span class="open">Open to correspondence</span> &middot; <a href="#" data-u="kabirsinghji" data-d="gmail" data-t="com">kabirsinghji [at] gmail [dot] com</a><br>Last updated October 2026 &middot; <a href="curious.html">The long way round</a> &middot; <a href="admin.html">Admin</a></p>
     <div class="sign-off">
-      <p class="coin" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
+      <p class="couplet" lang="fa" dir="rtl" title="Deg o tegh o fateh o nusrat-i bedirang, yāft az Nānak Gurū Gobind Singh">دیگ و تیغ و فتح و نصرت بیدرنگ<br>یافت از نانک گورو گوبند سنگه</p>
       <p class="pa" lang="pa">ਅਕਾਲ ਸਹਾਇ</p>
     </div>
   </div>
