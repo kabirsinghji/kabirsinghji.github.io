@@ -1,0 +1,237 @@
+\documentclass[11pt,a4paper]{article}
+\newif\ifmaster
+\mastertrue % Set \masterfalse to remove all editorial expansion prompts.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}
+\usepackage[margin=1.8cm,includefoot,footskip=0.8cm]{geometry}
+\usepackage{xcolor,enumitem,array,tabularx,booktabs,needspace,hyperref,fancyhdr,lastpage,microtype}
+\hypersetup{hidelinks,pdfauthor={Kabir Singh},pdftitle={Kabir Singh - Master Curriculum Vitae}}
+\definecolor{promptgray}{gray}{0.46}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlist[itemize]{leftmargin=1.3em,topsep=1pt,itemsep=0pt,parsep=0pt,partopsep=0pt}
+\setlength{\tabcolsep}{0pt}
+\emergencystretch=2em
+\pagestyle{fancy}\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}
+\fancyfoot[L]{\footnotesize Kabir Singh $\cdot$ Curriculum Vitae $\cdot$ October 2026}
+\fancyfoot[R]{\footnotesize Page \thepage\ of \pageref{LastPage}}
+% Faux small caps (Charter BT has no small caps): each word keeps a full-size
+% initial and the rest is uppercase at \footnotesize, as in the two-page CV.
+\makeatletter
+\def\fauxsc#1{\@fsc#1 \@@}
+\def\@fsc#1 #2\@@{\@fscw#1\@@\if\relax\detokenize{#2}\relax\else\ \@fsc#2\@@\fi}
+\def\@fscw#1#2\@@{#1{\footnotesize\MakeUppercase{#2}}}
+\makeatother
+\newcommand{\cvsection}[1]{\needspace{3\baselineskip}\vspace{9pt}{\fauxsc{#1}}\par\vspace{2pt}\hrule height .45pt\vspace{5pt}}
+\newcommand{\subhead}[1]{\needspace{2\baselineskip}\vspace{4pt}{\itshape\bfseries #1}\par\vspace{2pt}}
+\newcommand{\entry}[4]{\needspace{2\baselineskip}\vspace{4pt}\noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{1em}}r@{}}\textbf{#1}&#2\\[-1pt]#3&#4\end{tabularx}\par}
+\newcommand{\role}[4]{\entry{#1}{#2}{#3}{#4}}
+% Split dates, as in the full CV: second period (or "(Expected)") on its own line.
+% \entrysplit{title}{dates, line 1}{dates, line 2}{institution}{location}
+\newcommand{\entrysplit}[5]{\needspace{3\baselineskip}\vspace{4pt}\noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{1em}}r@{}}\textbf{#1}&#2\\[-1pt]#4&\begin{tabular}[t]{@{}r@{}}#3\\#5\end{tabular}\end{tabularx}\par}
+% \splitdate{line 1}{line 2} for the date column of \award
+\newcommand{\splitdate}[2]{\begin{tabular}[t]{@{}r@{}}#1\\#2\end{tabular}}
+\newcommand{\award}[3]{\needspace{1.3\baselineskip}\noindent\begin{tabularx}{\linewidth}{@{}X@{\hspace{1em}}r@{}}\textbf{#1}\if\relax\detokenize{#2}\relax\else\ --- #2\fi & #3\end{tabularx}\par\vspace{2pt}}
+\newcommand{\prompt}[1]{\ifmaster\begin{itemize}[leftmargin=1.45em]\item[\textcolor{promptgray}{$\rightarrow$}]\textcolor{promptgray}{\itshape #1}\end{itemize}\fi}
+\newcommand{\bullets}[1]{\begin{itemize}#1\end{itemize}}
+\newcommand{\cvitem}[1]{\item #1}
+\newcommand{\venue}[3]{\noindent\hspace*{1.0em}\begin{tabularx}{\dimexpr\linewidth-1em\relax}{@{}X@{\hspace{1em}}r@{}}#1 (\emph{#2}) & #3\end{tabularx}\par}
+\newcommand{\course}[2]{\noindent\begin{tabularx}{\linewidth}{@{}>{\itshape}p{3.3cm}@{\hspace{0.5em}}X@{}}#1 & #2\end{tabularx}\par}
+\begin{document}
+\begin{center}
+{\Large\bfseries Kabir Singh}\par\vspace{3pt}
+\small \href{mailto:kabirsinghji@gmail.com}{kabirsinghji@gmail.com} $\cdot$ +1 917 636 8664 $\cdot$ \href{https://kabirsinghji.github.io}{kabirsinghji.github.io} $\cdot$ \href{https://orcid.org/0009-0002-5159-5879}{ORCID 0009-0002-5159-5879}
+\end{center}\vspace{-5pt}
+
+\cvsection{Education}
+\entrysplit{B.S. Mathematical Sciences (Mathematical Biology)}{Sep 2023 -- May 2027}{(Expected)}{Albert Dorman Honors College and Jordan Hu College of Sciences and Liberal Arts, NJIT}{Newark, NJ, USA}
+\bullets{\cvitem{UK Good 2:1 Honours equivalent; Dean's List in all semesters.}\cvitem{Minors: Biomedical Engineering Technology, History, Philosophy and Applied Ethics; Honors tracks: Medical Humanities and Global Studies (first Honors College student to pursue two).}\cvitem{Academic scholarships exceeding \$100,000, including Academic Excellence, Honors Merit, Honors Residential, and Highlander Achievement scholarships; tuition and board scholarship support.}}
+\vspace{3pt}
+\course{Biomedical}{\textbf{Applications in Healthcare}; Biochemistry; Cell \& Molecular Biology}
+\course{Medicine \& society}{\textbf{Biomedical Ethics}; Health, Justice, \& Capitalism; Medical Sociology; \textbf{Medicine \& Law in Modern History}}
+\course{Quantitative}{Applied Numerical Methods; Differential Equations (ordinary \& partial); \textbf{Linear Algebra}; \textbf{Mathematical Modeling}; Stochastic \& Discrete Models in Biology}
+\course{Independent study}{Hawkes process model of amyloid nucleation (Dr James Maclaurin); \textbf{simplifying \& modeling biophysical neuron systems} (Dr Horacio Rotstein, in progress); American medicine \& end-of-life care (Dr Stephen Pemberton, in progress); intellectual history in the early modern Khalsa (Harvard Sikh Center \& Satnam Singh, in progress)}
+% CHECK: October 2026 two-page PDF labels Rotstein study MAPK/ERK therapeutic intervention; newer cv.html and science.html identify reduced biophysical neuronal models. Use latter.
+\entry{Exchange semester (Global E3), Lund University, Sweden}{Jan 2025 -- Jun 2025}{Faculty of Engineering (LTH); 44 ECTS}{}
+\bullets{\cvitem{Fellow, Institute of International Education's Global Engineering Education Exchange (Global E3).}}
+\vspace{3pt}
+\course{Master's level}{Biomathematics; Immunotechnology; Microscopy, Bio-Imaging; \textbf{Ultrasound Physics \& Technology}}
+\course{Undergraduate}{Patent \& Intellectual Property Rights}
+
+\cvsection{Research Experience}
+\subhead{$\diamond$\ Computational and Mathematical Biology\ $\diamond$}
+\entry{Undergraduate Researcher and Computational Biology Team Lead}{Oct 2023 -- Present}{KumarLab; PI: Dr Vivek Kumar, University of Houston (previously NJIT)}{Houston, TX / Newark, NJ}
+\bullets{\cvitem{Lead undergraduate and graduate trainees in computational development of peptide therapeutics; trained 15+ lab associates and secured over \$15,000 in direct project funding.}\cvitem{Designed cyclic peptides against multiple sclerosis autoantibodies; ran molecular-dynamics simulations for the published lead peptide CAP8 (KPYPFWDD), from an eight-residue design scaffold and Rosetta/FlexPepDock workflow.}\cvitem{Validated designs with 100 ns GROMACS simulations and alanine scanning; in the published study, CAP8 bound anti-GlialCAM autoantibody with $K_d=0.294$ mM, versus 4.82 mM linear and 2.61 mM unrelated cyclic controls, and cut epitope detection on Western blot by 69\% versus 27\% and 5\% for controls.}\cvitem{Led a funded non-hormonal male-contraception project: machine-learning-guided cyclic peptide design against \emph{redacted target}, docking and refinement; grant writing, manuscript and patent application in preparation.}\cvitem{Conducted dissections and assisted animal work on angiogenic hydrogels subsequently published; maintained computational research after the lab relocated to Houston.}}
+\entry{Undergraduate Researcher, Computational Bionanotechnology}{Jun 2026 -- Present}{PI: Prof Stefano Angioletti-Uberti, Department of Materials, Imperial College London}{London, UK}
+\bullets{\cvitem{Apply statistical mechanics, molecular dynamics, protein language models and machine-learning methods to enzyme and binder design and soft-matter/biomaterial systems.}\cvitem{Contributed code to BAGEL (Biomolecular Algorithm for Guidance in Energy Landscape), a tool for searching biomolecular energy landscapes; investigate peptide designs that mimic natural ligands.}\cvitem{Designs currently in \emph{in vitro} testing.} % CHECK: keep this line out of public/tailored versions until the work can be made public.
+}
+\prompt{Specify the code modules you built or changed in BAGEL, test dataset and result at close.}
+\entry{Undergraduate Researcher, Mathematical Neuroscience}{Sep 2026 -- Present}{PI: Dr Horacio Rotstein, NJIT}{Newark, NJ}
+\bullets{\cvitem{Derive reduced mathematical descriptions of biophysical neuronal models and characterize the dynamical properties retained by the reduced systems.}}
+\prompt{Which neuron models, reduction method and validation comparison?}
+\entry{Undergraduate Researcher, Mathematical Modeling}{Oct 2025 -- May 2026}{PI: Dr James Maclaurin, NJIT}{Newark, NJ}
+\bullets{\cvitem{Applied Hawkes self-exciting point processes to secondary nucleation and feedback in amyloid formation.}}
+\prompt{Record mathematical assumptions, fitted/simulated quantities and final deliverable.}
+\subhead{$\diamond$\ Intellectual and Cultural History\ $\diamond$}
+\entry{Emerging Scholars Research Fellow, Early Modern Sikh History}{Sep 2026 -- Dec 2026}{Harvard Sikh Center; mentor: Satnam Singh}{ }
+\bullets{\cvitem{Research `Dissemination and the making of Khalsa authority in a contested panth': how the early Khalsa came to dominate the wider Sikh world against rival claimants, including the Bandai Khalsa, Minas, Ram Raiyas and Hindaliyas.}\cvitem{Argue that the answer lies less in politics than in transmission: the Khalsa's consolidation of `authentic Sikh teachings' through \emph{katha} preceded and enabled its control of the panth.}\cvitem{Sources: Gurmukhi and Persian primary materials, including works attributed to Bhai Mani Singh, \emph{hukamname}, \emph{rahit-nama} and sampardaic literature, alongside Persian and European accounts of the period.}\cvitem{Twelve-week fellowship term producing a paper and a presentation: first, a characterization of the intellectual landscape and its conflicts; second, a prosopography linking intellectual influences to the period's political figures.}}
+\prompt{Which manuscripts and editions you actually worked from, and where the argument stands at term end.}
+\entry{Undergraduate Researcher, History of Medicine and Bioethics}{Sep 2026 -- Present}{PI: Dr Stephen Pemberton, NJIT}{Newark, NJ}
+\bullets{\cvitem{Synthesize legal, clinical and cultural developments in American end-of-life care from the late twentieth century to today; develop scholarship intended for submission to a peer-reviewed humanities journal.}}
+\prompt{Identify primary sources, case studies and provisional thesis.}
+\entrysplit{Undergraduate Researcher, Digital History and Urban Studies}{Jan 2024 -- May 2024,}{Jan 2026 -- May 2026}{PI: Dr Louis Hamilton, NJIT; field research in Rome and Florence}{Newark, NJ / Italy}
+\bullets{\cvitem{Two solo-authored geospatial narratives (StoryMapJS) mapping sites visited on foot against historical and archival sources.}\cvitem{\emph{Power vs. the People} (HIST 328): mapped 18 sites, layering Counter-Reformation Marian shrines against Julius II's 1508 papal axis along the Via Giulia, Rome, drawing on the Early Modern Rome Reconstructed database and Rufini's 1853 shrine census; argued the street shows superimposition and negotiation rather than a papal-versus-popular divide.}\cvitem{\emph{Processions and Power} (HIST 329): mapped 22 Florentine sites to examine how urban expansion transformed liturgical processions into contests of ecclesiastical and household prestige, read against Dante's critique of the \emph{gente nuova}.}}
+\subhead{$\diamond$\ Emergency Care and Health Services\ $\diamond$}
+\entry{Undergraduate Researcher, Collegiate Emergency Medical Services}{Sep 2025 -- Present}{PI: Dr Chang Yaramothu, School of Applied Engineering and Technology, NJIT}{Newark, NJ}
+\bullets{\cvitem{Co-developed IRB protocol, questionnaire and recruitment materials with two other students for a national study of collegiate EMS organizations; recruited via National Collegiate EMS Foundation regional coordinators.}\cvitem{Examined resources, organizational structures, operating models and capabilities across approximately 50 US collegiate EMS squads; data analysis in progress.}}
+% CHECK: two-page PDF lists EMS project Sep 2025 -- May 2026 but newer cv.html lists Sep 2025 -- Present and analysis ongoing. Retained Present.
+\prompt{Confirm data freeze, response denominator, analysis approach and whether study has ended.}
+
+\cvsection{Research Funding \& Honours}
+\subhead{$\diamond$\ Grants \& awards\ $\diamond$}
+\award{Undergraduate Research Opportunities Programme (UROP) bursary}{Imperial College London, Department of Materials; project: using protein language models to mimic natural ligands; personal compensation included}{Jun -- Jul 2026}
+\award{NSF I-Corps Regional Program, Northeast Hub}{Competitive cohort and customer-discovery project funding for Axioma Therapeutics}{May -- Jun 2026}
+\award{Grace Hopper AI Research Institute grant}{NJIT, computational protein design course development; \$3,330}{May -- Aug 2025}
+\award{Honors College Moonshot Grant for Engaged Scholarship}{Male-contraceptive project; personal compensation included; one recipient per annum}{Jun -- Jul 2025}
+\award{Male Contraceptive Initiative Youth Advisory Board project grant}{Grantee-led male-contraceptive project; personal compensation included}{Jan -- Jun 2025}
+\award{Male Contraceptive Initiative travel award}{National Contraception Meeting, Durham, North Carolina}{May 2025}
+\award{NJIT Undergraduate Research and Innovation Student Seed Grant}{Phase-2 longitudinal research project, cyclic peptide therapeutic for multiple sclerosis}{Oct 2024 -- May 2025}
+\award{Honors Summer Research Institute (HSRI) grant}{ADHC and NJIT URI; multiple sclerosis and male-contraceptive projects; personal compensation included}{Jun -- Jul 2024}
+\award{First place, Honors Interdisciplinary Research Forum}{Male-contraceptive poster, NJIT Albert Dorman Honors College}{Fall 2025}
+\award{Academic Excellence, Honors Merit, Honors Residential scholarships}{NJIT merit scholarships, part of award package exceeding \$100,000}{2023 -- 2027}
+\award{Highlander Achievement Scholarship}{NJIT}{2023 -- 2027}
+\subhead{$\diamond$\ Fellowships \& selective programmes\ $\diamond$}
+\award{Emerging Scholars Research Fellowship}{Harvard Sikh Center; early modern Sikh history}{2026}
+\award{Honors Summer Research Institute Fellowship}{Fellow}{\splitdate{Jun 2024 -- Jul 2024,}{Jun 2025 -- Jul 2025}}
+\award{Goldwater Ambassadors Program}{Selected mentee, mentored by Goldwater Scholars; programme for underserved or underrepresented students}{Aug 2025 -- Present}
+\award{NSF ART Integrated Student Ambassador Network (ARTISAN)}{Selected/inducted on the basis of translational-research engagement}{Apr 2025 -- Present}
+\award{No Patient Left Behind Fellowship}{Fellow}{Jun -- Aug 2024}
+\award{American College of Cardiology}{Young Scholar}{May 2023 -- Apr 2024}
+
+\cvsection{Publications \& Presentations}
+\subhead{$\diamond$\ Publications\ $\diamond$}
+\begin{enumerate}[label={[\arabic*]},leftmargin=2.2em,itemsep=3pt,topsep=1pt]
+\item C. Heffernan, O. West, \textbf{K. Singh}, J. Dodd-o, M. James, A. Baradi, K. Rybak, A. Lateef, S. Elkabes, V. Kumar. ``A novel cyclic peptide that blocks human autoimmune antibodies for the treatment of multiple sclerosis.'' \emph{Eur.\ J. Med.\ Chem.} (2026). \href{https://doi.org/10.1016/j.ejmech.2026.119173}{doi:10.1016/j.ejmech.2026.119173}\\
+\textit{Contribution:} ran the molecular dynamics simulations; designed the published peptide
+\item \textbf{K. Singh}, C. Heffernan, O. West, J. Dodd-o, V. Kumar. ``Machine learning for rational design of a cyclic peptide-based male contraceptive.'' \textsc{In preparation}; patent application in preparation
+\item J. Lau, D. Yun, \textbf{K. Singh}, A. Patananan, N. Jadavji. ``Academic publishing as a launchpad: how publishing research in an undergraduate journal shapes future careers.'' \textsc{In preparation}
+\end{enumerate}
+\subhead{$\diamond$\ Presentations\ $\diamond$}
+\noindent M. Kotta, G. Victorio, G. Karmacharya, \textbf{K. Singh}, N. Giovannetti, B. Shadpoor, J. Dodd-O, V. Kumar. ``Putative computational design of novel inhibitors to modulate de-novo targets for CB1 receptor.''\par
+\venue{University of Houston, Undergraduate Research Day}{Poster and podium}{2026}
+\vspace{4pt}\noindent \textbf{K. Singh}, C. Heffernan, J. Dodd-O, V. Kumar. ``Development of a novel male contraceptive using cyclic peptides to inhibit fertilization.''\par
+\venue{AAP/ASCI/APSA Joint Meeting}{Poster}{2026}
+\venue{NJIT AI Exploration Day}{Poster}{2026}
+\venue{NJIT Honors Interdisciplinary Research Forum, first place}{Poster}{Fall 2025}
+\venue{National Contraception Meeting}{Poster}{2025}
+\venue{NJIT Honors Interdisciplinary Research Forum}{Poster}{Spring 2025}
+\venue{NJIT Dana Knox Research Showcase}{Poster}{2025}
+\venue{NJIT Undergraduate Research and Innovation}{Abstract and podium}{2025}
+\venue{Biomedical Engineering Society (BMES), co-presenter}{Abstract and poster}{2024}
+\venue{NJIT Undergraduate Research and Innovation}{Abstract and podium}{2024}
+\vspace{4pt}\noindent \textbf{K. Singh}, J. Lau, H. Gerber, A. Alibilli, L. Goralsky. ``Mitigating knowledge drain: a case study in optimizing workflow and training in a high-turnover, international peer-reviewed undergraduate science academic journal.''\par
+\venue{National Conference on Undergraduate Research (NCUR)}{Poster}{2026}
+\subhead{$\diamond$\ Invited talks \& features\ $\diamond$}
+\award{Invited speaker (forthcoming), Science National Honor Society}{Piscataway High School}{2026}
+\award{Invited student roundtable speaker}{Margo Chaly, New Jersey Secretary of Education; NJIT}{2026}
+\award{Invited speaker, NJIT University Advancement Dinner}{Interdisciplinary medicine and healthcare research for NJIT leadership, including interim president and interim provost}{2026}
+\award{Speaker, `Shaping the Future of Healthcare \& Innovation' dinner}{Peptide therapeutics, published multiple sclerosis research, and emergency care; alongside Dr Genoa R. Warner and Dr Bryan Pfister, NJIT}{Oct 2026}
+% CHECK: cv.html calls 2026 talk `University Advancement Dinner'; homepage LinkedIn post calls Oct 2026 event `Shaping the Future of Healthcare & Innovation' dinner. They may be the same dinner; retained both pending verification to avoid deletion.
+\award{Lecture series, Ethics in Science and Research}{Science Mentorship Institute}{2026}
+\award{Session moderator, Student Oral Presentations (Communications)}{NCUR}{2026}
+\award{Featured presenter, `Navigating peer review and the student journal landscape'}{`Shaping Asia's Future: Development, Innovation, and Society in Transition', Nazarbayev University / Asian Universities Alliance}{2026}
+\award{Featured panelist, `It's Different for Girls'}{Documentary screening and panel; NJIT ADHC and CSLA co-sponsored colloquium}{2026}
+\award{NJIT Makes: Undergraduate Research and Innovation}{NJIT promotional material}{2026}
+\award{Invited speaker, NJIT Board of Trustees and President's Town Hall}{Presented with NJIT First Aid Squad leadership at the request of President Teik Lim}{2025}
+\award{Honors in Action 2025}{Albert Dorman Honors College publication: research, awards and study abroad}{2025}
+\award{Article feature: `150+ Honors Scholars Showcase Findings at Interdisciplinary Research Forum'}{Nayib Mor\'an, NJIT News}{2025}
+\award{Featured speaker, ADHC Advising Day}{NJIT; appearances in both 2024 and 2025}{2024, 2025}
+\award{Honors in Action 2024}{Albert Dorman Honors College publication: research and study abroad}{2024}
+\award{Article feature: `Undergraduate Student Researchers on Campus'}{Gurnoor Kaur, \emph{The Vector}, NJIT student newspaper}{2024}
+\award{Lecture, `Introduction to PyMOL and Linear Peptide Design'}{NJIT, Genetically Engineered Machines}{2024}
+
+\cvsection{Clinical \& Translational}
+\subhead{$\diamond$\ Emergency medical services\ $\diamond$}
+\entrysplit{Public Relations Chair; Emergency Medical Technician}{Oct 2025 -- Present,}{Jan 2024 -- Present}{NJIT First Aid Squad}{Newark, NJ}
+\bullets{\cvitem{Licensed New Jersey EMT; over 2,000 hours handling emergency medical situations across EMS roles.}\cvitem{Represented the squad in presentations to NJIT senior leadership and Board of Trustees.}}
+\role{EMT Senior Squad Member; former Cadet Crew Chief}{Apr 2022 -- Jan 2025}{Marlboro First Aid Squad}{New Jersey}
+\prompt{Break out patient-care responsibilities or types of calls without disclosing patient information.}
+\subhead{$\diamond$\ Public health education\ $\diamond$}
+\role{Stop the Bleed Instructor}{Oct 2025 -- Present}{NJIT; ACS-certified instruction}{Newark, NJ}
+\role{Stop the Bleed Instructor (hybrid English--Punjabi)}{Jan -- May 2026}{New Jersey gurdwaras; NJ Office of Homeland Security and Preparedness; Sikh Youth Alliance}{New Jersey}
+\bullets{\cvitem{Taught hemorrhage-control skills to 100+ people across NJIT and gurdwara outreach.}\cvitem{Bilingual delivery because those most likely to be first on scene in a gurdwara are not always the most comfortable in English.}}
+\subhead{$\diamond$\ Commercialisation\ $\diamond$}
+\role{Co-founder and Technical Lead}{May 2026 -- Present}{Axioma Therapeutics; funded through NSF I-Corps Northeast Hub}{ }
+\bullets{\cvitem{Led customer discovery and lean-startup validation for peptide and mini-protein therapeutics targeting degenerative eye diseases.}}
+\prompt{Clarify whether the company role continued after the I-Corps cohort and what was validated.}
+
+\cvsection{Academic Service}
+\subhead{$\diamond$\ Editorial \& peer review\ $\diamond$}
+\role{22nd Editor-in-Chief; former Associate Editor}{Dec 2024 -- Present}{Journal of Young Investigators (JYI)}{International}
+\bullets{\cvitem{Lead the oldest international undergraduate research journal, funded and featured by Nature, Science, NSF and the Burroughs Wellcome Fund; earlier associate-editor work spanned biology, physical sciences and social sciences.}\cvitem{Developed structured, multi-stage hiring, asynchronous onboarding, tiered training, and a shared manuscript workflow board to reduce institutional knowledge loss.}\cvitem{2025--26: 27 new staff from 96 applications; two associate editors and a research editor assigned to each manuscript, with a two-week review window; author/reviewer AI policy published.}\cvitem{Re-established translations, restored Perspective articles, and developed partnerships for undergraduate research events; convened at the Seattle executive-board summit.}}
+\role{Grant Reviewer}{Dec 2025 -- Jan 2026}{MCI Youth Advisory Board Undergraduate Project Grant}{ }
+\subhead{$\diamond$\ Teaching \& mentorship\ $\diamond$}
+\entrysplit{Research Lead}{Sep 2026 -- May 2027}{(Expected)}{Governor's STEM Scholars; Research and Development Council of New Jersey}{New Jersey}
+\bullets{\cvitem{Mentor a high-school team on a year-long engineering and research project aligned to a UN Sustainable Development Goal and a New Jersey community need.}\cvitem{Oversee meetings, budget, milestones and deliverables, with final presentation planned across four statewide conferences; \$1,000 completion stipend.}}
+\role{Ethics Coordinator, Mentor (Neuroscience and Biology), Admissions Officer, Symposium Organizer and Grant Writer; former Ethics Curriculum Developer}{May 2024 -- Present}{Science Mentorship Institute (Sci-Mi)}{ }
+\bullets{\cvitem{Contributed to ethics instruction and research mentoring; delivered 2026 lecture series on ethics in science and research.}}
+\prompt{Separate dates, number of mentees and outputs for each Sci-Mi responsibility.}
+\entrysplit{Teaching Assistant, Honors First Year Seminar}{Sep 2024 -- Dec 2024,}{Sep 2025 -- Dec 2025}{Albert Dorman Honors College, NJIT}{Newark, NJ}
+\prompt{Specify section size, instructional activities and evaluation tasks.}
+\role{Teaching Assistant, Computational Protein Design}{May -- Aug 2025}{Grace Hopper AI Research Institute, NJIT}{Newark, NJ}
+\role{Sikh History (Virsa) Teacher}{Sep 2020 -- Present}{Khalsa School, Sikh Sabha of New Jersey}{New Jersey}
+\role{Research-team mentor and computational instructor}{Oct 2023 -- Present}{KumarLab; 15+ trainees}{NJIT / Houston}
+\subhead{$\diamond$\ National \& professional\ $\diamond$}
+\role{Research Chair}{Jun 2025 -- Present}{American Association of Physicians of Indian Origin (AAPI) PreMed Board}{National}
+\bullets{\cvitem{Lead research-focused committee and programming to support students, researchers and physicians.}\cvitem{Helped organize and host 2025 and 2026 Fall Virtual Research Symposia; sole MC in 2025 and co-MC in 2026, with 11 US and international presentations and seven physician judges recruited.}}
+\role{Board Member}{Aug 2025 -- Present}{Male Contraceptive Initiative (MCI) Youth Advisory Board}{ }
+\role{Member, Pre-Medical Ad Hoc Committee}{Mar 2026 -- Present}{American Physician Scientists Association (APSA)}{ }
+\subhead{$\diamond$\ University\ $\diamond$}
+\role{Member, Student Conduct Board}{Dec 2024 -- Present}{NJIT}{Newark, NJ}
+\bullets{\cvitem{Adjudicate academic and behavioral conduct cases alongside faculty, staff and university administrators.}}
+\role{Chair; former Chair-in-Training}{Sep 2024 -- Present}{Highlander Integrity Council, NJIT}{Newark, NJ}
+\role{Member}{Feb 2025 -- Present}{Inclusive Excellence Student Advisory Board, NJIT}{Newark, NJ}
+\role{Member}{Jan 2025 -- Present}{Multifaith Council, NJIT}{Newark, NJ}
+\role{Organizer, `It's Different for Girls' screening and panel}{Mar 2026}{NJIT ADHC and CSLA co-sponsored colloquium}{Newark, NJ}
+\role{University Representative}{Feb 2026}{BioNJ 33rd Annual Dinner Meeting and Innovation Celebration}{New Jersey}
+\role{Steering Committee Lead}{Mar -- Aug 2025}{Albert Dorman Honors College First Year Retreat}{Newark, NJ}
+\role{Advisor; former President and Secretary}{Feb 2024 -- May 2025}{Honors Hall Council, NJIT}{Newark, NJ}
+\role{Honors College Representative}{Nov 2024}{National Collegiate Honors Council Annual Conference}{ }
+
+\cvsection{Leadership \& Community}
+\subhead{$\diamond$\ Student organisations\ $\diamond$}
+\role{Vice President; former President and Events Coordinator}{Dec 2023 -- Present}{Sikh Association of NJIT (SANJIT)}{Newark, NJ}
+\bullets{\cvitem{Vice President, 2026 -- present; President, 2023 -- 2026; earlier Events Coordinator.}}
+% CHECK: dates per sikh-studies.html; confirm the month you moved from President to VP.
+\prompt{Primary events you ran and turnout.}
+\role{Co-founder; former President and Treasurer}{Nov 2023 -- May 2026}{NJIT MedicZero}{Newark, NJ}
+\role{Co-founder}{Feb 2024 -- May 2025}{Delta Epsilon Mu, pre-medical professional fraternity}{NJIT}
+\subhead{$\diamond$\ Sikh community\ $\diamond$}
+\role{Youth Camp Organizer and Coordinator}{Aug 2021 -- Present}{Sikh Sabha of New Jersey}{New Jersey}
+\role{Youth Camp Counselor}{Aug 2021 -- Aug 2025}{Guru Nanak Sikh Heritage}{ }
+\role{Content Manager}{May 2026 -- Present}{The Mardana Project}{ }
+\prompt{Record content types, production ownership, audience and representative published work.}
+
+\cvsection{Certifications}
+\award{New Jersey Emergency Medical Technician licence}{}{}
+\award{American College of Surgeons Stop the Bleed certification and instructor licence}{}{}
+\award{OSHA General Industry Safety and Health certification}{}{}
+\award{CITI Biomedical Research certification}{}{}
+\award{CITI Responsible Conduct of Research (RCR) Basic certification}{}{}
+\award{American Heart Association BLS and CPR, Adult/Child/Infant}{}{}
+
+\cvsection{Skills \& Languages}
+\course{Computational biology}{Rosetta; RosettaScripts; PyMOL; GROMACS and GROMACS scripting; NAMD; VMD; OpenMM; CHARMM; AlphaFold; Boltz; ESMFold; protein language models}
+\course{Methods}{Computational peptide design; docking; molecular dynamics; statistical mechanics; RMSD analysis; mathematical and stochastic modeling}
+\course{Laboratory}{Surface plasmon resonance (SPR); general dissection}
+\course{Data and tools}{Python; \LaTeX; molecular dynamics trajectory analysis}
+\course{Languages}{English (C2); Punjabi (C1); Swedish (B2); Spanish (B1); Russian (B1)}
+
+\cvsection{Interests}
+\noindent Gurmat Sangeet (classical Indian music in the Sikh devotional tradition); wrestling and martial arts; ping-pong; travel; reading history, epistemology and comparative theology.\par
+
+% CHECK: Two-page PDF calls degree B.S. Mathematical Sciences (Mathematical Biology); newer cv.html says B.S. major Mathematical Biology. Keep formal PDF degree label and newer site's honors tracks.
+% CHECK: male-contraceptive title uses the two-page PDF wording (no target); the site shows ***** in place of the target, which reads oddly in print.
+\end{document}
