@@ -1,8 +1,7 @@
 /* The welcome. Arriving at a homepage from outside the site, a visitor meets a front door that waits:
    the seal (QUAERENDO, "by seeking", over KABIR and SINGH, EST. MMV at the sides) around a trefoil
    knot drawn over and under, which turns one way for as long as the page is open and speeds up while
-   the pointer is on it; then the one-line statement, an Enter button and links straight to each part
-   of the site. Enter, Return, Escape or scrolling down opens the homepage; a link goes where it says.
+   the pointer is on it; then an Enter button and links straight to each part of the site. Enter, Return, Escape or scrolling down opens the homepage; a link goes where it says.
    The three long intros play only when asked for, from the long way round (curious.html):
    - procession: figures cut from Mughal, Persian and Sikh paintings parade before the walls of
      Surat (arrival/procession.js)
@@ -61,7 +60,6 @@
     '#arv .q-in{opacity:0;transform:translateY(8px);animation:qIn .8s cubic-bezier(.16,1,.3,1) forwards}' +
     '#arv .q-seal{width:min(240px,56vw);aspect-ratio:144/180;animation-delay:.05s}' +
     '#arv .q-seal svg{display:block;width:100%;height:100%;overflow:visible}' +
-    '#arv .q-line{margin:0;max-width:24ch;font:400 clamp(21px,2.6vw,29px)/1.25 var(--display);text-wrap:balance;animation-delay:.25s}' +
     '#arv .q-enter{min-height:46px;padding:0 26px;border:1px solid currentColor;border-radius:999px;background:none;color:inherit;' +
     'font:500 13px/1 var(--mono);letter-spacing:.24em;cursor:pointer;transition:background .2s,color .2s;animation-delay:.4s}' +
     '#arv .q-enter:hover{background:var(--ink);color:var(--bg)}' +
@@ -177,7 +175,6 @@
     var wrap = document.createElement('div'); wrap.className = 'q-in q-seal'; wrap.appendChild(s.el);
     o.appendChild(wrap);
     o.insertAdjacentHTML('beforeend',
-      '<p class="q-in q-line">Aspiring physician-scientist, between molecules and manuscripts.</p>' +
       '<button class="q-in q-enter" type="button">ENTER &rarr;</button>' +
       '<nav class="q-in q-links" aria-label="Go straight to">' + links.map(function (l) { return '<a href="' + base + l[1] + '">' + l[0] + '</a>'; }).join('') + '</nav>' +
       '<p class="q-in q-hint">PRESS RETURN TO ENTER</p>');
@@ -185,7 +182,7 @@
     document.body.appendChild(o);
     A.started = true;
     var btn = o.querySelector('.q-enter');
-    try { btn.focus({ preventScroll: true }); } catch (e) { btn.focus(); }
+    try { btn.focus({ preventScroll: true, focusVisible: false }); } catch (e) { btn.focus(); }
     function finish() {
       if (over) return; over = true;
       removeEventListener('keydown', onKey, true); removeEventListener('wheel', onWheel, { passive: true });
