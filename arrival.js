@@ -1,16 +1,18 @@
-/* The welcome. Arriving at a homepage from outside the site, a visitor gets a short, quiet one:
-   a dark screen, Plato and Aristotle from Raphael's School of Athens (1509-11) in grayscale
-   (arrival/plato-aristotle.webp) rising into place over a thin line with light passing along it,
-   then the page fades up (about two seconds, sooner if they press a key, click or scroll).
+/* The welcome. Arriving at a homepage from outside the site, a visitor meets a front door that waits:
+   the seal (QUAERENDO, "by seeking", over KABIR and SINGH, EST. MMV at the sides) around a trefoil
+   knot drawn over and under, which turns one way for as long as the page is open and speeds up while
+   the pointer is on it; then the one-line statement, an Enter button and links straight to each part
+   of the site. Enter, Return, Escape or scrolling down opens the homepage; a link goes where it says.
    The three long intros play only when asked for, from the long way round (curious.html):
    - procession: figures cut from Mughal, Persian and Sikh paintings parade before the walls of
      Surat (arrival/procession.js)
    - unfold: the page threaded along Kabir's antibody structure; a simulation unfolds it and its
      chains settle onto the page (arrival/unfold.js)
    - darbar: a painted court welcome, drawn from scratch (arrival/darbar.js)
-   The quiet welcome is skipped when the visitor comes from another page here, reloads or goes back,
+   The front door is skipped when the visitor comes from another page here, reloads or goes back,
    follows a link to a #section, or their device asks for reduced motion or reduced data, and never
-   shown to crawlers. ?arrival=procession|unfold|darbar|quiet forces one and ?arrival=off none.
+   shown to crawlers. ?arrival=procession|unfold|darbar|quiet forces one (quiet is the front door)
+   and ?arrival=off none.
    Loaded in <head> without defer, so it can hide the page before the first paint; the long intros
    are fetched only when one will actually play. */
 (function () {
@@ -50,18 +52,25 @@
     'min-height:36px;padding:0 16px;border:1px solid currentColor;border-radius:999px;background:rgba(250,246,236,.92);color:#3E2E16;' +
     'font:600 13px/1 "Hanken Grotesk",system-ui,sans-serif;cursor:pointer}' +
     '.arv-skip:focus-visible{outline:2px solid #2A6FAE;outline-offset:2px}' +
-    // the quiet welcome
-    'html.arv-q body{background:#16130F!important}' +
-    '#arv.arv-q{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;' +
-    'gap:.9rem;background:#16130F;color:#EEE7DA;transition:opacity .7s ease,visibility 0s linear .7s}' +
+    // the front door
+    'html.arv-q body{background:var(--bg)!important}' +
+    '#arv.arv-q{position:fixed;inset:0;z-index:2147483000;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+    'gap:clamp(18px,3.4vh,30px);padding:max(28px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));' +
+    'background:var(--bg);color:var(--ink);text-align:center;transition:opacity .6s ease,visibility 0s linear .6s}' +
     '#arv.arv-q.q-out{opacity:0;visibility:hidden}' +
-    '.q-mark{display:block;width:min(420px,78vw);height:auto;opacity:0;transform:translateY(10px);' +
-    'animation:qIn .9s cubic-bezier(.16,1,.3,1) .1s forwards}' +
-    '.q-bar{position:relative;display:block;width:min(240px,44vw);height:1px;margin-top:1.4rem;background:rgba(238,231,218,.14);overflow:hidden}' +
-    '.q-bar i{position:absolute;left:0;top:0;width:35%;height:100%;' +
-    'background:linear-gradient(90deg,rgba(238,231,218,0),rgba(238,231,218,.85),rgba(238,231,218,0));animation:qSlide 2s cubic-bezier(.4,0,.2,1) infinite}' +
+    '#arv .q-in{opacity:0;transform:translateY(8px);animation:qIn .8s cubic-bezier(.16,1,.3,1) forwards}' +
+    '#arv .q-seal{width:min(240px,56vw);aspect-ratio:144/180;animation-delay:.05s}' +
+    '#arv .q-seal svg{display:block;width:100%;height:100%;overflow:visible}' +
+    '#arv .q-line{margin:0;max-width:24ch;font:400 clamp(21px,2.6vw,29px)/1.25 var(--display);text-wrap:balance;animation-delay:.25s}' +
+    '#arv .q-enter{min-height:46px;padding:0 26px;border:1px solid currentColor;border-radius:999px;background:none;color:inherit;' +
+    'font:500 13px/1 var(--mono);letter-spacing:.24em;cursor:pointer;transition:background .2s,color .2s;animation-delay:.4s}' +
+    '#arv .q-enter:hover{background:var(--ink);color:var(--bg)}' +
+    '#arv .q-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 30px;font:400 12px/1.4 var(--mono);letter-spacing:.2em;animation-delay:.5s}' +
+    '#arv .q-links a{color:inherit;text-decoration:none}#arv .q-links a:hover,#arv .q-links a:focus-visible{color:var(--sky)}' +
+    '#arv .q-hint{margin:0;font:400 10.5px/1 var(--mono);letter-spacing:.16em;color:var(--soft);animation-delay:.6s}' +
+    '#arv :focus-visible{outline:2px solid var(--sky);outline-offset:3px}' +
     '@keyframes qIn{to{opacity:1;transform:none}}' +
-    '@keyframes qSlide{from{transform:translateX(-120%)}to{transform:translateX(360%)}}';
+    '@media (prefers-reduced-motion:reduce){#arv .q-in{animation:none;opacity:1;transform:none}}';
   document.head.appendChild(style);
 
   var running = false, skipBtn = null, cover = null;
@@ -97,25 +106,106 @@
     s.onerror = done;
     document.head.appendChild(s);
   }
-  // the quiet welcome: ends once the page has loaded and the name has had time to settle
+  // the seal: the words are set once; only the knot moves, one way, every frame
+  function seal() {
+    var NS = 'http://www.w3.org/2000/svg', TAU = Math.PI * 2, cx = 120, cy = 124, ang = 24 * Math.PI / 180;
+    function arc(r, top) {
+      var x0 = cx - r * Math.cos(ang), x1 = cx + r * Math.cos(ang), y = top ? cy - r * Math.sin(ang) : cy + r * Math.sin(ang);
+      return { d: 'M ' + x0 + ' ' + y + ' A ' + r + ' ' + r + ' 0 0 ' + (top ? 1 : 0) + ' ' + x1 + ' ' + y, len: (r * (Math.PI - 2 * ang)).toFixed(1) };
+    }
+    var a1 = arc(37, true), a2 = arc(39, false), F = 'font-family="Newsreader, Georgia, serif" fill="currentColor"';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '48 34 144 180');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Quaerendo, Kabir Singh, established 2005: a seal around a turning knot');
+    svg.innerHTML = '<defs><path id="qT" d="' + a1.d + '"></path><path id="qB" d="' + a2.d + '"></path></defs>' +
+      '<text x="120" y="54" text-anchor="middle" letter-spacing="1.2" font-size="9" ' + F + '>QUAERENDO</text>' +
+      '<text font-size="28" ' + F + '><textPath href="#qT" textLength="' + a1.len + '" lengthAdjust="spacing">KABIR</textPath></text>' +
+      '<text font-size="28" ' + F + '><textPath href="#qB" textLength="' + a2.len + '" lengthAdjust="spacing" dominant-baseline="hanging">SINGH</textPath></text>' +
+      '<text x="70" y="126.7" text-anchor="middle" font-size="7.6" letter-spacing=".4" ' + F + '>EST.</text>' +
+      '<text x="170" y="126.7" text-anchor="middle" font-size="7.6" letter-spacing=".4" ' + F + '>MMV</text>' +
+      '<g transform="translate(120 124)" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path class="k0" stroke="currentColor" stroke-width="1.3"></path>' +
+      '<path class="k1" style="stroke:var(--bg)" stroke-width="4.6"></path>' +
+      '<path class="k2" stroke="currentColor" stroke-width="1.3"></path></g>';
+    var K = [], N = 360;
+    for (var i = 0; i < N; i++) { var t = TAU * i / N; K.push([(Math.sin(t) + 2 * Math.sin(2 * t)) / 3.1, (Math.cos(t) - 2 * Math.cos(2 * t)) / 3.1, -Math.sin(3 * t) / 3.1]); }
+    var k0 = svg.querySelector('.k0'), k1 = svg.querySelector('.k1'), k2 = svg.querySelector('.k2');
+    var st = { t: .6, speed: 1, target: 1, live: true };
+    function strands(P, front) {
+      var d = '', open = false;
+      for (var i = 0; i <= N; i++) {
+        var p = P[i % N];
+        if ((p[2] >= 0) === front) { d += (open ? 'L' : 'M') + p[0].toFixed(2) + ' ' + p[1].toFixed(2); open = true; } else open = false;
+      }
+      return d;
+    }
+    function draw() {
+      var a = st.t * .62, b = st.t, ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b), ct = Math.cos(.35), stt = Math.sin(.35), P = [];
+      for (var i = 0; i < N; i++) {
+        var p = K[i], y = p[1] * ca - p[2] * sa, z = p[1] * sa + p[2] * ca;   // turn about x
+        var x = p[0] * cb + z * sb; z = -p[0] * sb + z * cb;                  // and about y
+        var y2 = y * ct - z * stt, z2 = y * stt + z * ct;                     // seen from a little above
+        var k = 25 / (1 - z2 * .14);
+        P.push([x * k, y2 * k, z2]);
+      }
+      var front = strands(P, true);
+      k0.setAttribute('d', strands(P, false)); k1.setAttribute('d', front); k2.setAttribute('d', front);
+    }
+    draw();
+    var last = performance.now();
+    function frame(now) {
+      if (!st.live) return;
+      var dt = Math.min(.05, (now - last) / 1000); last = now;
+      st.speed += (st.target - st.speed) * Math.min(1, dt * 3.2);
+      st.t += dt * .42 * st.speed;
+      draw();
+      requestAnimationFrame(frame);
+    }
+    if (!reduce.matches) requestAnimationFrame(frame);
+    svg.addEventListener('pointerenter', function () { st.target = 4; });
+    svg.addEventListener('pointerleave', function () { st.target = 1; });
+    return { el: svg, stop: function () { st.live = false; } };
+  }
+
+  // the front door: waits for the visitor, then fades off the homepage beneath it
   function quiet(end) {
-    var o = document.createElement('div'), t0 = performance.now(), over = false;
-    o.id = 'arv'; o.className = 'arv-q'; o.setAttribute('aria-hidden', 'true');
-    o.innerHTML = '<img class="q-mark" src="' + base + 'arrival/plato-aristotle.webp" alt="" width="738" height="423"><span class="q-bar"><i></i></span>';
+    var o = document.createElement('div'), over = false, s = seal(), hidden = [];
+    o.id = 'arv'; o.className = 'arv-q';
+    o.setAttribute('role', 'dialog'); o.setAttribute('aria-label', 'Welcome');
+    var links = [['CV', 'cv.html'], ['SCIENCE', 'science.html'], ['HISTORY', 'history.html'], ['ABOUT', 'about.html'], ['THE LONG WAY ROUND', 'curious.html']];
+    var wrap = document.createElement('div'); wrap.className = 'q-in q-seal'; wrap.appendChild(s.el);
+    o.appendChild(wrap);
+    o.insertAdjacentHTML('beforeend',
+      '<p class="q-in q-line">Aspiring physician-scientist, between molecules and manuscripts.</p>' +
+      '<button class="q-in q-enter" type="button">ENTER &rarr;</button>' +
+      '<nav class="q-in q-links" aria-label="Go straight to">' + links.map(function (l) { return '<a href="' + base + l[1] + '">' + l[0] + '</a>'; }).join('') + '</nav>' +
+      '<p class="q-in q-hint">PRESS RETURN TO ENTER</p>');
+    Array.prototype.forEach.call(document.body.children, function (c) { if (!c.inert) { c.inert = true; hidden.push(c); } });
     document.body.appendChild(o);
     A.started = true;
+    var btn = o.querySelector('.q-enter');
+    try { btn.focus({ preventScroll: true }); } catch (e) { btn.focus(); }
     function finish() {
       if (over) return; over = true;
-      end();                                            // the page is shown beneath; the screen fades off it
+      removeEventListener('keydown', onKey, true); removeEventListener('wheel', onWheel, { passive: true });
+      hidden.forEach(function (c) { c.inert = false; });
+      end();                                            // the page is shown beneath; the door fades off it
       requestAnimationFrame(function () {
         o.classList.add('q-out');
-        setTimeout(function () { o.remove(); }, 800);
+        setTimeout(function () { s.stop(); o.remove(); }, 700);
       });
     }
+    function onKey(e) {
+      if (e.key === 'Escape' || (e.key === 'Enter' && !(document.activeElement && document.activeElement.tagName === 'A'))) { e.preventDefault(); finish(); }
+    }
+    function onWheel(e) { if (e.deltaY > 30) finish(); }
+    var ty = null;
+    o.addEventListener('touchstart', function (e) { ty = e.touches[0].clientY; }, { passive: true });
+    o.addEventListener('touchmove', function (e) { if (ty !== null && ty - e.touches[0].clientY > 60) finish(); }, { passive: true });
+    btn.addEventListener('click', finish);
+    addEventListener('keydown', onKey, true); addEventListener('wheel', onWheel, { passive: true });
     A.skip = finish;
-    function ready() { setTimeout(finish, Math.max(0, 1900 - (performance.now() - t0))); }
-    if (document.readyState === 'complete') ready(); else addEventListener('load', ready);
-    setTimeout(finish, 3200);                           // a slow page still gets shown
   }
   function play(kind) {
     if (running) return;
@@ -123,8 +213,8 @@
     A.started = A.cancelled = false;
     clearTimeout(cover);
     cover = setTimeout(function () { if (!A.started) { A.cancelled = true; done(); } }, 4000);   // never leave the page hidden
+    if (kind === 'quiet') return quiet(done);           // the front door listens for its own keys
     EVENTS.forEach(function (ev) { addEventListener(ev, onInput, { capture: true, passive: true }); });
-    if (kind === 'quiet') return quiet(done);
     load(kind, function () {
       if (!running) return;
       A.base = base;
@@ -140,7 +230,7 @@
   var kind = KINDS.indexOf(forced) >= 0 || forced === 'quiet' ? forced : forced !== 'off' && eligible() ? 'quiet' : null;
   if (kind) {
     root.classList.add('arv-cover');
-    if (kind === 'quiet') { root.classList.add('arv-q'); new Image().src = base + 'arrival/plato-aristotle.webp'; }
+    if (kind === 'quiet') root.classList.add('arv-q');
     cover = setTimeout(done, 4000);                // in case the page never finishes loading
     if (kind === 'procession') ['arrival/fort.jpg', 'arrival/cast.webp', 'arrival/welcome.webp'].forEach(function (f) { new Image().src = base + f; });
     document.addEventListener('DOMContentLoaded', function () {
