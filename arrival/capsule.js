@@ -36,6 +36,7 @@
     root.innerHTML = '<div class="scene" id="kscA" aria-hidden="true">' + SCENE_A + '</div><div class="scene" id="kscB" aria-hidden="true">' + SCENE_B + '</div>' +
       '<button class="ksc-skip" type="button">SKIP &rarr;</button>';
     document.body.appendChild(root);
+    if (opts.decorate) opts.decorate(root);         // a page can restyle the film (the clay mockup does)
     var $ = function (s) { return root.querySelector(s); };
     var $$ = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
 
@@ -209,6 +210,7 @@
       tl.kill(); loops.forEach(function (l) { l.kill(); });
       removeEventListener('keydown', onKey, true); removeEventListener('resize', fit);
       root.remove(); style.remove();
+      if (opts.undecorate) opts.undecorate();
       if (opts.onCovered) opts.onCovered();
       if (opts.onDone) opts.onDone();
     }
