@@ -60,6 +60,10 @@
     '#arv .q-in{opacity:0;transform:translateY(8px);animation:qIn .8s cubic-bezier(.16,1,.3,1) forwards}' +
     '#arv .q-seal{width:min(240px,56vw);aspect-ratio:144/180;animation-delay:.05s}' +
     '#arv .q-seal svg{display:block;width:100%;height:100%;overflow:visible}' +
+    '#arv .k-hit{cursor:pointer;outline:none}#arv .k0,#arv .k2{transition:stroke .4s,stroke-width .4s}' +
+    '#arv .q-words,#arv .q-enter,#arv .q-links,#arv .q-hint{transition:opacity .35s}' +
+    '#arv.q-play .q-words,#arv.q-play .q-enter,#arv.q-play .q-links,#arv.q-play .q-hint{opacity:0!important;pointer-events:none}' +
+    '#arv.q-play .k0,#arv.q-play .k2{stroke:#4E91DD;stroke-width:2.6}' +
     '#arv .q-enter{min-height:46px;padding:0 26px;border:1px solid currentColor;border-radius:999px;background:none;color:inherit;' +
     'font:500 13px/1 var(--mono);letter-spacing:.24em;cursor:pointer;transition:background .2s,color .2s;animation-delay:.4s}' +
     '#arv .q-enter:hover{background:var(--ink);color:var(--bg)}' +
@@ -114,18 +118,20 @@
     var a1 = arc(37, true), a2 = arc(39, false), F = 'font-family="Newsreader, Georgia, serif" fill="currentColor"';
     var svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('viewBox', '48 34 144 180');
-    svg.setAttribute('role', 'img');
+    svg.setAttribute('role', 'group');
     svg.setAttribute('aria-label', 'Quaerendo, Kabir Singh, established 2005: a seal around a turning knot');
-    svg.innerHTML = '<defs><path id="qT" d="' + a1.d + '"></path><path id="qB" d="' + a2.d + '"></path></defs>' +
+    svg.innerHTML = '<defs><path id="qT" d="' + a1.d + '"></path><path id="qB" d="' + a2.d + '"></path></defs><g class="q-words">' +
       '<text x="120" y="54" text-anchor="middle" letter-spacing="1.2" font-size="9" ' + F + '>QUAERENDO</text>' +
       '<text font-size="28" ' + F + '><textPath href="#qT" textLength="' + a1.len + '" lengthAdjust="spacing">KABIR</textPath></text>' +
       '<text font-size="28" ' + F + '><textPath href="#qB" textLength="' + a2.len + '" lengthAdjust="spacing" dominant-baseline="hanging">SINGH</textPath></text>' +
       '<text x="70" y="126.7" text-anchor="middle" font-size="7.6" letter-spacing=".4" ' + F + '>EST.</text>' +
-      '<text x="170" y="126.7" text-anchor="middle" font-size="7.6" letter-spacing=".4" ' + F + '>MMV</text>' +
+      '<text x="170" y="126.7" text-anchor="middle" font-size="7.6" letter-spacing=".4" ' + F + '>MMV</text></g>' +
       '<g transform="translate(120 124)" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
       '<path class="k0" stroke="currentColor" stroke-width="1.3"></path>' +
       '<path class="k1" style="stroke:var(--bg)" stroke-width="4.6"></path>' +
-      '<path class="k2" stroke="currentColor" stroke-width="1.3"></path></g>';
+      '<path class="k2" stroke="currentColor" stroke-width="1.3"></path>' +
+      // the knot itself is the way in to the long version; everything else on the door is the short way
+      '<circle class="k-hit" r="29" fill="transparent" pointer-events="all" tabindex="0" role="button" aria-label="Take the long way in"></circle></g>';
     var K = [], N = 360;
     for (var i = 0; i < N; i++) { var t = TAU * i / N; K.push([(Math.sin(t) + 2 * Math.sin(2 * t)) / 3.1, (Math.cos(t) - 2 * Math.cos(2 * t)) / 3.1, -Math.sin(3 * t) / 3.1]); }
     var k0 = svg.querySelector('.k0'), k1 = svg.querySelector('.k1'), k2 = svg.querySelector('.k2');
@@ -161,9 +167,12 @@
       requestAnimationFrame(frame);
     }
     if (!reduce.matches) requestAnimationFrame(frame);
-    svg.addEventListener('pointerenter', function () { st.target = 4; });
-    svg.addEventListener('pointerleave', function () { st.target = 1; });
-    return { el: svg, stop: function () { st.live = false; } };
+    svg.addEventListener('pointerenter', function () { if (!st.lock) st.target = 4; });
+    svg.addEventListener('pointerleave', function () { if (!st.lock) st.target = 1; });
+    var hit = svg.querySelector('.k-hit');
+    return { el: svg, hit: hit, stop: function () { st.live = false; },
+      boost: function () { st.lock = true; st.target = 14; },
+      rect: function () { var r = hit.getBoundingClientRect(), k = .86; return { left: r.left + r.width * (1 - k) / 2, top: r.top + r.height * (1 - k) / 2, width: r.width * k, height: r.height * k }; } };
   }
 
   // the front door: waits for the visitor, then fades off the homepage beneath it
@@ -194,8 +203,29 @@
       });
     }
     function onKey(e) {
-      if (e.key === 'Escape' || (e.key === 'Enter' && !(document.activeElement && document.activeElement.tagName === 'A'))) { e.preventDefault(); finish(); }
+      var at = document.activeElement;
+      if (at === s.hit && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); longWay(); return; }
+      if (e.key === 'Escape' || (e.key === 'Enter' && !(at && at.tagName === 'A'))) { e.preventDefault(); finish(); }
     }
+    // the long way in: the knot becomes the peptide, and arrival/capsule.js takes it from there
+    var playing = false;
+    function load(src) {
+      return new Promise(function (ok, no) { var t = document.createElement('script'); t.src = src; t.onload = ok; t.onerror = no; document.head.appendChild(t); });
+    }
+    function longWay() {
+      if (over || playing) return;
+      if (reduce.matches) return finish();
+      playing = true;
+      removeEventListener('keydown', onKey, true); removeEventListener('wheel', onWheel, { passive: true });
+      o.classList.add('q-play'); s.boost();
+      var wait = new Promise(function (ok) { setTimeout(ok, 650); });
+      (window.gsap ? Promise.resolve() : load(base + 'arrival/gsap.min.js'))
+        .then(function () { return window.KSCapsule ? null : load(base + 'arrival/capsule.js?v=1'); })
+        .then(function () { return wait; })
+        .then(function () { window.KSCapsule.play({ rect: s.rect(), onCovered: finish }); })
+        .catch(finish);
+    }
+    s.hit.addEventListener('click', longWay);
     function onWheel(e) { if (e.deltaY > 30) finish(); }
     var ty = null;
     o.addEventListener('touchstart', function (e) { ty = e.touches[0].clientY; }, { passive: true });
