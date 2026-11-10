@@ -3,9 +3,9 @@
    knot drawn over and under, which turns one way for as long as the page is open and speeds up while
    the pointer is on it; then an Enter button and links straight to each part of the site. Enter, Return, Escape or scrolling down opens the homepage; a link goes where it says.
    The door first appears pressed in clay, on a modelling board, the knot a rolled snake that moves in
-   held frames at twelve a second. Pressing the knot plays the long way in, a stop-motion film made in
-   Blender (arrival/long-way-in-clay.mp4): a protein is capped into a capsule that falls into a mouth and
-   down to an organ the colour of the page. The film lands back on the plain door, and ten seconds later
+   held frames at twelve a second. Pressing the knot plays the long way in, a stop-motion clay film
+   (arrival/clay-intro.mp4): proteins drop into a capsule that is capped and taken with water, then
+   followed down the throat to an organ the colour of the page. The film lands back on the plain door, and ten seconds later
    its knot turns back to clay, ready to be pressed again.
    The three long intros play only when asked for, from the long way round (curious.html):
    - procession: figures cut from Mughal, Persian and Sikh paintings parade before the walls of
@@ -232,8 +232,8 @@
       '<button class="q-in q-enter" type="button">ENTER &rarr;</button>' +
       '<nav class="q-in q-links" aria-label="Go straight to">' + links.map(function (l) { return '<a href="' + base + l[1] + '">' + l[0] + '</a>'; }).join('') + '</nav>' +
       '<p class="q-in q-hint">PRESS RETURN TO ENTER<span class="q-kh"> &middot; PRESS THE KNOT FOR THE LONG WAY IN</span></p>' +
-      '<video class="q-film" muted playsinline preload="metadata" poster="' + base + 'arrival/long-way-in-clay.jpg" aria-label="The long way in, in stop-motion clay">' +
-      '<source src="' + base + 'arrival/long-way-in-clay.mp4" type="video/mp4"><source src="' + base + 'arrival/long-way-in-clay.webm" type="video/webm"></video>' +
+      '<video class="q-film" muted playsinline preload="metadata" poster="' + base + 'arrival/clay-intro.jpg" aria-label="The long way in, in stop-motion clay">' +
+      '<source src="' + base + 'arrival/clay-intro.mp4" type="video/mp4"><source src="' + base + 'arrival/clay-intro.webm" type="video/webm"></video>' +
       '<button class="q-skip" type="button">SKIP &rarr;</button>');
     Array.prototype.forEach.call(document.body.children, function (c) { if (!c.inert) { c.inert = true; hidden.push(c); } });
     document.body.appendChild(o);
