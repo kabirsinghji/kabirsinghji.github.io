@@ -1656,7 +1656,7 @@ def build_curious(cv):
 HOME_JS_V = 3
 HOME_CSS_V = 1
 # arrival.js plays a short welcome on a visitor's first arrival (arrival/: the procession and the fold)
-ARRIVAL_JS_V = 8
+ARRIVAL_JS_V = 9
 ORCID = "https://orcid.org/0009-0002-5159-5879"
 SCHOLAR = "https://scholar.google.com/citations?user=-RpJmPsAAAAJ"
 PA_DIGITS = str.maketrans("0123456789", "੦੧੨੩੪੫੬੭੮੯")

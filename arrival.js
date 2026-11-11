@@ -4,7 +4,7 @@
    the pointer is on it; then an Enter button and links straight to each part of the site. Enter, Return, Escape or scrolling down opens the homepage; a link goes where it says.
    The door first appears pressed in clay, on a modelling board, the knot a rolled snake that moves in
    held frames at twelve a second. Pressing the knot plays the long way in, a stop-motion clay film
-   (arrival/clay-intro.mp4): proteins drop into a capsule that is capped and taken with water, then
+   (arrival/clay-intro.mp4, with its sound): proteins drop into a capsule that is capped and taken with water, then
    followed down the throat to an organ the colour of the page. The film lands back on the plain door, and ten seconds later
    its knot turns back to clay, ready to be pressed again.
    The three long intros play only when asked for, from the long way round (curious.html):
@@ -232,7 +232,7 @@
       '<button class="q-in q-enter" type="button">ENTER &rarr;</button>' +
       '<nav class="q-in q-links" aria-label="Go straight to">' + links.map(function (l) { return '<a href="' + base + l[1] + '">' + l[0] + '</a>'; }).join('') + '</nav>' +
       '<p class="q-in q-hint">PRESS RETURN TO ENTER<span class="q-kh"> &middot; PRESS THE KNOT FOR THE LONG WAY IN</span></p>' +
-      '<video class="q-film" muted playsinline preload="metadata" poster="' + base + 'arrival/clay-intro.jpg" aria-label="The long way in, in stop-motion clay">' +
+      '<video class="q-film" playsinline preload="metadata" poster="' + base + 'arrival/clay-intro.jpg" aria-label="The long way in, in stop-motion clay">' +
       '<source src="' + base + 'arrival/clay-intro.mp4" type="video/mp4"><source src="' + base + 'arrival/clay-intro.webm" type="video/webm"></video>' +
       '<button class="q-skip" type="button">SKIP &rarr;</button>');
     Array.prototype.forEach.call(document.body.children, function (c) { if (!c.inert) { c.inert = true; hidden.push(c); } });
@@ -256,12 +256,13 @@
       if (playing || over || !s.isClay()) return;
       playing = true; clearTimeout(toClay);
       o.classList.add('q-play'); s.rush(true);
-      film.preload = 'auto';
+      film.preload = 'auto'; film.muted = false;
       try { film.currentTime = 0; } catch (e) {}
+      try { var u = film.play(); if (u && u.catch) u.catch(function () {}); film.pause(); } catch (e) {}   // unlock sound inside the click
       setTimeout(function () {
         if (!playing) return;
         film.classList.add('on'); skip.classList.add('on');
-        var p = film.play(); if (p && p.catch) p.catch(land);
+        var p = film.play(); if (p && p.catch) p.catch(function () { film.muted = true; var q = film.play(); if (q && q.catch) q.catch(land); });   // sound refused: play it silent
       }, 650);
     }
     function land() {
