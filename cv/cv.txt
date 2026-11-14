@@ -119,6 +119,9 @@ PUBLICATIONS & MANUSCRIPTS
 PRESENTATIONS
 =============
 
+K. Singh. “From seed grant to publication: a translational medical research case study in computational peptide design.”
+  - NJIT Center for Translational Research, P3HI Workshop (Showcase (exhibit)), 2026
+
 M. Kotta, G. Victorio, G. Karmacharya, K. Singh, N. Giovannetti, B. Shadpoor, J. Dodd-O, V. Kumar. “Putative computational design of novel inhibitors to modulate de-novo targets for CB1 receptor.”
   - University of Houston, Undergraduate Research Day (Poster & podium), 2026
 
@@ -140,7 +143,9 @@ K. Singh, J. Lau, H. Gerber, A. Alibilli, L. Goralsky. “Mitigating knowledge d
 LECTURES & FEATURES
 ===================
 
-Invited speaker (forthcoming), Science National Honor Society – Piscataway High School | 2026
+Invited speaker, Piscataway High School | 2026
+Science National Honor Society
+  - Getting into research, publishing & building a first resume, for high school students
 
 Invited student roundtable speaker (https://news.njit.edu/njit-students-meet-state-secretary-higher-education) | 2026
   - Margo Chaly, New Jersey Secretary of Education; NJIT
