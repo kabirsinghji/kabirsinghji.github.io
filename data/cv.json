@@ -565,6 +565,51 @@
       "keep": 10,
       "items": [
         {
+          "authors": "K. Singh",
+          "title": "From seed grant to publication: a translational medical research case study in computational peptide design",
+          "show": "both",
+          "venues": [
+            {
+              "name": "NJIT Center for Translational Research, P3HI Workshop",
+              "format": "Showcase (exhibit)",
+              "year": "2026"
+            }
+          ],
+          "tags": [
+            "research",
+            "writing-editing",
+            "speaking",
+            "teaching-mentoring",
+            "clinical-care",
+            "leading-organizing",
+            "funding-ventures",
+            "peptide-protein-design",
+            "research-culture-publishing",
+            "adaptability",
+            "ambition-commitment",
+            "analysis-research",
+            "client-facing",
+            "commercial-awareness",
+            "oral-communication",
+            "written-communication",
+            "independence-confidence",
+            "interpersonal",
+            "leadership",
+            "persuasion-negotiation",
+            "planning-organisation",
+            "problem-solving-creativity",
+            "teamwork",
+            "molecular-dynamics",
+            "machine-learning",
+            "mathematical-modelling",
+            "statistical-mechanics",
+            "pymol",
+            "field-research",
+            "peer-review"
+          ],
+          "id": "from-seed-grant-to-publication-a-translational-m"
+        },
+        {
           "authors": "M. Kotta, G. Victorio, G. Karmacharya, **K. Singh**, N. Giovannetti, B. Shadpoor, J. Dodd-O, V. Kumar",
           "title": "Putative computational design of novel inhibitors to modulate de-novo targets for CB1 receptor",
           "venues": [
@@ -683,10 +728,15 @@
           "entries": [
             {
               "id": "invited-speaker-forthcoming-science-national-hon",
-              "heading": "Invited speaker (forthcoming), Science National Honor Society",
-              "note": "Piscataway High School",
+              "heading": "Invited speaker, Piscataway High School",
+              "note": "",
               "dates": "2026",
-              "bullets": [],
+              "bullets": [
+                {
+                  "text": "Getting into research, publishing & building a first resume, for high school students",
+                  "show": "both"
+                }
+              ],
               "kind": "talk",
               "tags": [
                 "research",
@@ -712,7 +762,8 @@
                 "teamwork",
                 "peer-review",
                 "emergency-care-emt-bls"
-              ]
+              ],
+              "org": "Science National Honor Society"
             },
             {
               "id": "invited-student-roundtable-speaker",
