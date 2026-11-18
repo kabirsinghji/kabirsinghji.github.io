@@ -1,6 +1,6 @@
 EB Garamond web fonts for the site's reading text (style.css), subset from the CV's fonts in cv/fonts.
 
-eb-garamond-12-regular.woff2, eb-garamond-12-italic.woff2:
+eb-garamond-12-regular.woff2, eb-garamond-12-italic.woff2, eb-garamond-12-long-q.woff2 (the long Q alone, for the welcome seal):
   Copyright 2010-2012 Georg Duffner (http://www.georgduffner.at), release 0.016
 eb-garamond-semibold.woff2:
   Copyright 2017 The EB Garamond Project Authors (https://github.com/octaviopardo/EBGaramond12)

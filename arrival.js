@@ -153,7 +153,9 @@
       '<feComposite in="lit" in2="d" operator="in" result="lit2"></feComposite>' +
       '<feComposite in="lit2" in2="s2" operator="arithmetic" k2="1" k3=".45"></feComposite></filter></defs>' +
       '<g class="q-words">' +
-      '<text x="120" y="54" text-anchor="middle" letter-spacing="1.2" font-size="9" ' + F + '>QUAERENDO</text>' +
+      // the Q is Georg Duffner's long-tailed Q from EB Garamond (style.css), its tail under UA
+      '<text x="120" y="54" text-anchor="middle" letter-spacing="1.2" font-size="9" ' + F + '>' +
+      '<tspan font-family="EB Garamond Long Q, Georgia, serif" font-size="9.3">Q</tspan>UAERENDO</text>' +
       '<text font-size="28" ' + F + '><textPath href="#qT" textLength="' + a1.len + '" lengthAdjust="spacing">KABIR</textPath></text>' +
       '<text font-size="28" ' + F + '><textPath href="#qB" textLength="' + a2.len + '" lengthAdjust="spacing" dominant-baseline="hanging">SINGH</textPath></text>' +
       '<text x="70" y="126.7" text-anchor="middle" font-size="7.6" letter-spacing=".4" ' + F + '>EST.</text>' +
