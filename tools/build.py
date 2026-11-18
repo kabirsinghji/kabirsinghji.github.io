@@ -108,8 +108,6 @@ def _tex_inline(s):
           .replace("—", "---").replace("–", "--").replace("\u2009", r"\,").replace("\u00a0", "~"))
     s = s.replace(r"\textgreater{}\,", r"\textgreater\,").replace(r"\textless{}\,", r"\textless\,")
     s = re.sub(r"\bLaTeX\b", r"\\LaTeX{}", s)
-    s = re.sub("[αβγδεκλμπστω]", lambda m: r"\ensuremath{\%s}" % dict(zip("αβγδεκλμπστω", ["alpha", "beta", "gamma", "delta", "varepsilon", "kappa",
-               "lambda", "mu", "pi", "sigma", "tau", "omega"]))[m.group()], s)
     s = re.sub(r"\b(Dr|Prof|Mr|Ms|Mrs)\. ", r"\1.~", s)
     s = re.sub(r"\b(Prev|vs|etc|e\.g|i\.e)\. ", r"\1.\\ ", s)
     s = re.sub(r"(?<![A-Za-z.])([A-Z])\. (?=[A-Z])", r"\1.~", s)      # initials: K. Singh
@@ -370,6 +368,25 @@ def citation(p):
 
 
 # ─────────────────────────────────────────────────────────────── cv.tex ──
+def _tie(s):
+    """Keep a paragraph from ending on a stray word or half a word: tie (~) the last
+    word to the one before when it is under 15 characters, and a third word when
+    those two are under 10; then mark them for preamble.tex: \\cvkeep (the tied
+    words hyphenate only with 5+ letters carried over) and \\cvlast (the final word
+    never hyphenates)."""
+    spaces = [j for j in range(1, len(s)) if s[j] == " " and s[j - 1] != "\\"]
+    if not spaces:
+        return s
+    shown = lambda t: len(re.sub(r"\\[A-Za-z]+|\\(?=\W)|[{}]|(?<=[`'])[`']", "", t))   # characters as printed
+    n = 0
+    while n < 2 and n < len(spaces) and shown(s[spaces[-1 - n] + 1:]) < (15, 10)[n]:
+        s = s[:spaces[-1 - n]] + "~" + s[spaces[-1 - n] + 1:]
+        n += 1
+    k = spaces[-1 - n] + 1 if n < len(spaces) else 0       # where the kept words start
+    last = spaces[-1] + 1                                  # where the final word starts
+    return s[:k] + r"\cvkeep{}" + s[k:last] + r"\cvlast{}" + s[last:] + r"\cvkeepend{}"
+
+
 def _tex_right(parts):
     parts = [to_tex(x) for x in parts if x]
     if len(parts) <= 1:
@@ -379,7 +396,7 @@ def _tex_right(parts):
 
 def _tex_item(b):
     # an item that opens with [ would be read as \item's optional argument
-    return r"  \item " + ("{}" if b.startswith("[") and not re.match(r"\[[^\]]+\]\(", b) else "") + to_tex(b)
+    return r"  \item " + ("{}" if b.startswith("[") and not re.match(r"\[[^\]]+\]\(", b) else "") + _tie(to_tex(b))
 
 
 def build_tex(cv, prof):
@@ -394,14 +411,14 @@ def build_tex(cv, prof):
     w("%==============================================================")
     w(r"\input{preamble}")
     w(r"\hypersetup{pdftitle={%s -- Curriculum Vitae},pdfauthor={%s}}" % (to_tex(m.get("name", "")), to_tex(m.get("name", ""))))
-    w(r"\fancyfoot[L]{\footnotesize %s $\cdot$ Curriculum Vitae $\cdot$ %s}" % (to_tex(m.get("name", "")), to_tex(m.get("asOf", ""))))
+    w(r"\fancyfoot[L]{\footnotesize %s · Curriculum Vitae · %s}" % (to_tex(m.get("name", "")), to_tex(m.get("asOf", ""))))
     link = full_cv_link(cv, prof)
     if link:
         w(r"\fancyhead[L]{\ifnum\value{page}>1 \footnotesize Find the full CV at \href{%s}{%s}\fi}" % (_tex_url(link), to_tex(link)))
     w("")
     w(r"\begin{document}")
     name = r"{\Large\bfseries %s}" % to_tex(m.get("name", ""))
-    contact = r"{\small " + " $\\cdot$\n ".join(r"\href{%s}{%s}" % (_tex_url(u), to_tex(t)) if u else to_tex(t) for t, u in contacts(m)) + "}"
+    contact = r"{\small " + " ·\n ".join(r"\href{%s}{%s}" % (_tex_url(u), to_tex(t)) if u else to_tex(t) for t, u in contacts(m)) + "}"
     shot = headshot_path(cv, prof)
     if shot:                                           # photo on the left, name and contacts beside it
         w(r"\noindent\begin{tabularx}{\linewidth}{@{}m{2.3cm}@{\hspace{1.1em}}>{\raggedright\arraybackslash}X@{}}")
@@ -416,7 +433,7 @@ def build_tex(cv, prof):
     if obj:
         w("")
         w(r"\cvsection{Objective}")
-        w(r"\noindent %s\par" % to_tex(obj))
+        w(r"\noindent %s\par" % _tie(to_tex(obj)))
     first_pub = 1
     for title, body in cv_blocks(cv, prof):
         w("")
@@ -428,15 +445,15 @@ def build_tex(cv, prof):
             elif k == "head":
                 e = b[1]
                 d = date_lines(e)
-                w(r"\headentry{%s}{%s}{%s}{%s}" % (to_tex(linked(e)), to_tex(d[0]) if d else "", to_tex(e.get("org", "")),
+                w(r"\headentry{%s}{%s}{%s}{%s}" % (_tie(to_tex(linked(e))), to_tex(d[0]) if d else "", _tie(to_tex(e.get("org", ""))),
                                                     _tex_right(d[1:] + [e.get("location", "")])))
             elif k == "line":
-                w(r"\lineentry{%s}{%s}" % (to_tex(line_text(b[1])), _tex_right(date_lines(b[1]))))
+                w(r"\lineentry{%s}{%s}" % (_tie(to_tex(line_text(b[1]))), _tex_right(date_lines(b[1]))))
             elif k == "roles":
                 for r in b[1]:
-                    w(r"\roleline{%s}{%s}" % (to_tex(role_text(r)), _tex_right(date_lines(r))))
+                    w(r"\roleline{%s}{%s}" % (_tie(to_tex(role_text(r))), _tex_right(date_lines(r))))
             elif k == "project":
-                w(r"\project{%s}" % to_tex(b[1]))
+                w(r"\project{%s}" % _tie(to_tex(b[1])))
             elif k == "bullets":
                 w(r"\begin{itemize}")
                 L.extend(_tex_item(x) for x in b[1])
@@ -449,27 +466,28 @@ def build_tex(cv, prof):
                 if L[-1].startswith(r"\end{itemize}") or L[-1].startswith(r"\headentry") or L[-1].startswith(r"\lineentry"):
                     w(r"\vspace{3pt}")
                 for r in b[1]:
-                    w(r"\course{%s}{%s}" % (to_tex(r["label"]), to_tex(r["text"])))
+                    w(r"\course{%s}{%s}" % (to_tex(r["label"]), _tie(to_tex(r["text"]))))
             elif k == "prompt":
                 w(r"\prompt{%s}" % to_tex(b[1]))
             elif k == "pubs":
                 w(r"\begin{enumerate}[label={[\arabic*]},leftmargin=2.2em,itemsep=3pt,topsep=1pt,start=%d]" % first_pub)
                 for g, p in b[1]:
-                    s = "  \\item " + to_tex(citation(p))
+                    s = to_tex(citation(p))
                     if p.get("doi"):
                         s += r". \href{https://doi.org/%s}{doi:%s}" % (_tex_url(p["doi"]), _tex_escape(p["doi"]))
+                    s = "  \\item " + _tie(s)
                     if p.get("contribution") and prof.get("descriptions", True) is not False:
-                        s += "\\\\\n  \\textit{Contribution:} " + to_tex(p["contribution"])
+                        s += "\\\\\n  \\textit{Contribution:} " + _tie(to_tex(p["contribution"]))
                     w(s)
                 w(r"\end{enumerate}")
                 first_pub += len(b[1])
             elif k == "pres":
                 p = b[1]
-                w(r"\pres{%s}" % to_tex("%s. “%s.”" % (p["authors"], p["title"].rstrip("."))))
+                w(r"\pres{%s}" % _tie(to_tex("%s. “%s.”" % (p["authors"], p["title"].rstrip(".")))))
                 for v in p.get("venues", []):
                     w(r"\venue{%s}{%s}{%s}" % (to_tex(v["name"]), to_tex(v.get("format", "")), to_tex(v.get("year", ""))))
             elif k == "text":
-                w(r"\noindent %s\par" % to_tex(b[1]))
+                w(r"\noindent %s\par" % _tie(to_tex(b[1])))
     if m.get("closing"):
         w("")
         w(r"\vspace{16pt}\noindent\textit{%s}" % to_tex(m["closing"]))
@@ -542,8 +560,8 @@ def build_txt(cv, prof):
 
 # ────────────────────────────────────────────────────────────── cv.docx ──
 # A Word copy of the PDF, written as plain OOXML (no libraries, so the GitHub runner needs nothing extra).
-# A4 with 1.8 cm margins, Charter 11 pt (Word substitutes a serif where Charter isn't installed).
-DOCX_FONT = "Charter"
+# A4 with 1.8 cm margins, EB Garamond 12 pt like the PDF (Word substitutes a serif where it isn't installed).
+DOCX_FONT = "EB Garamond"
 TW = 9866                       # text width in twentieths of a point: A4 (11906) less two 1.8 cm margins
 _RUN_TAGS = re.compile(r"(<strong>|</strong>|<em>|</em>|<sup>|</sup>|<sub>|</sub>|<a href=\"[^\"]*\">|</a>)")
 _DOCX_LINKS = {}                # url -> relationship id, for the document being written (build_docx resets it)
@@ -649,10 +667,10 @@ def build_docx(cv, prof, path):
              '<w:tblGrid><w:gridCol w:w="1500"/><w:gridCol w:w="%d"/></w:tblGrid><w:tr>'
              '<w:tc><w:tcPr><w:tcW w:w="1500" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>%s</w:tc>'
              '<w:tc><w:tcPr><w:tcW w:w="%d" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>%s%s</w:tc></w:tr></w:tbl>'
-             % (TW, none, TW - 1500, _p(pic), TW - 1500, _p(_runs(m.get("name", ""), bold=True, size=34), after=60), _p(_runs(contact_line, size=19)))]
+             % (TW, none, TW - 1500, _p(pic), TW - 1500, _p(_runs(m.get("name", ""), bold=True, size=37), after=60), _p(_runs(contact_line, size=21)))]
     else:
-        P = [_p(_runs(m.get("name", ""), bold=True, size=34), align="center", after=60),
-             _p(_runs(contact_line, size=19), align="center")]
+        P = [_p(_runs(m.get("name", ""), bold=True, size=37), align="center", after=60),
+             _p(_runs(contact_line, size=21), align="center")]
     obj = objective(cv, prof)
     if obj:
         P.append(_p(_runs("Objective"), style="Heading1"))
@@ -721,21 +739,21 @@ def build_docx(cv, prof, path):
             ('<w:titlePg/>' if link else '') + '</w:sectPr>')
     document = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document %s%s><w:body>%s%s</w:body></w:document>' % (W, DRAW, "".join(P), sect)
     header = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr %s>' % W +
-              _p(_runs("Find the full CV at " + link, size=18)) + "</w:hdr>") if link else None
+              _p(_runs("Find the full CV at " + link, size=20)) + "</w:hdr>") if link else None
 
     def field(code):
-        return ('<w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:instrText xml:space="preserve"> %s </w:instrText></w:r>'
-                '<w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:t>1</w:t></w:r><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r>' % code)
+        return ('<w:r><w:rPr><w:sz w:val="20"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr><w:sz w:val="20"/></w:rPr><w:instrText xml:space="preserve"> %s </w:instrText></w:r>'
+                '<w:r><w:rPr><w:sz w:val="20"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:rPr><w:sz w:val="20"/></w:rPr><w:t>1</w:t></w:r><w:r><w:rPr><w:sz w:val="20"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r>' % code)
     footer = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr %s>' % W +
-              _p(_runs("%s · Curriculum Vitae · %s" % (m.get("name", ""), m.get("asOf", "")), size=18) + _tab() + _runs("Page ", size=18) +
-                 field("PAGE") + _runs(" of ", size=18) + field("NUMPAGES"), tabs=[("right", TW)]) + "</w:ftr>")
+              _p(_runs("%s · Curriculum Vitae · %s" % (m.get("name", ""), m.get("asOf", "")), size=20) + _tab() + _runs("Page ", size=20) +
+                 field("PAGE") + _runs(" of ", size=20) + field("NUMPAGES"), tabs=[("right", TW)]) + "</w:ftr>")
     styles = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles %s><w:docDefaults><w:rPrDefault><w:rPr>'
-              '<w:rFonts w:ascii="{f}" w:hAnsi="{f}" w:cs="{f}" w:eastAsia="{f}"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-GB"/>'
+              '<w:rFonts w:ascii="{f}" w:hAnsi="{f}" w:cs="{f}" w:eastAsia="{f}"/><w:sz w:val="24"/><w:szCs w:val="24"/><w:lang w:val="en-GB"/>'
               '</w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>'
               '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>'
               '<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/>'
               '<w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:pBdr><w:bottom w:val="single" w:sz="4" w:space="1" w:color="000000"/></w:pBdr>'
-              '<w:spacing w:before="200" w:after="100"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:smallCaps/><w:sz w:val="23"/><w:szCs w:val="23"/></w:rPr></w:style>'
+              '<w:spacing w:before="200" w:after="100"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:smallCaps/><w:sz w:val="25"/><w:szCs w:val="25"/></w:rPr></w:style>'
               '<w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/>'
               '<w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="80" w:after="40"/><w:outlineLvl w:val="1"/></w:pPr>'
               '<w:rPr><w:i/><w:iCs/></w:rPr></w:style></w:styles>' % W).replace("{f}", DOCX_FONT)

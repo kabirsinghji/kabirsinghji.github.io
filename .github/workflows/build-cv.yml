@@ -11,6 +11,7 @@ on:
       - 'tools/build.py'
       - 'tools/linkedin.py'
       - 'cv/preamble.tex'
+      - 'cv/fonts/**'
       - '.github/workflows/build-cv.yml'
   workflow_dispatch:
 
@@ -37,11 +38,17 @@ jobs:
       - name: Generate the CVs (.tex, .docx, .txt per profile) and the site pages from data/cv.json
         run: python3 tools/build.py
 
-      - name: Compile every CV profile to PDF
+      - name: Compile every CV profile to PDF (XeLaTeX, for the EB Garamond fonts in cv/fonts)
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: cv
           root_file: cv*.tex
+          latexmk_use_xelatex: true
+
+      # The hanging-line rules (build.py + preamble.tex) can only ever cost a line
+      # running into the right margin; flag any so it gets noticed. Never fails the build.
+      - name: Flag lines that run into the margin
+        run: grep -H "Overfull .hbox" cv/cv*.log | sed 's/^/::warning::/' || true
 
       - name: Commit the rebuilt files
         run: |
