@@ -1,7 +1,7 @@
 /* ============================================================
    Kabir Singh — site styles
    Text first: a vellum ground, ink, lapis for science and
-   vermilion for history; IBM Plex Mono for the voice, Newsreader
+   vermilion for history; IBM Plex Mono for the voice, EB Garamond
    for reading. The archived Diptych homepage keeps its own palette
    (html[data-home="diptych"], below). Change a token in :root and
    it propagates.
@@ -19,6 +19,11 @@
 @font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-display: swap; src: url("fonts/ibm-plex-mono-latin-600-normal.woff2") format("woff2"); }
 @font-face { font-family: "Newsreader"; font-weight: 400 600; font-display: swap; src: url("fonts/newsreader-latin-var.woff2") format("woff2"); }
 @font-face { font-family: "Newsreader"; font-style: italic; font-weight: 400; font-display: swap; src: url("fonts/newsreader-latin-400-italic.woff2") format("woff2"); }
+/* EB Garamond, the CV's fonts: Georg Duffner's 12-point cut, with Octavio Pardo's SemiBold for
+   bold; 7% larger so its small lowercase reads at the size the layout was set for */
+@font-face { font-family: "EB Garamond 12"; font-weight: 400; font-display: swap; size-adjust: 107%; src: url("fonts/eb-garamond-12-regular.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond 12"; font-style: italic; font-weight: 400; font-display: swap; size-adjust: 107%; src: url("fonts/eb-garamond-12-italic.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond 12"; font-weight: 500 900; font-display: swap; size-adjust: 107%; src: url("fonts/eb-garamond-semibold.woff2") format("woff2"); }
 @font-face { font-family: "Noto Serif Gurmukhi"; font-weight: 400; font-display: swap; src: url("fonts/noto-serif-gurmukhi-gurmukhi-400-normal.woff2") format("woff2");
   unicode-range: U+0951-0952, U+0964-0965, U+0A01-0A76, U+200C-200D, U+20B9, U+25CC, U+262C, U+A830-A839; }
 @font-face { font-family: "Noto Nastaliq Urdu"; font-weight: 400; font-display: swap; src: url("fonts/noto-nastaliq-urdu-coin-subset.woff2") format("woff2");
@@ -31,10 +36,10 @@
   /* molecule colours follow the paper's figure: light chain blue, heavy chain red, peptide green */
   --chain-l: #8EA3D6; --chain-h: #CC8784; --pep: #2C7A4C; --pep-t: #E2F0E7; --atom-n: #486CBE; --atom-o: #BE463E;
   --grid: rgba(35, 29, 24, .06);
-  --display: "Newsreader", Georgia, serif;
+  --display: "EB Garamond 12", Georgia, serif;
   --sans: "IBM Plex Mono", ui-monospace, monospace;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
-  --read: "Newsreader", Georgia, serif;
+  --read: "EB Garamond 12", Georgia, serif;
   --pa: "Noto Serif Gurmukhi", serif;
   --w: 74rem;
   color-scheme: light;
