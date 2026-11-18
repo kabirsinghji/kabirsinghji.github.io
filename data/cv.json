@@ -729,7 +729,12 @@
             {
               "heading": "Panelist, ‘Study Abroad Stories’",
               "dates": "2026",
-              "bullets": [],
+              "bullets": [
+                {
+                  "text": "International Education Week 2026, NJIT Office of Global Initiatives; one of five study-abroad alumni, moderated by Dean of Students Marybeth Boger",
+                  "show": "both"
+                }
+              ],
               "tags": [
                 "leading-organizing",
                 "adaptability",
