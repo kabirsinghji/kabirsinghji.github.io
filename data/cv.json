@@ -1841,7 +1841,12 @@
             {
               "heading": "Senior Representative",
               "dates": "Sep 2026 – Present",
-              "bullets": [],
+              "bullets": [
+                {
+                  "text": "Planned service events including 'Fight Hunger', which packed 20,000+ meals for food-insecure families in Newark",
+                  "show": "both"
+                }
+              ],
               "tags": [
                 "speaking",
                 "leading-organizing",
