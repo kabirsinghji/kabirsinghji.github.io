@@ -46,8 +46,9 @@ def smart_quotes(s):
     s = re.sub(r'(^|[\s(\[“‘])"', r"\1“", s)
     s = s.replace('"', "”")
     s = re.sub(r"(\w)'(\w)", r"\1’\2", s)          # it's
-    s = re.sub(r"'(\d\d)\b", r"’\1", s)            # '26
-    return s
+    s = re.sub(r"'(\d\d)(?=s?\b)", r"’\1", s)      # '26, '90s
+    s = re.sub(r"(^|[\s(\[“—–])'", r"\1‘", s)      # 'Fight Hunger' opens
+    return s.replace("'", "’")                     # ...and closes; students'
 
 
 def to_html(s, strip_bold=False):
@@ -934,7 +935,7 @@ def protein_data(cv):
 
     def add(sec, obj, text, dates, t, verbs=()):
         g = [index[x] for x in obj.get("tags", []) if x in index]
-        out.append({"s": obj.get("short") or short_of(text), "title": plain(text), "sec": sec["title"], "d": dates,
+        out.append({"s": smart_quotes(obj.get("short") or "") or short_of(text), "title": plain(text), "sec": sec["title"], "d": dates,
                     "v": list(verbs)[:3], "t": t, "g": g})
 
     for sec in cv["sections"]:
@@ -1311,7 +1312,7 @@ def entries(cv, sec_id):
 def short_title(e):
     """A short name for an entry: its own "short", else the heading without the role and the PI."""
     if e.get("short"):
-        return to_html_inline(e["short"])
+        return to_html_inline(smart_quotes(e["short"]))
     h = re.split(r"\.\s+(?:PI|Mentor|Supervisor|Dr\.)", e["heading"])[0]
     h = re.sub(r"^Undergraduate Researcher,\s*", "", h)
     return to_html_inline(h, strip_bold=True)
