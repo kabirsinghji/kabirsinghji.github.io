@@ -742,7 +742,7 @@
     if (!rootApps || !S.prog) return;
     S.appsStale = false;
     var input = h('input', { type: 'search', id: 'ap-q', autocomplete: 'off', 'aria-label': 'Program name',
-      placeholder: 'Type a program’s name, e.g. “NIH Postbac IRTA” or “Edinburgh Drug Discovery MSc”' });
+      placeholder: 'Paste the link to a program’s page, or type a name to find it in your research list' });
     input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); search(input.value); } });
     AP.sync = h('div', { class: 'ms-sync', role: 'status', 'aria-live': 'polite' });
     AP.facts = h('p', { class: 'ap-facts' });
@@ -757,8 +757,8 @@
           h('div', { class: 'ms-sync-wrap' }, AP.sync, ' ', h('button', { class: 'btn btn--small', type: 'button', text: 'Reload', onclick: load }))),
         AP.facts),
       h('div', { class: 'ap-addbox' },
-        h('div', { class: 'ap-addrow' }, input, h('button', { class: 'btn btn--primary', type: 'button', text: 'Look it up', onclick: function () { search(input.value); } })),
-        h('p', { class: 'hint', text: 'Checks your research list first. Anything else is looked up online: the official page, deadlines, fees, length, requirements and first steps. It takes about 1–3 minutes, and you can keep working. Anything it can’t find is listed under “Still to check”, and you can fill it in with Edit details.' }),
+        h('div', { class: 'ap-addrow' }, input, h('button', { class: 'btn btn--primary', type: 'button', text: 'Add', onclick: function () { search(input.value); } })),
+        h('p', { class: 'hint', text: 'Paste the link to the program’s own page (copy it from your browser’s address bar). In about a minute it fills in what it finds there: the name, deadlines, length and fees. Check what it picked out, then fill in the rest with Edit details. Typing a name finds programs in your research list.' }),
         AP.msg, AP.looks),
       AP.next,
       AP.groups,
@@ -876,6 +876,7 @@
     [['Type', p.type], ['Length', p.length], ['Runs', p.runs], ['Ends', p.endShow], ['Application fee', p.fee], [p.kind === 'work' ? 'Pay' : 'Tuition', p.tuition]]
       .forEach(function (f) { if (f[1]) facts.push(f); });
     var editBox = h('div', { class: 'ap-edit', hidden: true });
+    if (AP.editNext === id) { AP.editNext = null; setTimeout(function () { editForm(p0, editBox); }, 0); }
 
     return h('div', { class: 'ap-detail', id: 'ap-d-' + id },
       h('div', null, stepsUI(p, after), h('h4', { text: 'Notes' }), notes),
@@ -890,7 +891,7 @@
           p.dec ? h('p', null, h('b', { text: 'Decisions. ' }), p.dec) : null,
           p.people ? h('p', null, h('b', { text: 'People to contact. ' }), p.people) : null,
           p.src.length ? h('div', { class: 'srcs' }, p.src.map(function (u) { return h('a', { href: u, target: '_blank', rel: 'noopener', text: u.replace(/^https?:\/\/(www\.)?/, '') }); })) : null) : null,
-        isAdded(p0) && p0.added ? h('p', { class: 'ap-src', text: 'Looked up ' + fmtDate(p0.added) + (p0.query ? ' from “' + p0.query + '”' : '') + '.' }) : null,
+        isAdded(p0) && p0.added ? h('p', { class: 'ap-src', text: (p0.addedBy === 'link' ? 'Read from its page on ' : p0.addedBy === 'hand' ? 'Added by hand on ' : 'Looked up ') + fmtDate(p0.added) + (p0.query && p0.addedBy === 'lookup' ? ' from “' + p0.query + '”' : '') + '.' }) : null,
         h('div', { class: 'ap-acts' }, sel, star,
           p.src[0] ? h('a', { class: 'btn btn--small', href: p.src[0], target: '_blank', rel: 'noopener', text: 'Official page ↗' }) : null,
           h('button', { class: 'btn btn--small', type: 'button', text: 'Edit details', onclick: function () { editForm(p0, editBox); } }),
@@ -956,12 +957,20 @@
     q = String(q || '').trim(); fill(AP.msg);
     var input = document.getElementById('ap-q');
     if (!q) { if (input) input.focus(); return; }
+    var link = asLink(q);
+    if (link) return startLookup(link);
     var words = q.toLowerCase().split(/[\s,·()\/]+/).filter(function (w) { return w.length > 1 && !STOP[w]; });
     var hits = online || !words.length ? [] : S.ref.programs.filter(function (p) {
       var hay = (p.uni + ' ' + (S.ref.uniFull[p.uni] || '') + ' ' + uniTag(p.uni) + ' ' + p.name + ' ' + p.track).toLowerCase();
       return words.every(function (w) { return hay.indexOf(w) >= 0; });
     }).slice(0, 6);
-    if (!hits.length) return startLookup(q);
+    function byName(lead) {
+      return h('div', { class: 'ap-hits' }, h('p', { class: 's', text: lead + ' To add it, paste the link to its page.' }),
+        h('div', { class: 'ap-acts' },
+          h('button', { class: 'btn btn--small', type: 'button', text: 'Add it by hand', onclick: function () { addByHand(q); } }),
+          h('button', { class: 'btn btn--small', type: 'button', text: 'Search online by name (needs an API key)', onclick: function () { startLookup(q); } })));
+    }
+    if (online || !hits.length) return fill(AP.msg, byName(online ? 'Not one of these?' : 'That isn’t in your research list.'));
     fill(AP.msg, h('div', { class: 'ap-hits' },
       h('p', { class: 's', text: hits.length === 1 ? 'This one is in your research list:' : 'These are in your research list:' }),
       h('ul', null, hits.map(function (p) {
@@ -973,7 +982,28 @@
                    fill(AP.msg); if (input) input.value = ''; paintTop(); openRow(p.id);
                  } }));
       })),
-      h('button', { class: 'btn btn--small', type: 'button', text: 'None of these: look it up online', onclick: function () { search(q, true); } })));
+      h('button', { class: 'btn btn--small', type: 'button', text: 'None of these', onclick: function () { search(q, true); } })));
+  }
+  /* A pasted link, with or without https:// in front; null for anything else. */
+  function asLink(q) {
+    if (/\s/.test(q)) return null;
+    if (/^https?:\/\/[^\s.]+\.\S+$/i.test(q)) return q;
+    if (/^(www\.)?[\w-]+(\.[\w-]+)*\.[a-z]{2,}(\/\S*)?$/i.test(q)) return 'https://' + q;
+    return null;
+  }
+  function shown(q) { var t = q.replace(/^https?:\/\/(www\.)?/i, ''); return t.length > 70 ? t.slice(0, 67) + '…' : t; }
+  /* A blank program to fill in with Edit details: for sites that don't allow automatic reading, or a name. */
+  function addByHand(q, l) {
+    if (!S.repoOk) { fill(AP.msg, h('div', { class: 'note note--err', text: 'Read-only: the token can’t write to ' + repo() + '.' })); return; }
+    var link = asLink(q), host = link ? link.replace(/^https?:\/\/(www\.)?/i, '').split('/')[0] : '';
+    var p = { id: 'add-' + uid(), query: q, added: today(), addedBy: 'hand', kind: 'other', uni: host, org: host,
+              name: link ? 'New program' : q, aim: [], extra: [], last: [], steps: [], src: link ? [link] : [] };
+    putFile(ADDED_DIR + '/' + p.id + '.json', JSON.stringify(p, null, 1) + '\n', null, 'Add ' + p.name).then(function (res) {
+      S.addedSha[p.id] = res.content.sha; S.added.push(p);
+      fill(AP.msg); var input = document.getElementById('ap-q'); if (input) input.value = '';
+      if (l) dismissLookup(l);
+      AP.editNext = p.id; paintTop(); openRow(p.id);
+    }, function (e) { fill(AP.msg, h('div', { class: 'note note--err', text: 'Could not add it: ' + e.message })); });
   }
   function lookupFile(l) { return JSON.stringify({ id: l.id, query: l.query, requested: l.requested, status: l.status }, null, 1) + '\n'; }
   function startLookup(q) {
@@ -1025,13 +1055,14 @@
       var mins = Math.max(0, Math.floor((Date.now() - new Date(l.requested)) / 60000));
       if (l.status === 'failed') return h('div', { class: 'ap-look err' },
         h('span', { class: 'x', 'aria-hidden': 'true', text: '!' }),
-        h('span', null, 'Couldn’t look up ', h('b', { text: l.query }), '. ' + (l.error || '')),
+        h('span', null, 'Couldn’t look up ', h('b', { text: shown(l.query) }), '. ' + (l.error || '')),
         h('span', { class: 't' },
           h('button', { class: 'btn btn--small', type: 'button', text: 'Retry', onclick: function () { retryLookup(l); } }), ' ',
+          h('button', { class: 'btn btn--small', type: 'button', text: 'Add it by hand', onclick: function () { addByHand(l.query, l); } }), ' ',
           h('button', { class: 'btn btn--small', type: 'button', text: 'Dismiss', onclick: function () { dismissLookup(l); } })));
       return h('div', { class: 'ap-look' },
         h('span', { class: 'spin', 'aria-hidden': 'true' }),
-        h('span', null, 'Looking up ', h('b', { text: l.query }),
+        h('span', null, 'Looking up ', h('b', { text: shown(l.query) }),
           mins >= 10 ? [h('span', { text: '. This is taking longer than usual: ' }), h('a', { href: 'https://github.com/' + repo() + '/actions', target: '_blank', rel: 'noopener', text: 'check the Action' })] : null),
         h('span', { class: 't', text: mins < 1 ? 'just now' : mins + ' min ago' }));
     }));
