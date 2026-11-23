@@ -1,9 +1,16 @@
-/* UK master's tab for admin.html.
+/* Future tab for admin.html: My applications, and the UK master's research list.
 
-   Both files live in the PRIVATE data repository (Settings → Private data
+   All files live in the PRIVATE data repository (Settings → Private data
    repository), never in the public site:
      masters/programs.json  reference list of programs, deadlines and funding (read-only here)
-     masters/progress.json  your statuses, stars, ticked steps, notes, tasks and journal
+     masters/progress.json  your statuses, stars, ticked steps, notes, edits, tasks and journal
+     masters/added/*.json   programs you added by name (one file each)
+     masters/lookups/*.json searches waiting for the "Look up programs" GitHub Action, which
+                            finds the program online and writes it to masters/added/
+
+   My applications shows every program in your plan, starred, given a status,
+   or added by name. Not applying moves it to a closed list where it can be
+   restored, or, if you added it by name, deleted.
 
    Update program list (top right) replaces programs.json with a newer copy;
    progress.json is never touched by that, and programs keep their ids, so
@@ -21,6 +28,7 @@
   if (!A) return;
 
   var REF = 'masters/programs.json', PROG = 'masters/progress.json', CACHE = 'adm.masters.cache';
+  var ADDED_DIR = 'masters/added', LOOKUP_DIR = 'masters/lookups';
   var STATUS = [['', 'Not started'], ['researching', 'Researching'], ['preparing', 'Preparing'], ['submitted', 'Submitted'],
                 ['interview', 'Interview'], ['waitlist', 'Waitlisted'], ['offer', 'Offer'], ['accepted', 'Accepted'],
                 ['rejected', 'Rejected'], ['declined', 'Declined'], ['skip', 'Not applying']];
@@ -34,9 +42,11 @@
     ref: null, refSha: null, prog: null, sha: null, repoOk: false,
     pending: false, saving: false, rev: 0, err: '', savedAt: null, timer: null,
     f: { q: '', uni: '', fit: '', track: '', plan: false, star: false, st: '', time: '' },
-    allUp: false
+    allUp: false,
+    added: [], addedSha: {}, lookups: [], poll: null, loading: false,
+    appsStale: false, resStale: false                 /* changed in the other view since last drawn */
   };
-  var root, R = {};                                   /* R: containers that re-render */
+  var rootRes, rootApps, R = {}, AP = { open: {} };   /* R, AP: containers that re-render */
 
   /* ------------------------------------------------------------ utils -- */
   function h(tag, attrs) {
@@ -146,6 +156,8 @@
   }
   function changed() {
     S.prog.updated = now(); S.pending = true; S.rev++; S.err = '';
+    if (rootApps && !rootApps.hidden) S.resStale = true;
+    if (rootRes && !rootRes.hidden) S.appsStale = true;
     cacheSave(); renderSync();
     clearTimeout(S.timer); S.timer = setTimeout(push, 2000);
   }
@@ -175,7 +187,7 @@
         if ((e.status === 409 || e.status === 422) && !retry) {       /* another device saved first: merge and retry */
           return getFile(PROG).then(function (f) {
             S.prog = merge(S.prog, JSON.parse(f.text)); S.sha = f.sha; S.rev++;
-            R.cards = {}; cacheSave(); renderAll(); push(true);
+            R.cards = {}; cacheSave(); renderAll(); renderApps(); push(true);
           }).catch(function (e2) { S.err = e2.message; renderSync(); });
         }
         S.err = e.status === 401 || e.status === 403 ? 'GitHub refused the save. Check the token can write to ' + repo() + '.' : e.message;
@@ -184,9 +196,29 @@
   }
   window.addEventListener('beforeunload', function (e) { if (S.pending) { push(); e.preventDefault(); e.returnValue = ''; } });
 
+  function deleteFile(path, sha, message) {
+    return A.gh('/repos/' + repo() + '/contents/' + path, { method: 'DELETE', body: { message: message, sha: sha } });
+  }
+  function listDir(path) {                            /* .json files in a folder; none if it doesn't exist yet */
+    return A.gh('/repos/' + repo() + '/contents/' + path).then(function (a) {
+      return Array.isArray(a) ? a.filter(function (f) { return /\.json$/.test(f.name); }) : [];
+    }, function (e) { if (e.status === 404) return []; throw e; });
+  }
+  function loadAdded() {
+    return Promise.all([listDir(ADDED_DIR), listDir(LOOKUP_DIR)]).then(function (r) {
+      return Promise.all(r[0].map(function (f) { return getFile(f.path).then(function (x) { var p = JSON.parse(x.text); S.addedSha[p.id] = x.sha; return p; }); }))
+        .then(function (ps) {
+          S.added = ps;
+          return Promise.all(r[1].map(function (f) { return getFile(f.path).then(function (x) { var l = JSON.parse(x.text); l.sha = x.sha; return l; }); }));
+        }).then(function (ls) { S.lookups = ls; });
+    });
+  }
+
   /* -------------------------------------------------------------- load -- */
+  function roots() { return [rootApps, rootRes].filter(Boolean); }
   function load() {
-    fill(root, h('p', { class: 'ms-empty', text: 'Loading your master’s tracker…' }));
+    S.loading = true;
+    roots().forEach(function (r) { fill(r, h('p', { class: 'ms-empty', text: 'Loading your applications…' })); });
     if (!A.cfg().token) return setup('token');
     A.gh('/repos/' + repo()).then(function (r) {
       if (!r.private) return setup('public');
@@ -200,15 +232,24 @@
         var c = cacheLoad();
         if (c && c.pending && c.prog) { S.prog = merge(S.prog, c.prog); S.pending = true; S.rev++; clearTimeout(S.timer); S.timer = setTimeout(push, 1500); }
         migrateSteps();
-        renderMain();
+        return loadAdded().then(function () {
+          S.loading = false;
+          if (rootRes) renderMain();
+          renderApps(); poll();
+        });
       });
     }).catch(function (e) {
+      S.loading = false;
       if (e.status === 404) return setup('norepo');
-      fill(root, h('div', { class: 'note note--err', text: 'Could not load the tracker: ' + e.message }));
+      roots().forEach(function (r) { fill(r, h('div', { class: 'note note--err', text: 'Could not load the tracker: ' + e.message })); });
     });
   }
 
   function setup(kind) {
+    S.loading = false;
+    roots().forEach(function (r) { fill(r, setupBox(kind)); });
+  }
+  function setupBox(kind) {
     var c = A.cfg();
     var box = h('div', { class: 'ms-setup' }, h('h2', { text: 'UK master’s tracker' }));
     if (kind === 'token') {
@@ -225,7 +266,8 @@
       box.append(h('div', { class: 'note note--err' }, h('b', { text: c.dataRepo }), ' is public, so your notes would be visible to anyone. Make it private on GitHub (Settings → General → Danger zone → Change visibility), then reload.'),
         h('p', null, h('button', { class: 'btn btn--primary', type: 'button', text: 'Reload', onclick: load })));
     } else if (kind === 'nofile') {
-      var input = h('input', { type: 'file', accept: 'application/json,.json', id: 'ms-file' });
+      var fid = 'ms-file-' + uid();
+      var input = h('input', { type: 'file', accept: 'application/json,.json', id: fid });
       var msg = h('div');
       input.addEventListener('change', function () {
         var file = input.files[0]; if (!file) return;
@@ -238,9 +280,9 @@
           .catch(function (e) { fill(msg, h('div', { class: 'note note--err', text: 'Could not add the file: ' + e.message })); });
       });
       box.append(h('p', null, 'The private repository ', h('b', { text: c.dataRepo }), ' is ready. Add the program list once and the tracker will open.'),
-        h('label', { class: 'f', for: 'ms-file' }, h('span', { text: 'Program list (masters-programs.json)' }), input), msg);
+        h('label', { class: 'f', for: fid }, h('span', { text: 'Program list (masters-programs.json)' }), input), msg);
     }
-    fill(root, box);
+    return box;
   }
 
   /* Replace programs.json with a newer copy. Progress is a separate file and is not touched. */
@@ -249,7 +291,7 @@
       var d = JSON.parse(t);
       if (!d.programs || !d.programs.length) throw new Error('that file has no programs in it');
       var ids = {}; d.programs.forEach(function (p) { ids[p.id] = 1; });
-      var missing = Object.keys(S.prog.programs).filter(function (id) { return !ids[id]; });
+      var missing = Object.keys(S.prog.programs).filter(function (id) { return !ids[id] && !isAdded({ id: id }); });
       function go() {
         fill(R.refMsg, h('div', { class: 'note', text: 'Uploading ' + d.programs.length + ' programs…' }));
         putFile(REF, t, S.refSha, 'Update UK master’s program list').then(function () { load(); },
@@ -265,20 +307,23 @@
 
   /* ------------------------------------------------------------ render -- */
   function renderSync() {
-    if (!R.sync) return;
+    [R.sync, AP.sync].forEach(function (el) { if (el) paintSync(el); });
+  }
+  function paintSync(el) {
     var cls = 'ms-sync', text;
     if (!S.repoOk) { cls += ' err'; text = 'Read-only: the token can’t write to ' + repo(); }
     else if (S.err) { cls += ' err'; text = 'Not saved: ' + S.err; }
     else if (S.saving) { cls += ' busy'; text = 'Saving…'; }
     else if (S.pending) { cls += ' busy'; text = 'Unsaved changes'; }
     else { cls += ' ok'; text = S.savedAt ? 'Saved to GitHub at ' + S.savedAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : 'Up to date'; }
-    R.sync.className = cls;
-    fill(R.sync, h('span', { class: 'dot', 'aria-hidden': 'true' }), h('span', { text: text }),
+    el.className = cls;
+    fill(el, h('span', { class: 'dot', 'aria-hidden': 'true' }), h('span', { text: text }),
       S.err ? h('button', { class: 'btn btn--small', type: 'button', text: 'Retry', onclick: function () { S.err = ''; push(); } }) : null);
   }
 
   function renderMain() {
     var P = S.ref.programs;
+    S.resStale = false;
     R.sync = h('div', { class: 'ms-sync', role: 'status', 'aria-live': 'polite' });
     R.sum = h('div', { class: 'ms-sum' });
     R.up = h('div', { class: 'ms-box' });
@@ -299,7 +344,7 @@
     var firstAim = P.map(function (p) { return p.aim[0]; }).filter(function (a) { return a.c === 'c' && a.d >= today() && !/^Oct|Autumn/.test(a.w); })
       .sort(function (a, b) { return a.d < b.d ? -1 : 1; })[0];
     var inTime = P.filter(function (p) { return p.timing === 'A' || p.timing === 'B'; }).length, confirm = P.filter(function (p) { return p.timing === 'U'; }).length;
-    fill(root, h('div', { class: 'ms' },
+    fill(rootRes, h('div', { class: 'ms' },
       h('div', null,
         h('div', { class: 'ms-head' },
           h('div', null, h('p', { class: 'eyebrow', text: S.ref.eyebrow || '' }), h('h2', { text: S.ref.title || 'UK master’s options' })),
@@ -598,33 +643,7 @@
           h('span', { class: 'lb', text: d.a.t })));
     }));
 
-    var stepsUl = h('ul');
-    function paintSteps() {
-      var o = pp(p.id), done = o.done || [];
-      var rows = p.steps.map(function (s, i) {
-        var cb = h('input', { type: 'checkbox', 'aria-label': 'Done: ' + s }); cb.checked = done.indexOf(i) >= 0;
-        cb.addEventListener('change', function () {
-          var w = x(); w.done = (w.done || []).filter(function (j) { return j !== i; }); if (cb.checked) w.done.push(i);
-          if (p.stepsRev) w.stepsRev = p.stepsRev;                    /* these ticks belong to the current steps */
-          touch(w); paintSteps(); paintProgress(); renderSummary();
-        });
-        return h('li', { class: cb.checked ? 'done' : '' }, cb, h('span', { text: s }), h('span'));
-      });
-      (o.tasks || []).filter(function (t) { return !t.deleted; }).forEach(function (t) {
-        var cb = h('input', { type: 'checkbox', 'aria-label': 'Done: ' + t.text }); cb.checked = !!t.done;
-        cb.addEventListener('change', function () { t.done = cb.checked; x().updated = now(); changed(); paintSteps(); paintProgress(); renderSummary(); });
-        rows.push(h('li', { class: 'mine' + (t.done ? ' done' : '') }, cb, h('span', { text: t.text }),
-          h('button', { class: 'ms-x', type: 'button', 'aria-label': 'Delete step: ' + t.text, text: '✕', onclick: function () { t.deleted = true; x().updated = now(); changed(); paintSteps(); paintProgress(); renderSummary(); } })));
-      });
-      fill(stepsUl, rows);
-    }
-    var newStep = h('input', { type: 'text', placeholder: 'Add your own step', 'aria-label': 'Add a step for ' + p.name });
-    function addStep() {
-      var v = newStep.value.trim(); if (!v) return;
-      var w = x(); w.tasks = w.tasks || []; w.tasks.push({ id: uid(), text: v, done: false });
-      newStep.value = ''; touch(w); paintSteps(); paintProgress(); renderSummary();
-    }
-    newStep.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addStep(); } });
+    var stepsBox = stepsUI(p, function () { paintProgress(); renderSummary(); });
 
     var notes = h('textarea', { rows: 2, placeholder: 'Your notes on this program', 'aria-label': 'Notes for ' + p.name });
     notes.value = pp(p.id).notes || '';
@@ -644,8 +663,7 @@
         h('div', null, h('dt', { text: 'Tuition (international)' }), h('dd', { text: p.tuition }))),
       dl,
       h('p', { class: 'ms-fittext' }, p.fit, h('span', { text: p.why })),
-      h('div', { class: 'ms-steps' }, h('h4', { text: 'Steps' }), stepsUl,
-        h('div', { class: 'ms-add' }, newStep, h('button', { class: 'btn btn--small', type: 'button', text: 'Add', onclick: addStep }))),
+      stepsBox,
       notes,
       h('details', null, h('summary', { text: 'Requirements, contacts and sources' }),
         h('div', { class: 'body' },
@@ -653,8 +671,370 @@
           p.dec ? h('p', null, h('b', { text: 'Decisions. ' }), p.dec) : null,
           p.people ? h('p', null, h('b', { text: 'People to contact. ' }), p.people) : null,
           h('div', { class: 'srcs' }, h('b', { text: 'Sources' }), p.src.map(function (u) { return h('a', { href: u, target: '_blank', rel: 'noopener', text: u.replace(/^https?:\/\/(www\.)?/, '') }); })))));
-    paintSteps(); paintProgress();
+    paintProgress();
     return c;
+  }
+
+  /* The step checklist, with your own steps. after() runs when a step changes. */
+  function stepsUI(p, after) {
+    var x = function () { return ppw(p.id); };
+    var stepsUl = h('ul');
+    function paintSteps() {
+      var o = pp(p.id), done = o.done || [];
+      var rows = p.steps.map(function (s, i) {
+        var cb = h('input', { type: 'checkbox', 'aria-label': 'Done: ' + s }); cb.checked = done.indexOf(i) >= 0;
+        cb.addEventListener('change', function () {
+          var w = x(); w.done = (w.done || []).filter(function (j) { return j !== i; }); if (cb.checked) w.done.push(i);
+          if (p.stepsRev) w.stepsRev = p.stepsRev;                    /* these ticks belong to the current steps */
+          touch(w); paintSteps(); after();
+        });
+        return h('li', { class: cb.checked ? 'done' : '' }, cb, h('span', { text: s }), h('span'));
+      });
+      (o.tasks || []).filter(function (t) { return !t.deleted; }).forEach(function (t) {
+        var cb = h('input', { type: 'checkbox', 'aria-label': 'Done: ' + t.text }); cb.checked = !!t.done;
+        cb.addEventListener('change', function () { t.done = cb.checked; x().updated = now(); changed(); paintSteps(); after(); });
+        rows.push(h('li', { class: 'mine' + (t.done ? ' done' : '') }, cb, h('span', { text: t.text }),
+          h('button', { class: 'ms-x', type: 'button', 'aria-label': 'Delete step: ' + t.text, text: '✕', onclick: function () { t.deleted = true; x().updated = now(); changed(); paintSteps(); after(); } })));
+      });
+      fill(stepsUl, rows);
+    }
+    var newStep = h('input', { type: 'text', placeholder: 'Add your own step', 'aria-label': 'Add a step for ' + p.name });
+    function addStep() {
+      var v = newStep.value.trim(); if (!v) return;
+      var w = x(); w.tasks = w.tasks || []; w.tasks.push({ id: uid(), text: v, done: false });
+      newStep.value = ''; touch(w); paintSteps(); after();
+    }
+    newStep.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addStep(); } });
+    paintSteps();
+    return h('div', { class: 'ms-steps' }, h('h4', { text: 'Steps' }), stepsUl,
+      h('div', { class: 'ms-add' }, newStep, h('button', { class: 'btn btn--small', type: 'button', text: 'Add', onclick: addStep })));
+  }
+
+  /* --------------------------------------------------- My applications -- */
+  var KINDS = [['masters', 'Master’s'], ['fellowship', 'Fellowships'], ['work', 'Research & jobs'], ['other', 'Other']];
+  var STOP = { in: 1, of: 1, the: 1, and: 1, at: 1, for: 1, university: 1 };
+
+  function isAdded(p) { return p.id.indexOf('add-') === 0; }
+  function allPrograms() { return S.ref.programs.concat(S.added); }
+  function mine(p) { return isAdded(p) || inPlan(p) || starred(p) || !!status(p); }
+  function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : null; }
+  /* The program as shown: its own details with your edits on top. Leaving an edit empty keeps the original. */
+  function eff(p, own) {
+    var q = {}, e = own ? {} : pp(p.id).edit || {};
+    Object.keys(p).forEach(function (k) { q[k] = p[k]; });
+    q.kind = q.kind || 'masters'; q.org = q.org || uniTag(p.uni);
+    q.aim = q.aim || []; q.extra = q.extra || []; q.last = q.last || []; q.steps = q.steps || [];
+    ['org', 'name', 'kind', 'length', 'endShow', 'fee', 'tuition'].forEach(function (k) { if (e[k]) q[k] = e[k]; });
+    if (e.d) q.aim = [{ d: e.d, w: fmtDate(e.d), t: 'Date you set', c: 'c' }];
+    q.src = (safeUrl(e.link) ? [e.link] : []).concat(q.src || []).filter(function (u, i, a) { return safeUrl(u) && a.indexOf(u) === i; });
+    return q;
+  }
+  function nextStep(p) {
+    var x = pp(p.id), done = x.done || [], steps = p.steps || [];
+    for (var i = 0; i < steps.length; i++) if (done.indexOf(i) < 0) return steps[i];
+    var t = (x.tasks || []).filter(function (t) { return !t.deleted && !t.done; })[0];
+    return t ? t.text : '';
+  }
+  function when(n) { return n < 21 ? leftLabel(n) : n < 70 ? Math.round(n / 7) + ' weeks' : Math.round(n / 30.4) + ' months'; }
+  function dateKey(p) { var n = nextDate(eff(p)); return n ? n.a.d : '9999'; }
+
+  function renderApps() {
+    if (!rootApps || !S.prog) return;
+    S.appsStale = false;
+    var input = h('input', { type: 'search', id: 'ap-q', autocomplete: 'off', 'aria-label': 'Program name',
+      placeholder: 'Type a program’s name, e.g. “NIH Postbac IRTA” or “Edinburgh Drug Discovery MSc”' });
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); search(input.value); } });
+    AP.sync = h('div', { class: 'ms-sync', role: 'status', 'aria-live': 'polite' });
+    AP.facts = h('p', { class: 'ap-facts' });
+    AP.msg = h('div');
+    AP.looks = h('div', { class: 'ap-looks', 'aria-live': 'polite' });
+    AP.next = h('section', { 'aria-label': 'Due next' });
+    AP.groups = h('div', { class: 'ap-groups' });
+    fill(rootApps, h('div', { class: 'ms ap' },
+      h('div', null,
+        h('div', { class: 'ms-head' },
+          h('div', null, h('p', { class: 'eyebrow', text: 'Future · gap year 2027–28' }), h('h2', { text: 'My applications' })),
+          h('div', { class: 'ms-sync-wrap' }, AP.sync, ' ', h('button', { class: 'btn btn--small', type: 'button', text: 'Reload', onclick: load }))),
+        AP.facts),
+      h('div', { class: 'ap-addbox' },
+        h('div', { class: 'ap-addrow' }, input, h('button', { class: 'btn btn--primary', type: 'button', text: 'Look it up', onclick: function () { search(input.value); } })),
+        h('p', { class: 'hint', text: 'Checks your research list first. Anything else is looked up online: the official page, deadlines, fees, length, requirements and first steps. It takes about 1–3 minutes, and you can keep working. Anything it can’t find is listed under “Still to check”, and you can fill it in with Edit details.' }),
+        AP.msg, AP.looks),
+      AP.next,
+      AP.groups,
+      h('div', { class: 'ap-browse' },
+        h('span', null, h('b', { text: 'The UK master’s research list' }), h('br'),
+          String(S.ref.programs.length) + ' programs, the ranked shortlist, funding and what was ruled out. Star one or add it to your plan and it shows up here.'),
+        h('button', { class: 'btn', type: 'button', text: 'Open ›', onclick: function () { var b = document.getElementById('subtab-masters'); if (b) b.click(); } }))));
+    renderSync(); paintTop(); paintLooks(); paintGroups();
+  }
+
+  function paintTop() {
+    if (!AP.facts) return;
+    var live = allPrograms().filter(function (p) { return mine(p) && status(p) !== 'skip'; }).map(function (p) { return eff(p); });
+    var count = function (f) { return live.filter(f).length; };
+    var groups = {}, order = [];
+    live.filter(function (p) { return !APPLIED[status(p)]; }).forEach(function (p) {
+      var n = nextDate(p); if (!n) return;
+      if (!groups[n.a.d]) { groups[n.a.d] = []; order.push(n.a.d); }
+      groups[n.a.d].push({ p: p, n: n });
+    });
+    order.sort();
+    var first = order[0];
+    fill(AP.facts,
+      h('span', null, h('b', { text: String(live.length) }), live.length === 1 ? ' application' : ' applications'),
+      h('span', null, h('b', { text: String(count(starred)) }), ' starred'),
+      h('span', null, h('b', { text: String(count(function (p) { return status(p) === 'preparing'; })) }), ' preparing'),
+      h('span', null, h('b', { text: String(count(function (p) { return APPLIED[status(p)]; })) }), ' submitted or decided'),
+      first ? h('span', null, 'next deadline ', h('b', { text: groups[first][0].n.a.w.replace(/^~/, '') }), ', in ' + when(daysUntil(first))) : null);
+    fill(AP.next, order.length ? [h('h3', { text: 'Due next' }), h('div', { class: 'ap-next' }, order.slice(0, 3).map(function (d) {
+      var g = groups[d].sort(function (a, b) { return starred(b.p) - starred(a.p); }), n = daysUntil(d), est = g[0].n.a.c === 'e', orgs = [];
+      g.forEach(function (x) { if (orgs.indexOf(x.p.org) < 0) orgs.push(x.p.org); });
+      return h('div', { class: 'ap-tile' },
+        h('span', { class: 'k ' + urgency(n), text: (est ? '≈ ' : '') + when(n) }),
+        h('span', { class: 'n', text: g[0].n.a.w.replace(/^~/, '') }),
+        h('span', { class: 's', text: orgs.join(', ') + ' · ' + g.length + (g.length === 1 ? ' application' : ' applications') }),
+        h('ul', null, g.map(function (x) {
+          return h('li', null, h('a', { href: '#future/apps', text: short(x.p.name), onclick: function (e) { e.preventDefault(); openRow(x.p.id); } }), starred(x.p) ? h('span', { class: 'st', text: ' ★' }) : null);
+        })));
+    }))] : null);
+  }
+
+  function paintGroups() {
+    if (!AP.groups) return;
+    var list = allPrograms().filter(mine);
+    var live = list.filter(function (p) { return status(p) !== 'skip'; }), gone = list.filter(function (p) { return status(p) === 'skip'; });
+    var sections = KINDS.map(function (k) {
+      var ps = live.filter(function (p) { return eff(p).kind === k[0]; })
+        .sort(function (a, b) { var x = dateKey(a), y = dateKey(b); return x < y ? -1 : x > y ? 1 : eff(a).name.localeCompare(eff(b).name); });
+      if (!ps.length) return null;
+      return h('section', { class: 'ap-group' }, h('h3', null, k[1], h('span', { class: 'c', text: String(ps.length) })),
+        h('div', { class: 'ap-list' }, ps.map(item)));
+    });
+    fill(AP.groups,
+      live.length ? sections : h('p', { class: 'ms-empty', text: 'Nothing here yet. Search for a program above, or star one in the research list.' }),
+      gone.length ? h('details', { class: 'ms-sec ap-gone' },
+        h('summary', null, h('h3', { text: 'Not applying' }), h('span', { class: 'c', text: gone.length + (gone.length === 1 ? ' program. Restore it to bring it back' : ' programs. Restore one to bring it back') })),
+        h('div', { class: 'ap-list' }, gone.map(goneItem))) : null);
+  }
+  function openRow(id) {
+    AP.open[id] = true; paintGroups();
+    var el = document.getElementById('ap-' + id); if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1800);
+  }
+
+  /* One application: a summary row that opens to steps, notes and details. */
+  function item(p0) {
+    var id = p0.id, wrap = h('div', { class: 'ap-item', id: 'ap-' + id }), body = null;
+    var head = h('button', { class: 'ap-row', type: 'button', 'aria-controls': 'ap-d-' + id });
+    function paintHead() {
+      var p = eff(p0), n = nextDate(p), s = status(p), k = stepCounts(p), nx = nextStep(p), d = n ? daysUntil(n.a.d) : null;
+      var past = !n && p.aim[0];
+      fill(head,
+        h('span', { class: 'ap-date' }, n ? [h('b', { text: n.a.w.replace(/^~/, '') }), h('span', { class: urgency(d), text: (n.a.c === 'e' ? '≈ ' : '') + when(d) })]
+          : h('b', { class: 'none', text: past ? past.w : 'No date' }), past ? h('span', { text: 'passed' }) : null),
+        h('span', { class: 'ap-name' },
+          h('span', { class: 'o', text: p.org }),
+          h('span', { class: 'p' }, short(p.name), starred(p) ? h('span', { class: 'st', text: ' ★' }) : null),
+          nx ? h('span', { class: 'nx' }, h('b', { text: 'Next: ' }), nx) : null),
+        h('span', { class: 'ap-st' }, h('span', { class: 'ms-pill' + (s ? ' st-' + s : ''), text: STATUS_LABEL[s] })),
+        h('span', { class: 'ap-prog' }, k.total ? [h('span', { class: 'ms-bar' }, h('i', { style: 'width:' + Math.round(100 * k.done / k.total) + '%' })), k.done + ' of ' + k.total + ' steps'] : null),
+        h('span', { class: 'ap-chev', 'aria-hidden': 'true', text: '›' }));
+    }
+    function draw() {
+      var on = !!AP.open[id];
+      head.setAttribute('aria-expanded', on ? 'true' : 'false'); wrap.classList.toggle('open', on);
+      if (on && !body) { body = detail(p0, function () { paintHead(); paintTop(); }); wrap.append(body); }
+      if (body) body.hidden = !on;
+    }
+    head.addEventListener('click', function () { AP.open[id] = !AP.open[id]; draw(); });
+    wrap.append(head); paintHead(); draw();
+    return wrap;
+  }
+
+  function detail(p0, after) {
+    var id = p0.id, p = eff(p0), x = function () { return ppw(id); };
+    var notes = h('textarea', { rows: 2, placeholder: 'Your notes on this application', 'aria-label': 'Notes for ' + p.name });
+    notes.value = pp(id).notes || '';
+    notes.addEventListener('input', function () { var w = x(); w.notes = notes.value; touch(w); });
+
+    var sel = h('select', { 'aria-label': 'Status for ' + p.name }, STATUS.map(function (s) { return h('option', { value: s[0], text: s[1] }); }));
+    sel.value = status(p0); sel.className = status(p0) ? 'st-' + status(p0) : '';
+    sel.addEventListener('change', function () {
+      var w = x(); w.status = sel.value; touch(w); sel.className = sel.value ? 'st-' + sel.value : '';
+      if (sel.value === 'skip') { paintGroups(); paintTop(); } else after();
+    });
+    var star = h('button', { class: 'ms-star', type: 'button', 'aria-pressed': starred(p0) ? 'true' : 'false', title: 'Star', 'aria-label': 'Star ' + p.name, text: '★', onclick: function () {
+      var w = x(); w.star = !w.star; touch(w); star.setAttribute('aria-pressed', w.star ? 'true' : 'false'); after();
+    } });
+
+    var facts = [];
+    dates(p).forEach(function (d) {
+      facts.push([d.k, (d.a.c === 'e' ? d.a.w.replace(/^~/, '') + ' (estimate)' : d.a.w) + (d.a.time ? ', ' + d.a.time : '') + (d.a.t ? '. ' + d.a.t : '')]);
+    });
+    [['Type', p.type], ['Length', p.length], ['Runs', p.runs], ['Ends', p.endShow], ['Application fee', p.fee], [p.kind === 'work' ? 'Pay' : 'Tuition', p.tuition]]
+      .forEach(function (f) { if (f[1]) facts.push(f); });
+    var editBox = h('div', { class: 'ap-edit', hidden: true });
+
+    return h('div', { class: 'ap-detail', id: 'ap-d-' + id },
+      h('div', null, stepsUI(p, after), h('h4', { text: 'Notes' }), notes),
+      h('div', null,
+        h('h4', { text: 'Key facts' }),
+        facts.length ? h('dl', { class: 'ap-kv' }, facts.map(function (f) { return [h('dt', { text: f[0] }), h('dd', { text: f[1] })]; })) : h('p', { class: 's', text: 'No details yet. Add them with Edit details.' }),
+        p.timing || p.realism ? h('div', { class: 'ap-tags' }, timingChip(p), p.realism ? h('span', { class: 'ms-fit fit-' + p.realism, text: FIT[p.realism] }) : null) : null,
+        p.fit || p.why ? h('p', { class: 'ms-fittext' }, p.fit || '', p.why ? h('span', { text: p.why }) : null) : null,
+        p.gaps ? h('p', { class: 'ap-gaps' }, h('b', { text: 'Still to check. ' }), p.gaps) : null,
+        p.req || p.people || p.src.length ? h('details', { class: 'ap-more' }, h('summary', { text: 'Requirements, contacts and sources' }),
+          p.req ? h('p', null, h('b', { text: 'What to submit and entry bar. ' }), p.req) : null,
+          p.dec ? h('p', null, h('b', { text: 'Decisions. ' }), p.dec) : null,
+          p.people ? h('p', null, h('b', { text: 'People to contact. ' }), p.people) : null,
+          p.src.length ? h('div', { class: 'srcs' }, p.src.map(function (u) { return h('a', { href: u, target: '_blank', rel: 'noopener', text: u.replace(/^https?:\/\/(www\.)?/, '') }); })) : null) : null,
+        isAdded(p0) && p0.added ? h('p', { class: 'ap-src', text: 'Looked up ' + fmtDate(p0.added) + (p0.query ? ' from “' + p0.query + '”' : '') + '.' }) : null,
+        h('div', { class: 'ap-acts' }, sel, star,
+          p.src[0] ? h('a', { class: 'btn btn--small', href: p.src[0], target: '_blank', rel: 'noopener', text: 'Official page ↗' }) : null,
+          h('button', { class: 'btn btn--small', type: 'button', text: 'Edit details', onclick: function () { editForm(p0, editBox); } }),
+          h('button', { class: 'btn btn--small', type: 'button', text: 'Not applying', title: 'Move to the Not applying list. You can restore it.', onclick: function () {
+            var w = x(); w.status = 'skip'; touch(w); paintGroups(); paintTop();
+          } })),
+        editBox));
+  }
+
+  function editForm(p0, box) {
+    var base = eff(p0, true), cur = eff(p0), e = pp(p0.id).edit || {}, inputs = {};
+    var F = [['org', 'Organisation'], ['name', 'Name'], ['kind', 'Type'], ['d', 'Deadline'], ['length', 'Length'], ['endShow', 'Ends'],
+             ['fee', 'Application fee'], ['tuition', 'Tuition or pay'], ['link', 'Official page']];
+    function val(q, k) { return k === 'd' ? (q.aim[0] && q.aim[0].d) || '' : k === 'link' ? q.src[0] || '' : q[k] || ''; }
+    box.hidden = false;
+    fill(box,
+      h('p', { class: 's', text: 'Leave a field empty to go back to the original.' }),
+      h('div', { class: 'ap-form' }, F.map(function (f) {
+        var k = f[0], fid = 'ap-e-' + p0.id + '-' + k, inp;
+        if (k === 'kind') inp = h('select', { id: fid }, KINDS.map(function (o) { return h('option', { value: o[0], text: o[1] }); }));
+        else inp = h('input', { id: fid, type: k === 'd' ? 'date' : k === 'link' ? 'url' : 'text', placeholder: val(base, k) });
+        inp.value = e[k] !== undefined ? e[k] : val(cur, k);
+        inputs[k] = inp;
+        return h('label', { class: 'f', for: fid }, h('span', { text: f[1] }), inp);
+      })),
+      h('div', { class: 'ap-acts' },
+        h('button', { class: 'btn btn--small btn--primary', type: 'button', text: 'Save', onclick: function () {
+          var ne = {};
+          F.forEach(function (f) { var k = f[0], v = inputs[k].value.trim(); if (v && v !== String(val(base, k))) ne[k] = v; });
+          if (ne.link && !safeUrl(ne.link)) ne.link = 'https://' + ne.link.replace(/^\/+/, '');
+          var w = ppw(p0.id);
+          if (Object.keys(ne).length) w.edit = ne; else delete w.edit;
+          touch(w); paintGroups(); paintTop();
+        } }),
+        h('button', { class: 'btn btn--small', type: 'button', text: 'Cancel', onclick: function () { box.hidden = true; fill(box); } })));
+    inputs.org.focus();
+  }
+
+  function goneItem(p0) {
+    var p = eff(p0), msg = h('span', { class: 'm' });
+    var del = isAdded(p0) ? h('button', { class: 'btn btn--small btn--danger', type: 'button', text: 'Delete', title: 'Delete this program for good', onclick: function () {
+      if (!del.dataset.arm) {
+        del.dataset.arm = '1'; del.textContent = 'Delete for good?';
+        setTimeout(function () { if (del.isConnected) { delete del.dataset.arm; del.textContent = 'Delete'; } }, 4000);
+        return;
+      }
+      del.disabled = true; msg.textContent = 'Deleting…';
+      deleteFile(ADDED_DIR + '/' + p0.id + '.json', S.addedSha[p0.id], 'Delete ' + p.name).then(function () {
+        S.added = S.added.filter(function (x) { return x.id !== p0.id; }); delete S.addedSha[p0.id];
+        paintGroups(); paintTop();
+      }, function (e) { del.disabled = false; msg.textContent = 'Could not delete: ' + e.message; });
+    } }) : null;
+    return h('div', { class: 'ap-item ap-goneitem' },
+      h('span', { class: 'ap-name' }, h('span', { class: 'o', text: p.org }), h('span', { class: 'p', text: short(p.name) })),
+      h('span', { class: 'ap-acts' }, msg,
+        h('button', { class: 'btn btn--small', type: 'button', text: 'Restore', onclick: function () {
+          var w = ppw(p0.id); w.status = ''; if (!isAdded(p0)) w.plan = true; AP.open[p0.id] = true; touch(w); paintGroups(); paintTop();
+        } }), del));
+  }
+
+  /* -------------------------------------------- add by name, or look up -- */
+  function search(q, online) {
+    q = String(q || '').trim(); fill(AP.msg);
+    var input = document.getElementById('ap-q');
+    if (!q) { if (input) input.focus(); return; }
+    var words = q.toLowerCase().split(/[\s,·()\/]+/).filter(function (w) { return w.length > 1 && !STOP[w]; });
+    var hits = online || !words.length ? [] : S.ref.programs.filter(function (p) {
+      var hay = (p.uni + ' ' + (S.ref.uniFull[p.uni] || '') + ' ' + uniTag(p.uni) + ' ' + p.name + ' ' + p.track).toLowerCase();
+      return words.every(function (w) { return hay.indexOf(w) >= 0; });
+    }).slice(0, 6);
+    if (!hits.length) return startLookup(q);
+    fill(AP.msg, h('div', { class: 'ap-hits' },
+      h('p', { class: 's', text: hits.length === 1 ? 'This one is in your research list:' : 'These are in your research list:' }),
+      h('ul', null, hits.map(function (p) {
+        var have = mine(p) && status(p) !== 'skip';
+        return h('li', null, h('span', null, h('b', { text: uniTag(p.uni) + ' ' }), p.name),
+          have ? h('a', { href: '#future/apps', text: 'Already in your list', onclick: function (e) { e.preventDefault(); fill(AP.msg); openRow(p.id); } })
+               : h('button', { class: 'btn btn--small', type: 'button', text: 'Add', onclick: function () {
+                   var w = ppw(p.id); w.plan = true; if (w.status === 'skip') w.status = ''; touch(w);
+                   fill(AP.msg); if (input) input.value = ''; paintTop(); openRow(p.id);
+                 } }));
+      })),
+      h('button', { class: 'btn btn--small', type: 'button', text: 'None of these: look it up online', onclick: function () { search(q, true); } })));
+  }
+  function lookupFile(l) { return JSON.stringify({ id: l.id, query: l.query, requested: l.requested, status: l.status }, null, 1) + '\n'; }
+  function startLookup(q) {
+    if (!S.repoOk) { fill(AP.msg, h('div', { class: 'note note--err', text: 'Read-only: the token can’t write to ' + repo() + ', so it can’t ask for a lookup.' })); return; }
+    var l = { id: 'add-' + uid(), query: q.slice(0, 200), requested: now(), status: 'queued' };
+    var input = document.getElementById('ap-q'); if (input) input.value = '';
+    S.lookups.push(l); paintLooks();
+    putFile(LOOKUP_DIR + '/' + l.id + '.json', lookupFile(l), null, 'Look up ' + l.query)
+      .then(function (res) { l.sha = res.content.sha; poll(); })
+      .catch(function (e) { l.status = 'failed'; l.error = 'Could not save the request: ' + e.message; paintLooks(); });
+  }
+  function retryLookup(l) {
+    l.status = 'queued'; l.error = ''; l.requested = now(); paintLooks();
+    putFile(LOOKUP_DIR + '/' + l.id + '.json', lookupFile(l), l.sha || null, 'Look up ' + l.query + ' again')
+      .then(function (res) { l.sha = res.content.sha; poll(); })
+      .catch(function (e) { l.status = 'failed'; l.error = 'Could not save the request: ' + e.message; paintLooks(); });
+  }
+  function dismissLookup(l) {
+    S.lookups = S.lookups.filter(function (x) { return x !== l; }); paintLooks();
+    if (l.sha) deleteFile(LOOKUP_DIR + '/' + l.id + '.json', l.sha, 'Dismiss lookup').catch(function () {});
+  }
+  /* Every 10 seconds while a lookup is waiting: the Action deletes the request when it has added the
+     program, or marks it failed. */
+  function poll() {
+    clearTimeout(S.poll);
+    var waiting = S.lookups.filter(function (l) { return l.status === 'queued' && l.sha; });
+    if (!waiting.length) return;
+    S.poll = setTimeout(function () {
+      Promise.all(waiting.map(check)).then(function () { paintLooks(); poll(); }, function () { paintLooks(); poll(); });
+    }, 10000);
+  }
+  function check(l) {
+    return getFile(LOOKUP_DIR + '/' + l.id + '.json').then(function (f) {
+      var d = JSON.parse(f.text); l.sha = f.sha; l.status = d.status; l.error = d.error || '';
+    }, function (e) {
+      if (e.status !== 404) throw e;
+      return getFile(ADDED_DIR + '/' + l.id + '.json').then(function (f) {
+        var p = JSON.parse(f.text);
+        S.addedSha[p.id] = f.sha;
+        if (!S.added.some(function (x) { return x.id === p.id; })) S.added.push(p);
+        S.lookups = S.lookups.filter(function (x) { return x !== l; });
+        paintTop(); openRow(p.id);
+      }, function (e2) { if (e2.status !== 404) throw e2; S.lookups = S.lookups.filter(function (x) { return x !== l; }); });
+    });
+  }
+  function paintLooks() {
+    if (!AP.looks) return;
+    fill(AP.looks, S.lookups.map(function (l) {
+      var mins = Math.max(0, Math.floor((Date.now() - new Date(l.requested)) / 60000));
+      if (l.status === 'failed') return h('div', { class: 'ap-look err' },
+        h('span', { class: 'x', 'aria-hidden': 'true', text: '!' }),
+        h('span', null, 'Couldn’t look up ', h('b', { text: l.query }), '. ' + (l.error || '')),
+        h('span', { class: 't' },
+          h('button', { class: 'btn btn--small', type: 'button', text: 'Retry', onclick: function () { retryLookup(l); } }), ' ',
+          h('button', { class: 'btn btn--small', type: 'button', text: 'Dismiss', onclick: function () { dismissLookup(l); } })));
+      return h('div', { class: 'ap-look' },
+        h('span', { class: 'spin', 'aria-hidden': 'true' }),
+        h('span', null, 'Looking up ', h('b', { text: l.query }),
+          mins >= 10 ? [h('span', { text: '. This is taking longer than usual: ' }), h('a', { href: 'https://github.com/' + repo() + '/actions', target: '_blank', rel: 'noopener', text: 'check the Action' })] : null),
+        h('span', { class: 't', text: mins < 1 ? 'just now' : mins + ' min ago' }));
+    }));
   }
 
   /* --------------------------------------------------------- shortlist -- */
@@ -747,6 +1127,16 @@
         h('div', { class: 'ms-foot' }, (r.footer || []).map(function (t) { return h('p', { text: t }); }))));
   }
 
-  A.register('masters', function (panel) { root = panel; load(); });
-  A.on('connect', function () { if (root) load(); });
+  /* Two sub-tabs share one copy of the data. Each draws itself the first time it opens; after that,
+     a view redraws when shown again if the other view changed something. */
+  function start(panel, draw, stale) {
+    new MutationObserver(function () { if (!panel.hidden && S.prog && !S.loading && stale()) draw(); })
+      .observe(panel, { attributes: true, attributeFilter: ['hidden'] });
+    if (S.prog && !S.loading) draw(); else if (!S.loading) load();
+  }
+  A.register('apps', function (panel) { rootApps = panel; start(panel, renderApps, function () { return S.appsStale; }); });
+  A.register('masters', function (panel) {
+    rootRes = panel; start(panel, function () { R.cards = {}; renderMain(); }, function () { return S.resStale; });
+  });
+  A.on('connect', function () { if (rootApps || rootRes) load(); });
 })();

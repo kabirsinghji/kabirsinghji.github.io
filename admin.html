@@ -8,8 +8,8 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css?v=9">
 <script src="theme.js?v=2"></script>
-<link rel="stylesheet" href="admin/masters.css?v=2">
-<script src="admin/masters.js?v=2" defer></script>
+<link rel="stylesheet" href="admin/masters.css?v=3">
+<script src="admin/masters.js?v=3" defer></script>
 <link rel="stylesheet" href="admin/attach.css?v=1">
 <script src="admin/attach.js?v=1" defer></script>
 <link rel="stylesheet" href="admin/research.css?v=3">
@@ -185,6 +185,7 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
   <!-- ===================== Future: a parent tab with sub-tabs ===================== -->
   <section class="panel" role="tabpanel" id="panel-future" aria-labelledby="tab-future" hidden>
     <nav class="subtabs" role="tablist" aria-label="Future" id="subtabs-future"></nav>
+    <section class="subpanel" role="tabpanel" id="panel-apps" aria-labelledby="subtab-apps" hidden></section>
     <section class="subpanel" role="tabpanel" id="panel-masters" aria-labelledby="subtab-masters" hidden></section>
   </section>
 
@@ -233,7 +234,8 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--sky); outli
       { id: 'dying', label: 'Death & dying' }
     ] },
     { id: 'future', label: 'Future', lock: 'ebb3de8a3d9a40366132eb5deb5af44e4c96c11696f8fc34ea2c1d8bd8399171', sub: [
-      { id: 'masters', label: 'UK master\u2019s' }
+      { id: 'apps', label: 'My applications' },
+      { id: 'masters', label: 'UK master\u2019s research' }
     ] },
     { id: 'settings', label: 'Settings', lock: 'e2768b52d33e87d7709986ff90a50a65ec7a186bd8dc0d1d5dc8a07afd3f3ac8' }
   ];
